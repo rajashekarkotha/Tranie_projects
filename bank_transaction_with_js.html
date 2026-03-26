@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>html task</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+  <div class="container mt-3">
+    <table class="table">
+      <thead>
+        <tr class="table-secondary">
+          <th>TxtId</th>
+          <th>TxnDate</th>
+          <th>Header</th>
+          <th>Credit</th>
+          <th colspan="2">Debit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-light">
+          <td></td>
+          <td><input type="date" class="form-control" id="date" /></td>
+          <td><input type="text" class="form-control" id="header" /></td>
+          <td><input type="number" class="form-control" id="credit" /></td>
+          <td><input type="number" class="form-control" id="debit" /></td>
+          <td><button type="button" class="btn btn-primary" onclick="add()">add</button></td>
+        </tr>
+
+        <tr class="total table-warning">
+          <td colspan="3" class="text-end pe-4 fw-bold">Total</td>
+          <td id="creditTotal">0</td>
+          <td colspan="2" id="debitTotal">0</td>
+        </tr>
+        <tr class="table-info">
+          <td colspan="3" class="text-end pe-4 fw-bold">Balance</td>
+          <td colspan="3" id="balance">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+     let transactions = [];
+     let nextTxnId = parseInt(localStorage.getItem('nextTxnId')) || 1;
+
+    function add() {
+      var dateInput = document.getElementById("date");
+      var headerInput = document.getElementById("header");
+      var creditInput = document.getElementById("credit");
+      var debitInput = document.getElementById("debit");
+      if (!dateInput.value || !headerInput.value || (!creditInput.value && !debitInput.value)) {
+        alert("Please fill in all fields and ensure at least one of Credit or Debit is provided.");
+        return;
+      }
+      if (creditInput.value && debitInput.value) {
+        alert("Only credit OR debit allowed, not both.");
+        return;
+      }
+
+      var table = document.querySelector("table");
+      var totalRow = document.querySelector(".total");
+      if (!totalRow) {
+        alert("Table structure invalid");
+        return;
+      }
+      var insertIndex = totalRow.rowIndex;
+      var dataCount = 0;
+      for (let i = 1; i < table.rows.length; i++) {
+        let row = table.rows[i];
+        if (row.cells.length !== 6) continue;
+        if (row.querySelector("#date")) continue;
+        dataCount++;
+      }
+      var newRow = table.insertRow(insertIndex);
+      newRow.insertCell(0).innerHTML = nextTxnId;
+      nextTxnId++;
+      localStorage.setItem('nextTxnId', nextTxnId);
+      newRow.insertCell(1).innerHTML = dateInput.value;
+      newRow.insertCell(2).innerHTML = headerInput.value;
+      newRow.insertCell(3).innerHTML = creditInput.value;
+      newRow.insertCell(4).innerHTML = debitInput.value;
+
+      newRow.insertCell(5).innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteRow(this)">delete</button>';
+      var creditVal = parseFloat(creditInput.value) || 0;
+      var debitVal = parseFloat(debitInput.value) || 0;
+      if (creditVal > 0) {
+        newRow.classList.add('table-success');
+      } else if (debitVal > 0) {
+        newRow.classList.add('table-primary');
+      }
+      var txnData = {
+        txnId: newRow.cells[0].innerHTML,
+        date: dateInput.value,
+        header: headerInput.value,
+        credit: creditInput.value,
+        debit: debitInput.value
+      };
+      transactions.push(txnData);
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+      dateInput.value = "";
+      headerInput.value = "";
+      creditInput.value = "";
+      debitInput.value = "";
+      updateTotals();
+    }
+
+    function deleteRow(button) {
+      var row = button.parentNode.parentNode;
+      var txnId = row.cells[0].textContent.trim();
+      transactions = transactions.filter(t => t.txnId !== txnId);
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+      row.parentNode.removeChild(row);
+      updateTotals();
+    }
+
+    function updateTotals() {
+      var creditTotal = document.getElementById("creditTotal");
+      var debitTotal = document.getElementById("debitTotal");
+      var balance = document.getElementById("balance");
+      var creditSum = 0;
+      var debitSum = 0;
+      var rows = document.querySelectorAll("table tbody tr:not(.total)");
+      rows.forEach(function (row) {
+        if (row.cells.length !== 6 || row.querySelector("#date")) return;
+        var credit = parseFloat(row.cells[3].textContent) || 0;
+        var debit = parseFloat(row.cells[4].textContent) || 0;
+        creditSum += credit;
+        debitSum += debit;
+      });
+      creditTotal.textContent = creditSum.toFixed(2);
+      debitTotal.textContent = debitSum.toFixed(2);
+      var balanceValue = creditSum - debitSum;
+      balance.textContent = balanceValue.toFixed(2);
+    }
+
+    function initApp() {
+      const saved = localStorage.getItem('transactions');
+      if (saved) {
+        transactions = JSON.parse(saved);
+      }
+      const table = document.querySelector("table");
+      const totalRow = document.querySelector(".total");
+      transactions.forEach(tx => {
+        const insertIndex = totalRow.rowIndex;
+        const newRow = table.insertRow(insertIndex);
+        newRow.insertCell(0).innerHTML = tx.txnId;
+        newRow.insertCell(1).innerHTML = tx.date;
+        newRow.insertCell(2).innerHTML = tx.header;
+        newRow.insertCell(3).innerHTML = tx.credit;
+        newRow.insertCell(4).innerHTML = tx.debit;
+        newRow.insertCell(5).innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteRow(this)">delete</button>';
+        var creditVal = parseFloat(tx.credit) || 0;
+        var debitVal = parseFloat(tx.debit) || 0;
+        if (creditVal > 0) {
+          newRow.classList.add('table-success');
+        } else if (debitVal > 0) {
+          newRow.classList.add('table-primary');
+        }
+      });
+      updateTotals();
+    }
+
+    window.onload = initApp;
+  </script>
+
+
+</body>
+
+</html>

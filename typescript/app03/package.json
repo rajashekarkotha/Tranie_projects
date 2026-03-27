@@ -1,0 +1,15 @@
+{
+  "name": "app02",
+  "version": "1.0.0",
+  "scripts": {
+    "start":"node dist/main",
+    "build":"npx tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

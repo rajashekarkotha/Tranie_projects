@@ -1,0 +1,184 @@
+TypeScript 
+
+ TypeScript = javascript + Types
+
+Creating Project 
+
+   npm init -y
+   npm i  typescript
+
+
+   npx tsc --init
+
+
+Tranpelling (compiling)
+
+   npx tsc filename.ts
+
+Datatypes 
+
+   number
+   string
+   Boolean
+   bigint
+    
+
+
+   symbol   //is used to handle UUID's
+            const photoId:symbol = Symbol("somekey")
+
+
+   void
+
+ 
+special DataTypes
+ any 
+
+        const f1 = (x:any) => {
+              //developer is sure that no issues will occur
+             //whatever may be the type of value of x.
+         }
+
+  
+
+  unknown
+
+     
+      const f1 = (x:unknown)=>{
+
+         // developer is NOT SURE that an issues will NOT occur
+        //based on the type of value of x.
+
+       // and for this reason the type of 'x' has to bbe
+be CHECKED before it is consumed
+       //and comilet 'tsc' will raise an error if the
+checking is not done
+
+      if(typeof(x)==='number'){
+       } else if(typeof(x) === 'string'){
+}
+      }
+
+Null
+
+undefined
+
+=====>Component life cycle are abstract methods which provide extra functionality to class components.
+
+
+  User Defined Data Types
+ 
+        interface
+            is a user defiend data type with methods that are not implemented.
+ 
+            interface ComplexNumber{
+                real:number;
+                imaginary:number;
+            }
+ 
+            var z1 = {real:90,imaginary:-7}
+            var z2 = {real:4,imaginary:-7}
+           
+            interface Shape2D {
+                sides:number[];
+                area : () => number;
+            }
+ 
+        class
+            is a user defiend data type tha thas fields and methods.
+            classes support access modifiers private,public and protected.
+ 
+            class Employee {
+                private empId:number;
+                private fullName:string;
+               
+                constructor(empId:number,fullName:string,private sal:number){
+                    this.empId=empId;                    
+                    this.fullName=fullName;
+                }
+ 
+                travelAllowence(){
+                    return this.sal*0.12;
+                }
+ 
+                houseRentAllowence(){
+                    return this.sal*0.32;
+                }
+ 
+                totalSal(){
+                    return this.sal + this.houseRentAllowence() + this.travelAllowence();
+                }
+ 
+            }
+ 
+            var emp1 = new Employee(101,"Vamsy",89000)
+ 
+        unions
+ 
+            var temp : number | string ;
+ 
+            temp = 90;
+            temp = "high";
+            temp = "low";
+            temp = 47;
+ 
+        aliases
+            is another name given to a datatype.
+ 
+            type num = number;
+ 
+            var x : num;
+ 
+            type alphaOrNumeric = number | string;
+ 
+            var itemId:alphaOrNumeric;
+            var temp:alphaOrNumeric;
+ 
+        enums      
+            is a set of possible values of a field.
+ 
+            gender  can be eitehr Male or Female
+           
+            enum Gender {
+                MALE, FEMALE
+            }
+ 
+            var gender : Gender;
+            gender = Gender.MALE;
+ 
+            enum Direction {
+                UP, DOWN, LEFT, RIGHT
+            }
+ 
+            var d1 : Direction;
+            d1 = Direction.UP;
+ 
+        types
+ 
+            type Point2D = {x:number,y:number};
+            type Point3D = {x:number,y:number,z:number};
+ 
+ 
+    Standard tsconfig
+ 
+        {
+            "compilerOptions": {
+                "module": "commonjs",
+                "esModuleInterop": true,
+                "target": "es6",
+                "moduleResolution": "node",
+                "sourceMap": false,
+                "outDir": "dist"
+            },
+            "lib": ["es2015"]
+        }
+ 
+    functions
+ 
+        function funName(param1:type,param2:type) : returntype {
+ 
+        }
+ 
+        const funName = function(param1:type,param2:type) : returntype {
+ 
+        }

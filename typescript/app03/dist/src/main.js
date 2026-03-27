@@ -1,0 +1,25 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const welcome_1 = __importDefault(require("./welcome"));
+console.log((0, welcome_1.default)("vamsy Kiran"));
+console.log((0, welcome_1.default)("Sagar Guru Charan", "Dr. "));
+const arrayDemo_1 = __importDefault(require("./arrayDemo"));
+(0, arrayDemo_1.default)();
+const numOperations_1 = __importDefault(require("./numOperations"));
+let [factors, numberType] = (0, numOperations_1.default)(1024);
+console.log(`Factors of 1024 are ${factors} and hence it is a ${numberType}`);
+const enumDemo_1 = __importDefault(require("./enumDemo"));
+(0, enumDemo_1.default)();
+const oopDemo_1 = require("./oopDemo");
+var emp1 = new oopDemo_1.RegularEmployee("vamsy", "Aripaka", "Flat No 123, Nidhi Apartments, Banglore", 10000);
+console.log(emp1);
+console.log(emp1.netPay());
+var emp2 = new oopDemo_1.RegularEmployee("Murthy", "KGN", { city: "Banglore", doorNumber: "1-23", state: "Karnataka" }, 88900);
+console.log(emp2);
+console.log(emp2.netPay());
+var mgr1 = new oopDemo_1.Manager("Kiran", "v", { doorNumber: "1-55", city: "Hyd", state: "Telangana" }, 89000, 8900);
+console.log(mgr1);
+console.log(mgr1.netPay());

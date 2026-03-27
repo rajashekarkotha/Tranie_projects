@@ -1,0 +1,32 @@
+import greet from './welcome';
+
+console.log(greet("vamsy Kiran"));
+console.log(greet("Sagar Guru Charan","Dr. "));
+
+
+import arrayDemoFunction from './arrayDemo';
+arrayDemoFunction();
+
+import checkPrime from './numOperations';
+
+let [factors,numberType] = checkPrime(1024);
+console.log(`Factors of 1024 are ${factors} and hence it is a ${numberType}`);
+
+import enumsDemoFunction from './enumDemo';
+enumsDemoFunction();
+
+import { RegularEmployee, Manager } from './oopDemo';
+
+var emp1 = new RegularEmployee("vamsy", "Aripaka", "Flat No 123, Nidhi Apartments, Banglore", 10000);
+
+console.log(emp1);
+console.log(emp1.netPay());
+
+var emp2 = new RegularEmployee("Murthy", "KGN", {city:"Banglore", doorNumber:"1-23", state:"Karnataka"}, 88900);
+
+console.log(emp2);
+console.log(emp2.netPay());
+
+var mgr1 = new Manager("Kiran", "v", {doorNumber:"1-55", city:"Hyd", state:"Telangana"}, 89000, 8900);
+console.log(mgr1);
+console.log(mgr1.netPay());

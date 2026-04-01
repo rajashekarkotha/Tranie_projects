@@ -1,0 +1,28 @@
+{
+  "contacts": [
+    {
+      "id": 1,
+      "fullName": "Vamsy",
+      "mobile": "9999999991",
+      "mailId": "vamsy@gmail.com"
+    },
+    {
+      "id": 2,
+      "fullName": "Suseela",
+      "mobile": "9999999992",
+      "mailId": "suseela@gmail.com"
+    },
+    {
+      "id": 3,
+      "fullName": "Indhikaa",
+      "mobile": "9999999993",
+      "mailId": "indu@gmail.com"
+    },
+    {
+      "id": 9,
+      "fullName": "shekar",
+      "mailId": "shekar@gmail.com",
+      "mobile": "7848849999"
+    }
+  ]
+}

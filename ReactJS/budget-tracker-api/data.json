@@ -1,0 +1,189 @@
+{
+  "customerSummary": [
+    {
+      "customerId": "CUST-10001",
+      "customerName": "Rajashekar Reddy",
+      "mobile": "9XXXXXXXXX",
+      "email": "rajashekar.reddy@email.com",
+      "kycStatus": "VERIFIED",
+      "createdAt": "2022-06-15",
+      "accounts": [
+        {
+          "accountId": "ACC-001",
+          "accountNumber": "1000102992",
+          "bankName": "HAFCB Bank",
+          "accountType": "Savings",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [
+            {
+              "id": 101,
+              "txnRef": "TXN-C-6001",
+              "txnDate": "2026-01-10",
+              "txnType": "CREDIT",
+              "header": "Salary",
+              "amount": 200,
+              "mode": "NEFT"
+            },
+            {
+              "id": 102,
+              "txnRef": "TXN-D-7001",
+              "txnDate": "2026-02-12",
+              "txnType": "DEBIT",
+              "header": "House Rent",
+              "amount": 40,
+              "mode": "UPI"
+            },
+            {
+              "id": 104,
+              "txnRef": "TXN-D-7003",
+              "txnDate": "2026-03-30",
+              "txnType": "DEBIT",
+              "header": "Snacks",
+              "amount": 60,
+              "mode": "CASH"
+            },
+            {
+              "id": 126,
+              "header": "io",
+              "amount": 10,
+              "txnDate": "2026-04-01",
+              "txnType": "DEBIT"
+            },
+            {
+              "id": 128,
+              "header": "po",
+              "amount": 30,
+              "txnDate": "2026-04-01",
+              "txnType": "DEBIT"
+            }
+          ],
+          "summary": {
+            "totalCredit": 200,
+            "totalDebit": 140,
+            "balance": 60,
+            "lastUpdated": "2026-04-03T10:57:38.792Z"
+          }
+        },
+        {
+          "accountId": "ACC-002",
+          "accountNumber": "2000204881",
+          "bankName": "ABC National Bank",
+          "accountType": "Current",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [
+            {
+              "id": 201,
+              "txnRef": "TXN-C-8001",
+              "txnDate": "2026-03-01",
+              "txnType": "CREDIT",
+              "header": "Client Payment",
+              "amount": 120000,
+              "mode": "RTGS"
+            },
+            {
+              "id": 202,
+              "txnRef": "TXN-D-8002",
+              "txnDate": "2026-03-05",
+              "txnType": "DEBIT",
+              "header": "Office Supplies",
+              "amount": 5000,
+              "mode": "CARD"
+            }
+          ],
+          "summary": {
+            "totalCredit": 120000,
+            "totalDebit": 5000,
+            "balance": 115000,
+            "lastUpdated": "2026-03-05"
+          }
+        },
+        {
+          "accountId": "ACC-003",
+          "accountNumber": "3000339922",
+          "bankName": "XYZ Digital Bank",
+          "accountType": "Salary",
+          "currency": "INR",
+          "status": "INACTIVE",
+          "Txns": [],
+          "summary": {
+            "totalCredit": 0,
+            "totalDebit": 0,
+            "balance": 0,
+            "lastUpdated": "2026-01-01"
+          }
+        }
+      ]
+    },
+    {
+      "customerId": "CUST-10002",
+      "customerName": "Ananya Sharma",
+      "mobile": "8XXXXXXXXX",
+      "email": "ananya.sharma@email.com",
+      "kycStatus": "VERIFIED",
+      "createdAt": "2021-03-12",
+      "accounts": [
+        {
+          "accountId": "ACC-004",
+          "accountNumber": "4000445566",
+          "bankName": "State Bank",
+          "accountType": "Savings",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [
+            {
+              "id": 301,
+              "txnRef": "TXN-C-9001",
+              "txnDate": "2026-02-01",
+              "txnType": "CREDIT",
+              "header": "Salary",
+              "amount": 80000,
+              "mode": "NEFT"
+            },
+            {
+              "id": 302,
+              "txnRef": "TXN-D-9002",
+              "txnDate": "2026-02-10",
+              "txnType": "DEBIT",
+              "header": "Car EMI",
+              "amount": 15000,
+              "mode": "UPI"
+            }
+          ],
+          "summary": {
+            "totalCredit": 80000,
+            "totalDebit": 15000,
+            "balance": 65000,
+            "lastUpdated": "2026-02-10"
+          }
+        }
+      ]
+    },
+    {
+      "customerId": "CUST-10003",
+      "customerName": "Vikram Singh",
+      "mobile": "7XXXXXXXXX",
+      "email": "vikram.singh@email.com",
+      "kycStatus": "PENDING",
+      "createdAt": "2023-11-20",
+      "accounts": [
+        {
+          "accountId": "ACC-005",
+          "accountNumber": "5000556677",
+          "bankName": "ICICI Bank",
+          "accountType": "Current",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [],
+          "summary": {
+            "totalCredit": 0,
+            "totalDebit": 0,
+            "balance": 320000,
+            "lastUpdated": "2026-01-15"
+          }
+        }
+      ]
+    }
+  ]
+}

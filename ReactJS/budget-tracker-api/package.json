@@ -1,0 +1,17 @@
+{
+  "name": "budget-tracker-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+   "scripts": {
+      "start": "node json-server.js"
+    },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "json-server": "^0.17.4",
+    "typescript": "^6.0.2"
+  }
+}

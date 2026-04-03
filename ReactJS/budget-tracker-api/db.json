@@ -1,0 +1,12 @@
+{
+  "customerSummary": [
+    {
+      "customerId": "CUST-10001",
+      "customerName": "Rajashekar Reddy"
+    },
+    {
+      "customerId": "CUST-10002",
+      "customerName": "Ananya Sharma"
+    }
+  ]
+}

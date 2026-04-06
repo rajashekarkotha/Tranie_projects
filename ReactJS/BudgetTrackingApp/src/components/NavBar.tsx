@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router";
 
 const routerLinks: { label: string, path: string }[] = [
     { label: "Customer List", path: "/" },
-    { label: "New Contact", path: "/add" }
+    { label: "New Customer", path: "/add" }
 ];
 
 const NavBar = ({ appTitle }: { appTitle: string }) => {

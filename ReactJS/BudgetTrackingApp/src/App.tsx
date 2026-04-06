@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import NavBar from "./components/NavBar";
 import CustomerList from "./components/CustomerList";
 import StatementOfAccount from "./components/StatementOfAccount";
+import AddCustomer from "./components/AddCustomer/AddCustomer";
 
 const App =() => (
   <BrowserRouter>
@@ -10,6 +11,7 @@ const App =() => (
       <Routes>
         <Route path="/" element={<CustomerList />}  />
         <Route path="/edit/:id" element={<StatementOfAccount />}  />
+        <Route path="/add" element={<AddCustomer />}  />
       </Routes>
     </div>
   </BrowserRouter>

@@ -56,13 +56,27 @@
               "amount": 30,
               "txnDate": "2026-04-01",
               "txnType": "DEBIT"
+            },
+            {
+              "id": 130,
+              "header": "po",
+              "amount": 80904,
+              "txnDate": "2026-04-01",
+              "txnType": "CREDIT"
+            },
+            {
+              "id": 117,
+              "header": "plp",
+              "amount": 8000,
+              "txnDate": "2026-04-01",
+              "txnType": "DEBIT"
             }
           ],
           "summary": {
-            "totalCredit": 200,
-            "totalDebit": 140,
-            "balance": 60,
-            "lastUpdated": "2026-04-03T10:57:38.792Z"
+            "totalCredit": 81104,
+            "totalDebit": 8140,
+            "balance": 72964,
+            "lastUpdated": "2026-04-01"
           }
         },
         {
@@ -112,6 +126,89 @@
             "totalDebit": 0,
             "balance": 0,
             "lastUpdated": "2026-01-01"
+          }
+        },
+        {
+          "accountId": "ACC-004",
+          "accountNumber": "894899",
+          "bankName": "HDFC",
+          "accountType": "SAVINGS",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [
+            {
+              "id": 1,
+              "header": "utilities",
+              "amount": 890,
+              "txnDate": "2026-04-01",
+              "txnType": "CREDIT"
+            }
+          ],
+          "summary": {
+            "totalCredit": 890,
+            "totalDebit": 0,
+            "balance": 890,
+            "lastUpdated": "2026-04-06T05:07:15.462Z"
+          }
+        },
+        {
+          "accountId": "ACC-005",
+          "accountNumber": "909040090",
+          "bankName": "YES",
+          "accountType": "CREDIT",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [],
+          "summary": {
+            "totalCredit": 0,
+            "totalDebit": 0,
+            "balance": 0,
+            "lastUpdated": "2026-04-06T05:04:25.890Z"
+          }
+        },
+        {
+          "accountId": "ACC-006",
+          "accountNumber": "90909904",
+          "bankName": "ICICI",
+          "accountType": "CHECKING",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [],
+          "summary": {
+            "totalCredit": 0,
+            "totalDebit": 0,
+            "balance": 0,
+            "lastUpdated": "2026-04-06T05:09:04.285Z"
+          }
+        },
+        {
+          "accountId": "ACC-007",
+          "accountNumber": "898094",
+          "bankName": "CITI",
+          "accountType": "SAVINGS",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [],
+          "summary": {
+            "totalCredit": 0,
+            "totalDebit": 0,
+            "balance": 0,
+            "lastUpdated": "2026-04-06T05:14:09.661Z"
+          }
+        },
+        {
+          "accountId": "ACC-008",
+          "accountNumber": "84949049",
+          "bankName": "UNION",
+          "accountType": "SAVINGS",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [],
+          "summary": {
+            "totalCredit": 0,
+            "totalDebit": 0,
+            "balance": 0,
+            "lastUpdated": "2026-04-06T05:23:48.863Z"
           }
         }
       ]
@@ -182,8 +279,37 @@
             "balance": 320000,
             "lastUpdated": "2026-01-15"
           }
+        },
+        {
+          "accountId": "ACC-123",
+          "accountNumber": "84945990",
+          "bankName": "SBI",
+          "accountType": "SAVINGS",
+          "currency": "INR",
+          "status": "ACTIVE",
+          "Txns": [],
+          "summary": {
+            "totalCredit": 0,
+            "totalDebit": 0,
+            "balance": 0,
+            "lastUpdated": "2026-04-06T05:25:04.915Z"
+          }
         }
       ]
+    },
+    {
+      "customerId": "CUST-100020",
+      "name": "intel",
+      "email": "intel@mail.com",
+      "mobile": "9409900494",
+      "accounts": []
+    },
+    {
+      "customerId": "CUST-100021",
+      "customerName": "mac",
+      "email": "mac@gmail.com",
+      "mobile": "8994000494",
+      "accounts": []
     }
   ]
 }

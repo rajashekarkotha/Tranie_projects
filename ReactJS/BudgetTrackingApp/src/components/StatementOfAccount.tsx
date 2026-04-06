@@ -11,12 +11,12 @@ const StatementOfAccount = () => {
   const params = useParams();
   const dispatch: AppDispatch = useDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [txn, setTxn] = useState<TxnSummary | null>({ id: 0, header: "", amount: 0, txnDate: "", txnType: "" });
+  const [txn, setTxn] = useState<TxnSummary | null>({ id: 0, header: "", amount: 0, txnDate: "", txnType: "DEBIT" });
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const selectedAccount = useSelector((state: RootState) => state.budgetTrackingSlice.selectedAccount);
   const onAdd = () => {
     setIsEditing(false);
-    setTxn({...txn, id: 0, header: "", amount: 0, txnDate: "", txnType: "" });
+    setTxn({...txn, id: 0, header: "", amount: 0, txnDate: "", txnType: "DEBIT" });
     setShowModal(true);
   };
 
@@ -61,7 +61,7 @@ const StatementOfAccount = () => {
       <p>
         Account Number: {selectedAccount?.accountNumber} <br />
         Bank: {selectedAccount?.bankName} <br />
-        Balance: ₹ {selectedAccount?.summary.balance}
+        Balance: ₹ {selectedAccount?.summary?.balance}
       </p>
 
       <h5>Transactions</h5>
@@ -87,7 +87,7 @@ const StatementOfAccount = () => {
           </tr>
         </thead>
         <tbody>
-          {selectedAccount && selectedAccount.Txns.length > 0 && selectedAccount.Txns.map((txn: TxnSummary) => (
+          {selectedAccount && selectedAccount?.Txns.length > 0 && selectedAccount?.Txns.map((txn: TxnSummary) => (
             <tr key={txn.id}>
               <td>{txn.txnDate}</td>
               <td>{txn.header}</td>

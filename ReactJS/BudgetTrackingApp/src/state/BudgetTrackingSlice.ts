@@ -19,6 +19,39 @@ const initialState: CustomerSummaryState = {
 
 const apiUrl = "http://localhost:9999";
 
+export const addCustomer = createAsyncThunk<
+  CustomersData,
+  Omit<CustomersData, "customerId" | "createdAt" | "accounts">,
+  { rejectValue: string }
+>(
+  "BudgetTrackingSlice/addCustomer",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${apiUrl}/customers`, data);
+      console.log("Response from addCustomer API: ", response.data);
+      return response.data as CustomersData;
+    } catch (error) {
+      return rejectWithValue("Failed to add customer");
+    } 
+  }
+);
+
+export const addBankAccount = createAsyncThunk<
+  any,
+  { customerId: string; data:any},
+  { rejectValue: string }
+>(
+  "BudgetTrackingSlice/addBankAccount",
+  async ({ customerId, data }, { rejectWithValue }) => {  
+    try {      
+      const response = await axios.post(`${apiUrl}/customers/${customerId}/accounts`, data);
+      return response.data as AccountSummary;
+    } catch (error) {
+      return rejectWithValue("Failed to add bank account");
+    }
+  }
+);
+
 export const loadCustomers = createAsyncThunk<CustomersData[], void>(
     'BudgetTrackingSlice/loadCustomers',
     async () => {
@@ -101,22 +134,6 @@ export const updateTxn = createAsyncThunk<
   }
 );
 
-// export const deleteTxn = createAsyncThunk<
-//   number,
-//   { accountId: string; txnId: number },
-//   { rejectValue: string }
-// >(
-//   "BudgetTrackingSlice/deleteTxn",
-//   async ({ accountId, txnId }, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.delete(apiUrl + `/accounts/${accountId}/txns/${txnId}`);
-//       return response.data as number; // Assuming the API returns the deleted transaction ID
-//     } catch (error) {
-//       return rejectWithValue("Failed to delete transaction");
-//     }
-//   }
-// );
-
 export const deleteTxn = createAsyncThunk<
   AccountSummary,
   { accountId: string; txnId: number },
@@ -134,6 +151,7 @@ export const deleteTxn = createAsyncThunk<
     }
   }
 );
+
 
 const BudgetTrackingSlice = createSlice({
     name: "BudgetTrackingSlice",
@@ -237,7 +255,33 @@ const BudgetTrackingSlice = createSlice({
             .addCase(deleteTxn.rejected, (state, action) => {
                 state.inProgress = false;
                 state.errMsg = action.error.message || 'An error occurred';
-            });
+            })
+            .addCase(addBankAccount.pending, (state) => {
+                state.inProgress = true;
+                state.errMsg = undefined;
+            })
+            .addCase(addBankAccount.fulfilled, (state, action: PayloadAction<AccountSummary>) => {
+                state.inProgress = false;
+                if (state.selectedCustomerSummary) {
+                    state.selectedCustomerSummary.accounts.push(action.payload);
+                }
+            })
+            .addCase(addBankAccount.rejected, (state, action) => {
+                state.inProgress = false;
+                state.errMsg = action.error.message || 'An error occurred'; 
+            })     
+            .addCase(addCustomer.pending, (state) => {
+                state.inProgress = true;
+                state.errMsg = undefined;
+            })
+            .addCase(addCustomer.fulfilled, (state, action: PayloadAction<CustomersData>) => {
+                state.inProgress = false;
+                state.customerSummary.push(action.payload);
+            })
+            .addCase(addCustomer.rejected, (state, action) => {
+                state.inProgress = false;
+                state.errMsg = action.payload || 'An error occurred';
+            })
     }
 });
 

@@ -67,7 +67,7 @@ const CustomerList = () => {
               <td colSpan={5} style={{ padding: 0 }}>
                 <Collapse in={openRow === customer.customerId}>
                   <div className="p-3">
-                    <AccountSummary accountSummary={customer.accounts} />
+                    <AccountSummary accountSummary={customer.accounts} customerId={customer.customerId} />
                   </div>
                 </Collapse>
               </td>

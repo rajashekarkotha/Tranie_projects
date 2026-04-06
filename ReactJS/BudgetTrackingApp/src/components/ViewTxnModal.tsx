@@ -59,9 +59,15 @@ const ViewTxnModal = ({ txnData, show, onClose, setTxnData, formSubmit }: { txnD
                   onChange={e => txnData && setTxnData({ ...txnData, header: e.target.value })} />
               </div>
                <div className="form-group mb-1">
-                <label className="form-label">Transaction type</label>
+                {/* <label className="form-label">Transaction type</label>
                 <input type="text" className="form-control" value={txnData?.txnType}
-                  onChange={e => txnData && setTxnData({ ...txnData, txnType: e.target.value })} />
+                  onChange={e => txnData && setTxnData({ ...txnData, txnType: e.target.value })} /> */}
+                  <label className="form-label">Account Type</label>
+                  <select className="form-control" value={txnData.txnType}
+                      onChange={e => txnData && setTxnData({ ...txnData, txnType: e.target.value as TxnSummary['txnType'] })}>
+                      <option value="DEBIT">DEBIT</option>
+                      <option value="CREDIT">Credit</option>
+                  </select>
               </div>
 
 

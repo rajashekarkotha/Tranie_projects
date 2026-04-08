@@ -4,6 +4,7 @@ import { Table, Button, Collapse } from "react-bootstrap";
 
 import type { AppDispatch, RootState } from "../state/AppStore";
 import { loadCustomers } from "../state/BudgetTrackingSlice";
+import { loadAccounts } from "../state/AccountTrackingSlice";
 import type { CustomersData } from "../models/CustomersData";
 import AccountsSummary from "./AccountsSummary";
 
@@ -18,6 +19,7 @@ const CustomerList = () => {
 
   useEffect(() => {
     dispatch(loadCustomers());
+    dispatch(loadAccounts());
   }, []);
 
   return (

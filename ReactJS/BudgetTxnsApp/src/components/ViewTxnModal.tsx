@@ -1,25 +1,25 @@
-// import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
-// import { useParams } from "react-router";
-// import { useDispatch } from "react-redux";
-// import type { AppDispatch } from "../state/AppStore";
+import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../state/AppStore";
 import type { TxnSummary } from "../models/txnSummary";
-// import { updateTxn, addTxn } from "../state/BudgetTrackingSlice";
+import { updateTxn, addTxn } from "../state/TxnsTrackingSlice";
 
 
 const ViewTxnModal = ({ txnData, show, onClose, setTxnData, formSubmit }: { txnData: TxnSummary, show: boolean, onClose: (value: boolean) => void, setTxnData: (data: TxnSummary) => void, formSubmit: () => void }) => {
-  // const dispatch: AppDispatch = useDispatch();
-  // const { id } = useParams<{ id: string }>();
+  const dispatch: AppDispatch = useDispatch();
+  const { id } = useParams<{ id: string }>();
   // console.log("Txn data ", txnData);
   const formSubmitted = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (!id || !txnData) return;
+    if (!id || !txnData) return;
 
-    // if (txnData.id) {
-    //   dispatch(updateTxn({ accountId: id, txnId: txnData.id, data: txnData }));
-    // } else {
-    //   dispatch(addTxn({ accountId: id, data: txnData }));
-    // }
+    if (txnData.id) {
+      dispatch(updateTxn({ accountId: id, txnId: txnData.id, data: txnData }));
+    } else {
+      dispatch(addTxn({ accountId: id, data: txnData }));
+    }
     formSubmit(); 
     // onClose(false);
   }

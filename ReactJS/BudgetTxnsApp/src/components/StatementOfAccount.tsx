@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Table, Button } from "react-bootstrap";
 import type { AppDispatch, RootState } from "../state/AppStore";
-// import { loadAccount, deleteTxn, updateTxn, addTxn } from "../state/BudgetTrackingSlice";
-import { loadTxns } from "../state/TxnsTrackingSlice";
+import { loadTxns, deleteTxn } from "../state/TxnsTrackingSlice";
 import ViewTxnModal from "./ViewTxnModal";
 import type { AccountSummary } from "../models/accountSummary";
 import type { TxnSummary } from "../models/txnSummary";
+import { loadAccounts } from "../state/AccountTrackingSlice";
 
 const StatementOfAccount = () => {
     const params = useParams();
@@ -44,27 +44,35 @@ const StatementOfAccount = () => {
         //     data: txn
         //   }));
         }
+        dispatch(loadAccounts());
         setIsEditing(false);
         setShowModal(false);
+       
       };
     const remove = (txnId: number) => {
         if (window.confirm("Are you sure to delete this transaction?")) {
-            //   dispatch(deleteTxn({ accountId: id!, txnId }));
+              dispatch(deleteTxn({ accountId: id!, txnId: txnId }));
         }
     }
+       // ✅ Effect 1: select account
     useEffect(() => {
-        if (!id) return;
+      if (!id || accounts.length === 0) return;
+    
+      const account = accounts.find(
+        acc => acc.accountId === id
+      );
+      if (account) {
+        setSelectedAccount({ ...account });
+      }
+    }, [id, accounts]);
 
-        const account = accounts.find(
-            (acc: AccountSummary) => acc.accountId === id
-        );
 
-        if (account) {
-            setSelectedAccount({ ...account });
-        }
-
-        dispatch(loadTxns({ id }));
-    }, [id, accounts, dispatch]);
+    // ✅ Effect 2: load txns ONLY when accountId changes
+    useEffect(() => {
+      if (!id) return;
+    
+      dispatch(loadTxns({ id }));
+    }, [id]);
 
     return (
         <div>

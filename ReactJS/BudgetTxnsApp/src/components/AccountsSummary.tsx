@@ -12,7 +12,7 @@ const AccountsSummary = ({customerId }: { customerId:string }) => {
   const [accountData, setAccountData] = useState<AccountSummary[]>([]);
   const dispatch: AppDispatch = useDispatch();
   const accounts: AccountSummary[] = useSelector((state: RootState) => state.budgetTrackingSlice.accounts);
-  console.log(accounts);
+  // console.log(accounts);
   // const addAccount = () => {
   //   setShowAddAccountModal(true);
   // }
@@ -22,10 +22,11 @@ const AccountsSummary = ({customerId }: { customerId:string }) => {
   //   dispatch(loadCustomers());
   // }, [showAddAccountModal]);
 
-   useEffect(()=>{
-    if(customerId)
-     dispatch((loadAccounts()))
-   },[customerId]);
+  //  useEffect(()=>{
+  //   if(customerId)
+  //    dispatch((loadAccounts()))
+  //  },[customerId]);
+   console.log(customerId);
    useEffect(()=>{
     if(accounts.length > 0){
       const dataAccounts = accounts.filter((acc)=> acc.customerId === customerId);

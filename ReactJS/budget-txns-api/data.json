@@ -1,0 +1,304 @@
+{
+  "customerSummary": [
+    {
+      "customerId": "CUST-10001",
+      "customerName": "Rajashekar Reddy",
+      "mobile": "9XXXXXXXXX",
+      "email": "rajashekar.reddy@email.com",
+      "kycStatus": "VERIFIED",
+      "createdAt": "2022-06-15T00:00:00Z",
+      "summary": {
+        "totalCredit": 81104,
+        "totalDebit": 8140,
+        "balance": 72964,
+        "lastUpdated": "2026-04-01T00:00:00Z"
+      }
+    },
+    {
+      "customerId": "CUST-10002",
+      "customerName": "Ananya Sharma",
+      "mobile": "8XXXXXXXXX",
+      "email": "ananya.sharma@email.com",
+      "kycStatus": "VERIFIED",
+      "createdAt": "2021-03-12T00:00:00Z",
+      "summary": {
+        "totalCredit": 120000,
+        "totalDebit": 5000,
+        "balance": 115000,
+        "lastUpdated": "2026-03-05T00:00:00Z"
+      }
+    },
+    {
+      "customerId": "CUST-10003",
+      "customerName": "Vikram Singh",
+      "mobile": "7XXXXXXXXX",
+      "email": "vikram.singh@email.com",
+      "kycStatus": "PENDING",
+      "createdAt": "2023-11-20T00:00:00Z",
+      "summary": {
+        "totalCredit": 80000,
+        "totalDebit": 15000,
+        "balance": 65000,
+        "lastUpdated": "2026-02-10T00:00:00Z"
+      }
+    },
+    {
+      "customerId": "CUST-100020",
+      "customerName": "Intel",
+      "mobile": "9409900494",
+      "email": "intel@mail.com",
+      "summary": {
+        "totalCredit": 0,
+        "totalDebit": 0,
+        "balance": 0,
+        "lastUpdated": "2026-04-06T05:04:25.890Z"
+      }
+    },
+    {
+      "customerId": "CUST-100021",
+      "customerName": "Mac",
+      "mobile": "8994000494",
+      "email": "mac@gmail.com",
+      "summary": {
+        "totalCredit": 0,
+        "totalDebit": 0,
+        "balance": 0,
+        "lastUpdated": "2026-04-06T05:09:04.285Z"
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "accountId": "ACC-001",
+      "customerId": "CUST-10001",
+      "accountNumber": "1000102992",
+      "bankName": "HAFCB Bank",
+      "accountType": "SAVINGS",
+      "currency": "INR",
+      "status": "ACTIVE",
+      "summary": {
+        "totalCredit": 600,
+        "totalDebit": 0,
+        "balance": 600
+      }
+    },
+    {
+      "accountId": "ACC-002",
+      "customerId": "CUST-10001",
+      "accountNumber": "2000204881",
+      "bankName": "ABC National Bank",
+      "accountType": "CURRENT",
+      "currency": "INR",
+      "status": "ACTIVE",
+      "summary": {
+        "totalCredit": 0,
+        "totalDebit": 80,
+        "balance": -80
+      }
+    },
+    {
+      "accountId": "ACC-003",
+      "customerId": "CUST-10001",
+      "accountNumber": "3000339922",
+      "bankName": "XYZ Digital Bank",
+      "accountType": "SALARY",
+      "currency": "INR",
+      "status": "INACTIVE",
+      "summary": {
+        "totalCredit": 0,
+        "totalDebit": 0,
+        "balance": 0
+      }
+    },
+    {
+      "accountId": "ACC-004-C10003",
+      "customerId": "CUST-10003",
+      "accountNumber": "4000445566",
+      "bankName": "State Bank",
+      "accountType": "SAVINGS",
+      "currency": "INR",
+      "status": "ACTIVE",
+      "summary": {
+        "totalCredit": 240000,
+        "totalDebit": 0,
+        "balance": 240000
+      }
+    },
+    {
+      "accountId": "ACC-005-C10003",
+      "customerId": "CUST-10003",
+      "accountNumber": "5000556677",
+      "bankName": "ICICI Bank",
+      "accountType": "CURRENT",
+      "currency": "INR",
+      "status": "ACTIVE",
+      "summary": {
+        "totalCredit": 0,
+        "totalDebit": 60000,
+        "balance": -60000
+      }
+    },
+    {
+      "accountId": "ACC-006",
+      "customerId": "CUST-10002",
+      "accountNumber": "90909904",
+      "bankName": "ICICI",
+      "accountType": "CHECKING",
+      "currency": "INR",
+      "status": "ACTIVE",
+      "summary": {
+        "totalCredit": 0,
+        "totalDebit": 0,
+        "balance": 0
+      }
+    },
+    {
+      "accountId": "ACC-007",
+      "customerId": "CUST-10002",
+      "accountNumber": "898094",
+      "bankName": "CITI",
+      "accountType": "SAVINGS",
+      "currency": "INR",
+      "status": "ACTIVE",
+      "summary": {
+        "totalCredit": 0,
+        "totalDebit": 0,
+        "balance": 0
+      }
+    }
+  ],
+  "Txns": [
+    {
+      "id": 101,
+      "accountId": "ACC-001",
+      "customerId": "CUST-10001",
+      "txnRef": "TXN-C-6001",
+      "txnDate": "2026-01-10T00:00:00Z",
+      "txnType": "CREDIT",
+      "header": "Salary",
+      "amount": 200,
+      "mode": "NEFT"
+    },
+    {
+      "id": 102,
+      "accountId": "ACC-001",
+      "customerId": "CUST-10001",
+      "txnRef": "TXN-C-6001",
+      "txnDate": "2026-01-10T00:00:00Z",
+      "txnType": "CREDIT",
+      "header": "Salary",
+      "amount": 200,
+      "mode": "NEFT"
+    },
+    {
+      "id": 103,
+      "accountId": "ACC-001",
+      "customerId": "CUST-10001",
+      "txnRef": "TXN-C-6001",
+      "txnDate": "2026-01-10T00:00:00Z",
+      "txnType": "CREDIT",
+      "header": "Salary",
+      "amount": 200,
+      "mode": "NEFT"
+    },
+    {
+      "id": 201,
+      "accountId": "ACC-002",
+      "customerId": "CUST-10001",
+      "txnRef": "TXN-D-7001",
+      "txnDate": "2026-02-12T00:00:00Z",
+      "txnType": "DEBIT",
+      "header": "House Rent",
+      "amount": 40,
+      "mode": "UPI"
+    },
+    {
+      "id": 202,
+      "accountId": "ACC-002",
+      "customerId": "CUST-10001",
+      "txnRef": "TXN-D-7001",
+      "txnDate": "2026-02-12T00:00:00Z",
+      "txnType": "DEBIT",
+      "header": "House Rent",
+      "amount": 40,
+      "mode": "UPI"
+    },
+    {
+      "id": 301,
+      "accountId": "ACC-004-C10003",
+      "customerId": "CUST-10003",
+      "txnRef": "TXN-C-9001",
+      "txnDate": "2026-02-01T00:00:00Z",
+      "txnType": "CREDIT",
+      "header": "Salary",
+      "amount": 80000,
+      "mode": "NEFT"
+    },
+    {
+      "id": 302,
+      "accountId": "ACC-004-C10003",
+      "customerId": "CUST-10003",
+      "txnRef": "TXN-C-9001",
+      "txnDate": "2026-02-01T00:00:00Z",
+      "txnType": "CREDIT",
+      "header": "Salary",
+      "amount": 80000,
+      "mode": "NEFT"
+    },
+    {
+      "id": 303,
+      "accountId": "ACC-004-C10003",
+      "customerId": "CUST-10003",
+      "txnRef": "TXN-C-9001",
+      "txnDate": "2026-02-01T00:00:00Z",
+      "txnType": "CREDIT",
+      "header": "Salary",
+      "amount": 80000,
+      "mode": "NEFT"
+    },
+    {
+      "id": 401,
+      "accountId": "ACC-005-C10003",
+      "customerId": "CUST-10003",
+      "txnRef": "TXN-D-9002",
+      "txnDate": "2026-02-10T00:00:00Z",
+      "txnType": "DEBIT",
+      "header": "Car EMI",
+      "amount": 15000,
+      "mode": "UPI"
+    },
+    {
+      "id": 402,
+      "accountId": "ACC-005-C10003",
+      "customerId": "CUST-10003",
+      "txnRef": "TXN-D-9002",
+      "txnDate": "2026-02-10T00:00:00Z",
+      "txnType": "DEBIT",
+      "header": "Car EMI",
+      "amount": 15000,
+      "mode": "UPI"
+    },
+    {
+      "id": 403,
+      "accountId": "ACC-005-C10003",
+      "customerId": "CUST-10003",
+      "txnRef": "TXN-D-9002",
+      "txnDate": "2026-02-10T00:00:00Z",
+      "txnType": "DEBIT",
+      "header": "Car EMI",
+      "amount": 15000,
+      "mode": "UPI"
+    },
+    {
+      "id": 404,
+      "accountId": "ACC-005-C10003",
+      "customerId": "CUST-10003",
+      "txnRef": "TXN-D-9002",
+      "txnDate": "2026-02-10T00:00:00Z",
+      "txnType": "DEBIT",
+      "header": "Car EMI",
+      "amount": 15000,
+      "mode": "UPI"
+    }
+  ]
+}

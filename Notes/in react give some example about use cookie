@@ -1,0 +1,282 @@
+Below are **simple, real React examples showing how to use cookies** — **with and without libraries**, plus **best‑practice notes** so you know **what’s safe and what’s not**.
+
+I’ll structure this clearly so you can **copy‑paste** and **understand why**.
+
+***
+
+# ✅ How Cookies Are Used in React
+
+React itself **does not have a cookie API**.  
+You use either:
+
+1.  ✅ **Plain JavaScript (`document.cookie`)**
+2.  ✅ **A helper library (`js-cookie`)** ← recommended
+
+***
+
+# ✅ Example 1: Using Cookies with Plain JavaScript (No Library)
+
+## ✅ Utility functions (create once)
+
+```jsx
+// cookieUtils.js
+export function setCookie(name, value, days = 7) {
+  const expires = new Date();
+  expires.setDate(expires.getDate() + days);
+
+  document.cookie = 
+    `${name}=${encodeURIComponent(value)};
+     expires=${expires.toUTCString()};
+     path=/;
+     SameSite=Lax`;
+}
+
+export function getCookie(name) {
+  const cookies = document.cookie.split("; ");
+  for (let cookie of cookies) {
+    const [key, value] = cookie.split("=");
+    if (key === name) return decodeURIComponent(value);
+  }
+  return null;
+}
+
+export function deleteCookie(name) {
+  document.cookie =
+    `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+}
+```
+
+***
+
+## ✅ React Example: Store and Read Cookie
+
+```jsx
+import { setCookie, getCookie, deleteCookie } from "./cookieUtils";
+import { useState, useEffect } from "react";
+
+export default function App() {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const savedUser = getCookie("username");
+    if (savedUser) setUsername(savedUser);
+  }, []);
+
+  const saveUser = () => {
+    setCookie("username", "Raja");
+    setUsername("Raja");
+  };
+
+  const logout = () => {
+    deleteCookie("username");
+    setUsername("");
+  };
+
+  return (
+    <div>
+      <h2>React Cookie Example</h2>
+
+      {username ? (
+        <>
+          <p>Welcome, {username}</p>
+          <button onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <button onClick={saveUser}>Login</button>
+      )}
+    </div>
+  );
+}
+```
+
+✅ Works across refresh  
+✅ Works in new tab  
+✅ Pure React + JS
+
+***
+
+# ✅ Example 2: Using Cookies in React with `js-cookie` (BEST PRACTICE)
+
+### Why use `js-cookie`?
+
+✔ Cleaner API  
+✔ Less bug‑prone  
+✔ Industry common
+
+***
+
+## ✅ Install
+
+```bash
+npm install js-cookie
+```
+
+***
+
+## ✅ Basic usage
+
+```jsx
+import Cookies from "js-cookie";
+```
+
+***
+
+## ✅ Store cookie
+
+```jsx
+Cookies.set("theme", "dark", {
+  expires: 7,
+  path: "/",
+  sameSite: "lax"
+});
+```
+
+***
+
+## ✅ Read cookie
+
+```jsx
+const theme = Cookies.get("theme");
+console.log(theme); // dark
+```
+
+***
+
+## ✅ Delete cookie
+
+```jsx
+Cookies.remove("theme");
+```
+
+***
+
+## ✅ Full React Example (Preferred Way)
+
+```jsx
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+
+export default function App() {
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const savedTheme = Cookies.get("theme");
+    if (savedTheme) setTheme(savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    Cookies.set("theme", newTheme, { expires: 7, sameSite: "lax" });
+    setTheme(newTheme);
+  };
+
+  return (
+    <div style={{ background: theme === "dark" ? "#222" : "#fff", height: "100vh" }}>
+      <h1>{theme.toUpperCase()} MODE</h1>
+      <button onClick={toggleTheme}>Toggle Theme</button>
+    </div>
+  );
+}
+```
+
+✅ Clean  
+✅ Readable  
+✅ Production friendly
+
+***
+
+# ✅ Example 3: Using Cookies for Auth (SAFE WAY)
+
+### ✅ Rule
+
+*   React **SHOULD NOT read auth cookies**
+*   Backend sets **HttpOnly cookies**
+*   React only sends requests
+
+***
+
+## ✅ Server sets cookie
+
+```http
+Set-Cookie: refreshToken=abc123; HttpOnly; SameSite=Lax
+```
+
+***
+
+## ✅ React sends request (cookie auto‑attached)
+
+```jsx
+fetch("http://localhost:4000/refresh", {
+  method: "POST",
+  credentials: "include" // VERY IMPORTANT
+});
+```
+
+✅ React **cannot read** the cookie  
+✅ Browser handles it securely
+
+***
+
+# ❌ Example 4: What NOT to Do (Very Important)
+
+```jsx
+// ❌ NEVER store auth tokens like this
+Cookies.set("token", jwtToken);
+localStorage.setItem("token", jwtToken);
+```
+
+Why ❌?
+
+*   Vulnerable to XSS
+*   Tokens can be stolen
+
+✅ Auth tokens must be **HttpOnly cookies**
+
+***
+
+# ✅ When Should React Use Cookies?
+
+| Scenario         | Use Cookie?       |
+| ---------------- | ----------------- |
+| Theme            | ✅ Yes             |
+| Language         | ✅ Yes             |
+| User preferences | ✅ Yes             |
+| JWT / Auth token | ❌ No              |
+| Refresh token    | ✅ (HttpOnly only) |
+
+***
+
+# ✅ Cookies vs React State
+
+| Feature          | React State | Cookie |
+| ---------------- | ----------- | ------ |
+| Survives refresh | ❌           | ✅      |
+| Survives new tab | ❌           | ✅      |
+| Security         | ✅           | ⚠️     |
+| Server access    | ❌           | ✅      |
+
+✅ Often used **together**
+
+***
+
+# ✅ Interview‑Ready Summary (MEMORIZE)
+
+✅ React uses cookies via JS or libraries  
+✅ Cookies persist across refresh & tabs  
+✅ `js-cookie` is preferred  
+✅ React cannot read HttpOnly cookies  
+✅ Auth cookies are server‑controlled  
+✅ Cookies + React state = best UX
+
+***
+
+## 🔥 Want More Examples?
+
+I can show:
+
+*   ✅ React + cookies + JWT login
+*   ✅ React + cookies + CSRF token
+*   ✅ React Router auth guard using cookies
+*   ✅ Spring Boot + React cookie flow
+
+Just tell me 👍

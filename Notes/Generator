@@ -1,0 +1,14 @@
+A function that can pause and resume execution using yield. Returns an iterator — call .next() to get values one at a time.
+
+function* generator() {
+  console.log(1);
+  yield;
+  console.log(2);
+  yield;
+  console.log(3);
+}
+
+const gen = generator();
+gen.next();
+gen.next();
+gen.next();

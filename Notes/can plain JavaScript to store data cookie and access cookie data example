@@ -1,0 +1,154 @@
+Yes ✅ — plain (vanilla) JavaScript can store and read cookies using document.cookie.
+Below is a clear, practical guide with working examples, plus important security notes so you know what JS can and cannot do with cookies.
+
+🍪 1. How Cookies Work in JavaScript (Basics)
+	• Cookies are stored as key=value pairs
+	• JavaScript accesses them via document.cookie
+	• All cookies are stored as one string
+	• JavaScript cannot access HttpOnly cookies
+
+✅ 2. Store a Cookie (Plain JavaScript)
+✅ Basic cookie
+
+document.cookie = "username=Raja";
+``
+✔ Stored in browser
+✔ Sent with every request to same domain
+
+✅ Cookie with expiry
+
+const expires = new Date();
+expires.setDate(expires.getDate() + 7); // 7 days
+document.cookie = 
+  "username=Raja; expires=" + expires.toUTCString();
+``
+
+✅ Full cookie with attributes
+
+document.cookie =
+  "theme=dark; " +
+  "expires=Fri, 30 Apr 2026 12:00:00 UTC; " +
+  "path=/; " +
+  "SameSite=Lax";
+
+✅ 3. Read Cookies (Plain JavaScript)
+❗ Important
+document.cookie returns ALL cookies for the domain as a single string
+Example output
+username=Raja; theme=dark; language=en
+
+✅ Read ALL cookies
+
+console.log(document.cookie);
+``
+
+✅ Read a specific cookie (UTILITY FUNCTION)
+
+function getCookie(name) {
+  const cookies = document.cookie.split("; ");
+  for (let cookie of cookies) {
+    const [key, value] = cookie.split("=");
+    if (key === name) {
+      return value;
+    }
+  }
+  return null;
+}
+Usage:
+
+const username = getCookie("username");
+console.log(username); // Raja
+``
+
+✅ 4. Update a Cookie
+To update → set it again with the same name
+
+document.cookie = "username=Reddy; path=/";
+``
+✅ Overwrites old value
+
+✅ 5. Delete a Cookie
+To delete → set expiry in the past
+document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+✅ Cookie removed
+
+✅ 6. Real‑World Example (Login Preference)
+Set cookie
+
+function rememberUser(name) {
+  document.cookie =
+    "rememberedUser=" + name +
+    "; max-age=604800; path=/; SameSite=Lax";
+}
+Read cookie
+
+if (getCookie("rememberedUser")) {
+  console.log("Welcome back", getCookie("rememberedUser"));
+}
+
+🔐 7. What JavaScript CANNOT Do With Cookies (IMPORTANT)
+❌ JS CANNOT:
+
+document.cookie = "token=abc; HttpOnly"; // ❌ ignored
+``
+
+Feature	JS Access
+HttpOnly cookies	❌ No
+Secure flag	❌ JS cannot force HTTPS
+Cross‑domain cookies	❌ No
+✅ Only the server can set HttpOnly cookies
+
+✅ 8. HttpOnly Cookie Example (SERVER vs JS)
+Server sets cookie
+Set-Cookie: refreshToken=abc123; HttpOnly; Secure; SameSite=Lax
+JS tries to read it
+
+console.log(document.cookie);
+``
+Result:
+❌ refreshToken NOT visible
+✅ This protects against XSS attacks
+
+⚠️ 9. Security Warnings (VERY IMPORTANT)
+❌ DO NOT store:
+	• JWT tokens
+	• Refresh tokens
+	• Sensitive user data
+In JS‑accessible cookies
+Why?
+
+<script>
+  alert(document.cookie); // XSS can steal cookies
+</script>
+
+✅ 10. When Should You Use JS Cookies?
+Use case	OK?
+Theme preference	✅ Yes
+Language settings	✅ Yes
+UI state	✅ Yes
+Auth tokens	❌ NO
+Session IDs	❌ NO
+
+✅ 11. Cookies vs localStorage (Quick Compare)
+Feature	Cookie	localStorage
+Auto sent to server	✅	❌
+JS access	✅	✅
+HttpOnly possible	✅	❌
+Size limit	~4KB	~5MB
+
+✅ Interview‑Ready Summary (MEMORIZE)
+✅ document.cookie is used to set/read cookies
+✅ Cookies are stored as strings
+✅ JS cannot read HttpOnly cookies
+✅ Cookies sent automatically with requests
+✅ Auth cookies must be HttpOnly
+✅ JS cookies are for non‑sensitive data only
+
+If you want next, I can:
+	• ✅ Show JS vs server cookie lifecycle
+	• ✅ Compare cookies vs sessions
+	• ✅ Explain why HttpOnly blocks XSS
+	• ✅ Show Spring Boot → JS cookie flow
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 

@@ -1,0 +1,335 @@
+Below is a **complete, real‑world React + Cookies + JWT login example** that follows **industry best practices**:
+
+✅ JWT **access token** (short‑lived)  
+✅ **HttpOnly cookie** for refresh/session  
+✅ Works across **refresh & new tabs**  
+✅ **Secure against XSS & CSRF (baseline)**
+
+I’ll show **Backend → Frontend → Flow explanation**.
+
+***
+
+# ✅ Architecture (IMPORTANT)
+
+    Access Token  → Stored in React memory (JS)
+    Refresh Token → HttpOnly Cookie (set by server)
+
+✅ React **never reads** refresh token  
+✅ Browser automatically sends cookie  
+✅ This is how real enterprise apps work
+
+***
+
+# 🧩 Backend (Node.js + Express)
+
+> If you use Spring Boot later, the flow is **identical**.
+
+***
+
+## 1️⃣ Install dependencies
+
+```bash
+npm install express jsonwebtoken cookie-parser cors
+```
+
+***
+
+## 2️⃣ `server.js`
+
+```js
+import express from "express";
+import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
+const ACCESS_SECRET = "ACCESS_SECRET";
+const REFRESH_SECRET = "REFRESH_SECRET";
+
+const user = { id: 1, username: "admin", password: "admin" };
+```
+
+***
+
+## 🔐 Login API (sets HttpOnly Cookie)
+
+```js
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  if (username !== user.username || password !== user.password) {
+    return res.sendStatus(401);
+  }
+
+  const accessToken = jwt.sign(
+    { userId: user.id },
+    ACCESS_SECRET,
+    { expiresIn: "15m" }
+  );
+
+  const refreshToken = jwt.sign(
+    { userId: user.id },
+    REFRESH_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false, // true in production
+    path: "/refresh"
+  });
+
+  res.json({ accessToken });
+});
+```
+
+✅ Refresh token stored securely  
+✅ JS cannot access it
+
+***
+
+## 🔄 Refresh Token API
+
+```js
+app.post("/refresh", (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, REFRESH_SECRET, (err, payload) => {
+    if (err) return res.sendStatus(403);
+
+    const newAccessToken = jwt.sign(
+      { userId: payload.userId },
+      ACCESS_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    res.json({ accessToken: newAccessToken });
+  });
+});
+```
+
+***
+
+## 🔒 Protected API
+
+```js
+app.get("/profile", (req, res) => {
+  const auth = req.headers.authorization;
+  if (!auth) return res.sendStatus(401);
+
+  const token = auth.split(" ")[1];
+  jwt.verify(token, ACCESS_SECRET, (err) => {
+    if (err) return res.sendStatus(401);
+    res.json({ message: "Protected profile data ✅" });
+  });
+});
+```
+
+***
+
+## 🚪 Logout
+
+```js
+app.post("/logout", (req, res) => {
+  res.clearCookie("refreshToken", { path: "/refresh" });
+  res.sendStatus(204);
+});
+```
+
+***
+
+## ✅ Start server
+
+```bash
+node server.js
+```
+
+***
+
+# ⚛️ Frontend (React)
+
+***
+
+## 3️⃣ `auth.js` (Access token in memory)
+
+```js
+let accessToken = null;
+
+export const setAccessToken = token => {
+  accessToken = token;
+};
+
+export const getAccessToken = () => accessToken;
+```
+
+***
+
+## 4️⃣ `api.js` (Auto‑refresh with cookies)
+
+```js
+import axios from "axios";
+import { getAccessToken, setAccessToken } from "./auth";
+
+const api = axios.create({
+  baseURL: "http://localhost:4000",
+  withCredentials: true // COOKIE MAGIC
+});
+
+api.interceptors.request.use(req => {
+  const token = getAccessToken();
+  if (token) req.headers.Authorization = `Bearer ${token}`;
+  return req;
+});
+
+api.interceptors.response.use(
+  res => res,
+  async err => {
+    if (err.response?.status === 401) {
+      const res = await axios.post(
+        "http://localhost:4000/refresh",
+        {},
+        { withCredentials: true }
+      );
+      setAccessToken(res.data.accessToken);
+      err.config.headers.Authorization =
+        `Bearer ${res.data.accessToken}`;
+      return axios(err.config);
+    }
+    return Promise.reject(err);
+  }
+);
+
+export default api;
+```
+
+***
+
+## 5️⃣ Login.jsx
+
+```jsx
+import api from "./api";
+import { setAccessToken } from "./auth";
+
+export default function Login() {
+  const login = async () => {
+    const res = await api.post("/login", {
+      username: "admin",
+      password: "admin"
+    });
+
+    setAccessToken(res.data.accessToken);
+    window.location.href = "/";
+  };
+
+  return <button onClick={login}>Login</button>;
+}
+```
+
+***
+
+## 6️⃣ Dashboard.jsx
+
+```jsx
+import api from "./api";
+
+export default function Dashboard() {
+  const loadProfile = async () => {
+    const res = await api.get("/profile");
+    alert(res.data.message);
+  };
+
+  return (
+    <>
+      <h2>Dashboard</h2>
+      <button onClick={loadProfile}>
+        Call Protected API
+      </button>
+    </>
+  );
+}
+```
+
+***
+
+## 7️⃣ App.jsx (NEW TAB SUPPORT)
+
+```jsx
+import { useEffect } from "react";
+import api from "./api";
+import { setAccessToken } from "./auth";
+import Login from "./Login";
+import Dashboard from "./Dashboard";
+
+function App() {
+  useEffect(() => {
+    api.post("/refresh")
+      .then(res => setAccessToken(res.data.accessToken))
+      .catch(() => console.log("Not logged in"));
+  }, []);
+
+  return (
+    <>
+      <Login />
+      <Dashboard />
+    </>
+  );
+}
+
+export default App;
+```
+
+✅ Open new tab → still logged in  
+✅ Refresh → still logged in
+
+***
+
+# 🔐 Security Breakdown (VERY IMPORTANT)
+
+| Protection              | Enabled                    |
+| ----------------------- | -------------------------- |
+| HttpOnly refresh cookie | ✅                          |
+| XSS token theft         | ❌ blocked                  |
+| CSRF risk               | ✅ mitigated (SameSite=Lax) |
+| JWT expiry              | ✅                          |
+| Auto refresh            | ✅                          |
+
+***
+
+# ❌ What NOT To Do
+
+❌ Store JWT in localStorage  
+❌ Read refresh token in React  
+❌ No `credentials: "include"`  
+❌ Long‑lived access tokens
+
+***
+
+# ✅ Real‑World Summary (MEMORIZE)
+
+✅ React handles UI + access token  
+✅ Cookies handle session securely  
+✅ Access token = memory only  
+✅ Refresh token = HttpOnly cookie  
+✅ This is enterprise‑grade auth
+
+***
+
+## 🚀 Want Next?
+
+I can:
+✅ Convert this to **Spring Boot**
+✅ Add **CSRF tokens**
+✅ Add **role‑based auth**
+✅ Add **refresh token rotation**
+✅ Add **React Router route guards**
+
+Just tell me 👍

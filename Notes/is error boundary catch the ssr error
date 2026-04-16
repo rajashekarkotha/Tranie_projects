@@ -1,0 +1,141 @@
+Short answer: **No — React Error Boundaries do *not* catch SSR errors.**
+
+Here’s the clear breakdown 👇
+
+***
+
+## ✅ What Error Boundaries *do* catch
+
+React **Error Boundaries** catch errors that occur:
+
+*   During **rendering**
+*   In **lifecycle methods**
+*   In **constructors of child components**
+
+✅ **But only on the client side (browser)**
+
+```jsx
+class ErrorBoundary extends React.Component {
+  componentDidCatch(error, info) {
+    console.error(error, info);
+  }
+
+  render() {
+    if (this.state.hasError) return <Fallback />;
+    return this.props.children;
+  }
+}
+```
+
+***
+
+## ❌ What Error Boundaries **do NOT** catch
+
+Error Boundaries **do NOT catch errors** that happen:
+
+| Scenario                           | Caught by Error Boundary? |
+| ---------------------------------- | ------------------------- |
+| **Server-Side Rendering (SSR)**    | ❌ No                      |
+| Event handlers (`onClick`, etc.)   | ❌ No                      |
+| Async code (`setTimeout`, `fetch`) | ❌ No                      |
+| Errors outside React tree          | ❌ No                      |
+
+***
+
+## 🚫 Why SSR errors are not caught
+
+During **SSR**:
+
+*   Components render on the **server (Node.js)**
+*   There is **no React lifecycle**
+*   Error boundaries run **only in the browser**
+
+So if this throws during SSR:
+
+```jsx
+function Page() {
+  throw new Error("SSR crash");
+}
+```
+
+👉 The server render fails **before** Error Boundary logic exists.
+
+***
+
+## ✅ How SSR errors are handled instead
+
+### 1️⃣ Framework-level error handling
+
+#### **Next.js**
+
+*   `getServerSideProps` / `getStaticProps` → use `try/catch`
+*   `pages/_error.js` or `app/error.tsx`
+*   500 error responses handled by Next.js
+
+```ts
+export async function getServerSideProps() {
+  try {
+    // SSR logic
+  } catch (err) {
+    return { notFound: true };
+  }
+}
+```
+
+#### **Remix**
+
+*   `ErrorBoundary` **does work on the server**, but it is **Remix-specific**, not React’s default Error Boundary
+
+***
+
+### 2️⃣ Node.js / server middleware
+
+*   Express / Fastify error handlers
+*   Logging (Winston, Pino, Datadog, Sentry)
+
+***
+
+## ✅ What happens after hydration?
+
+Important nuance:
+
+✅ If the **SSR succeeds**, but a component crashes **after hydration**,  
+👉 **Client-side Error Boundaries WILL catch it**
+
+```text
+SSR ✅ → HTML sent
+Hydration ✅
+Runtime error 🔥 → Error Boundary catches
+```
+
+***
+
+## ✅ Summary
+
+**Does Error Boundary catch SSR errors?**
+
+❌ **No**
+
+**Why?**
+
+*   Error Boundaries only run in the browser
+*   SSR happens before React mounts on the client
+
+**What should you use instead?**
+
+| Layer            | Solution                         |
+| ---------------- | -------------------------------- |
+| SSR              | try/catch, framework error pages |
+| Client rendering | React Error Boundary             |
+| Async/events     | manual error handling            |
+| Server           | Node.js middleware               |
+
+***
+
+If you want, tell me:
+
+*   **React only**
+*   **Next.js (pages or app router?)**
+*   **Remix**
+
+I can give an exact pattern for your use case 👍

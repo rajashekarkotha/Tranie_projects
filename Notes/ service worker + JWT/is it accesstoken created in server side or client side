@@ -1,0 +1,194 @@
+**Short answer:** ✅ **Access tokens are created on the *server side*, not the client side.**
+
+Let’s explain this clearly and precisely, because this is a **core OAuth / Okta concept**.
+
+***
+
+## ✅ Who creates the Access Token?
+
+> **Access Tokens are always generated (issued) by the Authorization Server**  
+> (e.g., **Okta, Auth0, Keycloak, Google, Microsoft Entra ID**).
+
+❌ **Never by the client**  
+❌ **Never by the browser or frontend**
+
+***
+
+## 🧠 Why only the server can create access tokens
+
+Access tokens must be:
+
+*   **Signed** with a secret or private key
+*   **Trusted** by backend APIs
+
+Those signing keys:
+
+*   Must stay **secure**
+*   Live **only on the server / identity provider**
+
+If the client could create tokens:
+
+*   Anyone could fake permissions ❌
+*   Security would be broken ❌
+
+***
+
+## ✅ Correct OAuth / OIDC flow (step‑by‑step)
+
+### 1️⃣ Client initiates login
+
+```text
+React / Next.js → Okta OAuth endpoint
+```
+
+### 2️⃣ User authenticates
+
+*   Username + password
+*   MFA, SSO, etc.
+
+### 3️⃣ ✅ Authorization Server creates tokens
+
+```text
+Okta (server) generates:
+✅ Access Token
+✅ ID Token
+(optional) Refresh Token
+```
+
+### 4️⃣ Tokens are returned to client
+
+*   Via redirect
+*   Via HTTPS response
+
+### 5️⃣ Client uses Access Token
+
+```http
+Authorization: Bearer <access_token>
+```
+
+✅ Client **uses** the token  
+❌ Client **does not create** the token
+
+***
+
+## 🧠 Responsibilities split (very important)
+
+| Action                    | Client | Server (IdP) |
+| ------------------------- | ------ | ------------ |
+| Generate access token     | ❌      | ✅            |
+| Sign token                | ❌      | ✅            |
+| Define scopes/permissions | ❌      | ✅            |
+| Store token               | ✅      | ❌            |
+| Send token to API         | ✅      | ❌            |
+| Verify token              | ❌      | ✅ (API)      |
+
+***
+
+## ✅ Where exactly is the access token created?
+
+### ✅ Created by:
+
+*   **Authorization Server**
+    *   Okta
+    *   Auth0
+    *   Keycloak
+    *   Azure AD
+    *   Google OAuth
+
+These are **server‑side systems**.
+
+***
+
+## ❌ Common misconception (very important)
+
+### ❌ “Client creates the access token after login”
+
+**Wrong.**
+
+The client:
+
+*   Requests a token ✅
+*   Receives a token ✅
+*   Stores/sends a token ✅
+
+But **never creates or signs it** ❌
+
+***
+
+## ✅ Example (Okta issuing an Access Token)
+
+On Okta’s side (conceptually):
+
+```js
+createAccessToken({
+  subject: userId,
+  scopes: ['read:orders'],
+  expiresIn: '1h'
+});
+```
+
+✅ This logic **lives inside Okta’s servers**, not your app.
+
+***
+
+## ✅ Example (Client usage)
+
+```ts
+// React / Next.js
+fetch('/api/orders', {
+  headers: {
+    Authorization: `Bearer ${accessToken}`
+  }
+});
+```
+
+✅ Client just sends the token  
+❌ Client does not validate or generate it
+
+***
+
+## ✅ What about backend APIs?
+
+Backend APIs:
+
+*   ✅ **Validate** access tokens
+*   ✅ Check signature, expiry, scopes
+*   ❌ Do not create user access tokens (except service‑to‑service flows)
+
+***
+
+## 🧠 Special case (advanced, just for awareness)
+
+There **are** rare cases like:
+
+*   OAuth **Client Credentials flow**
+*   JWT client assertions
+
+Even there:
+✅ The **authorization server** still issues the access token  
+❌ The client never invents one
+
+***
+
+## ✅ Interview‑ready answer ✅
+
+> **“Access tokens are always created and signed by the authorization server (such as Okta). The client only requests, receives, stores, and sends the token back to APIs; it never generates access tokens itself.”**
+
+***
+
+## ✅ Final takeaway
+
+✔ **Access Token = Server‑generated**  
+✔ **Client only consumes it**  
+✔ **If client could create tokens → security breaks**
+
+***
+
+If you want next, I can explain:
+
+*   ✅ Refresh tokens (who creates them?)
+*   ✅ How APIs validate access tokens
+*   ✅ Difference between access token vs session cookie
+*   ✅ OAuth flows (Authorization Code + PKCE)
+
+Just tell me 👍

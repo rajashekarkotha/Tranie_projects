@@ -1,0 +1,488 @@
+if put this vite.config.ts
+proxy: {
+        '/api': {
+          target: env.VITE_API_GATEWAY_URL,
+          changeOrigin: true
+        }
+      }
+my going like Request URL
+http://localhost:5713/api/quote/v1/quote/d2ckmbl/saveQuote
+
+in .env have like VITE_API_GATEWAY_URL=https://kmbld2c-optimus-uat.mykotaklife.com
+
+why it is not happened like
+https://kmbld2c-optimus-uat.mykotaklife.com/api/quote/v1/quote/d2ckmbl/saveQuote
+
+???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+
+This is a **very common Vite proxy confusion**, and your proxy is actually **working correctly**.  
+What you’re seeing is expected behavior.
+
+Let’s break it down clearly 👇
+
+***
+
+## ✅ What you configured
+
+### `vite.config.ts`
+
+```ts
+proxy: {
+  '/api': {
+    target: env.VITE_API_GATEWAY_URL,
+    changeOrigin: true
+  }
+}
+```
+
+### `.env`
+
+```env
+VITE_API_GATEWAY_URL=https://kmbld2c-optimus-uat.mykotaklife.com
+```
+
+### Request you make from browser
+
+    http://localhost:5713/api/quote/v1/quote/d2ckmbl/saveQuote
+
+***
+
+## ✅ Why the browser still shows `localhost:5713`
+
+> **Vite proxy works only at the development server level, not in the browser URL bar.**
+
+### Important rule 👇
+
+❗ **Proxy does NOT change the browser’s Request URL**  
+✅ It only **forwards the request behind the scenes**
+
+***
+
+## 🔁 What actually happens (step‑by‑step)
+
+### 1️⃣ Browser sends request to Vite dev server
+
+```text
+Browser → http://localhost:5713/api/quote/v1/quote/d2ckmbl/saveQuote
+```
+
+You **must** call `localhost` — that’s the proxy entry point.
+
+***
+
+### 2️⃣ Vite dev server intercepts `/api`
+
+Because of:
+
+```ts
+'/api': { target: 'https://kmbld2c-optimus-uat.mykotaklife.com' }
+```
+
+***
+
+### 3️⃣ Vite forwards request internally (this is invisible)
+
+```text
+Vite → https://kmbld2c-optimus-uat.mykotaklife.com
+       + /api/quote/v1/quote/d2ckmbl/saveQuote
+```
+
+✅ Final **actual backend call** becomes:
+
+    https://kmbld2c-optimus-uat.mykotaklife.com/api/quote/v1/quote/d2ckmbl/saveQuote
+
+✅ Backend receives correct URL  
+✅ CORS is avoided  
+✅ Browser still shows `localhost`
+
+***
+
+## ✅ Why it **cannot** show the gateway URL in browser
+
+Because:
+
+*   Browser is making the request to **Vite**
+*   Vite acts like a **reverse proxy**
+*   The browser never talks directly to the backend
+
+This is **by design**.
+
+***
+
+## ✅ How to verify proxy is working
+
+### ✅ Option 1: Check Network → Request Headers
+
+You’ll see:
+
+    Request URL: http://localhost:5713/api/...
+
+But on the server side, it reaches:
+
+    https://kmbld2c-optimus-uat.mykotaklife.com/api/...
+
+***
+
+### ✅ Option 2: Add `configure` logging
+
+```ts
+proxy: {
+  '/api': {
+    target: env.VITE_API_GATEWAY_URL,
+    changeOrigin: true,
+    configure: (proxy) => {
+      proxy.on('proxyReq', (proxyReq, req) => {
+        console.log(
+          'Proxying:',
+          req.url,
+          '→',
+          proxyReq.getHeader('host')
+        );
+      });
+    }
+  }
+}
+```
+
+You’ll see logs proving it’s forwarded.
+
+***
+
+## ✅ When would browser show the gateway URL?
+
+👉 **Only if you skip the proxy entirely**
+
+Example:
+
+```ts
+axios.post(
+  'https://kmbld2c-optimus-uat.mykotaklife.com/api/quote/v1/quote/...'
+);
+```
+
+❌ Causes CORS issues  
+❌ Not recommended during development
+
+***
+
+## ✅ Correct way to call APIs in Vite
+
+### ✅ Always call **relative URLs**
+
+```ts
+axios.post('/api/quote/v1/quote/d2ckmbl/saveQuote', data);
+```
+
+💡 Vite decides where it really goes.
+
+***
+
+## ❌ Common mistakes to avoid
+
+| Mistake                         | Why it’s wrong             |
+| ------------------------------- | -------------------------- |
+| Expecting browser URL to change | Proxy is server‑side       |
+| Calling full backend URL        | Breaks proxy & causes CORS |
+| Using `rewrite` unnecessarily   | You don’t need it here     |
+| Missing `/api` prefix           | Proxy won’t trigger        |
+
+***
+
+## ✅ When do you need `rewrite`?
+
+Only if backend **doesn’t want `/api`**
+
+```ts
+proxy: {
+  '/api': {
+    target: env.VITE_API_GATEWAY_URL,
+    changeOrigin: true,
+    rewrite: path => path.replace(/^\/api/, '')
+  }
+}
+```
+
+Then:
+
+    /api/users → https://domain.com/users
+
+🚫 Not your case.
+
+***
+
+## ✅ Final Answer (one‑liner ✅)
+
+> **The browser URL stays `localhost` because Vite proxy only forwards requests internally. Your actual request *is* hitting `https://kmbld2c-optimus-uat.mykotaklife.com/api/...`, just invisibly. This is expected and correct behavior.**
+
+***
+
+If you want, I can:
+
+*   ✅ Debug your proxy live
+*   ✅ Explain `rewrite` vs no‑rewrite
+*   ✅ Share production‑ready API setup
+*   ✅ Compare Vite proxy vs Nginx proxy
+How to test proxy locally?
+How to log proxy requests?
+What is the role of changeOrigin?
+
+Just tell me 👍
+
+===============================================================`How to test proxy locally?`===========================================================================
+
+Below is a **practical, step‑by‑step guide to testing a Vite proxy locally**, from **quick sanity checks** to **deep verification**.  
+You don’t need special tools—just your browser, terminal, and a bit of logging.
+
+***
+
+# ✅ How to Test a Vite Proxy Locally
+
+> **Key idea:**  
+> You test a proxy by confirming that a request sent to `localhost` is **actually forwarded** to the target backend.
+
+***
+
+## ✅ 1. Basic sanity test (most important)
+
+### ✅ Proxy config
+
+```ts
+// vite.config.ts
+proxy: {
+  '/api': {
+    target: env.VITE_API_GATEWAY_URL,
+    changeOrigin: true
+  }
+}
+```
+
+### ✅ Frontend request
+
+```ts
+fetch('/api/quote/v1/quote/d2ckmbl/saveQuote', {
+  method: 'POST'
+});
+```
+
+### ✅ Expected outcome
+
+*   Browser request URL:
+        http://localhost:5713/api/quote/v1/quote/...
+
+*   Response comes from your **real backend**
+
+✅ If you get a valid backend response → **proxy is working**
+
+***
+
+## ✅ 2. Verify in Browser DevTools (fastest check)
+
+### Steps
+
+1.  Open **Chrome DevTools → Network**
+2.  Trigger API request
+3.  Click the request
+
+### What you should see
+
+*   **Request URL:**
+        http://localhost:5713/api/...
+*   **Response status/data:** matches backend
+
+📌 This only proves the request hit Vite.  
+Next step proves it reached your real server.
+
+***
+
+## ✅ 3. Add proxy logging (BEST verification)
+
+Add this once—remove after testing.
+
+```ts
+proxy: {
+  '/api': {
+    target: env.VITE_API_GATEWAY_URL,
+    changeOrigin: true,
+    configure: (proxy, options) => {
+      proxy.on('proxyReq', (proxyReq, req) => {
+        console.log(
+          '[VITE PROXY]',
+          req.method,
+          req.url,
+          '→',
+          proxyReq.protocol + '//' + proxyReq.host + proxyReq.path
+        );
+      });
+    }
+  }
+}
+```
+
+### Restart Vite
+
+```bash
+npm run dev
+```
+
+### Make a request
+
+### ✅ If proxy works, terminal shows:
+
+    [VITE PROXY] POST /api/quote/v1/quote/... →
+    https://kmbld2c-optimus-uat.mykotaklife.com/api/quote/v1/quote/...
+
+✅ **This confirms actual forwarding**
+
+***
+
+## ✅ 4. Test using `curl` (no browser involved)
+
+This confirms proxy behavior independently.
+
+```bash
+curl -X POST http://localhost:5713/api/quote/v1/quote/d2ckmbl/saveQuote
+```
+
+✅ Response from backend = proxy works  
+❌ 404 / connection refused = proxy config issue
+
+***
+
+## ✅ 5. Force a backend‑only header check
+
+Sometimes backend behavior proves the proxy.
+
+### Example:
+
+If backend automatically adds:
+
+    x-powered-by: nginx
+
+Check response headers:
+
+```bash
+curl -i http://localhost:5713/api/quote/...
+```
+
+✅ Header present → request reached backend
+
+***
+
+## ✅ 6. Purposely break the backend URL (confidence test)
+
+Change:
+
+```env
+VITE_API_GATEWAY_URL=https://wrong-domain.com
+```
+
+### Result
+
+*   Requests start failing
+*   Browser still calls `localhost`
+*   No backend response
+
+✅ This proves that Vite proxy is in charge
+
+***
+
+## ✅ 7. Test `rewrite` behavior (if you use it)
+
+```ts
+proxy: {
+  '/api': {
+    target: env.VITE_API_GATEWAY_URL,
+    changeOrigin: true,
+    rewrite: path => path.replace(/^\/api/, '')
+  }
+}
+```
+
+Test with:
+
+```bash
+curl http://localhost:5713/api/test
+```
+
+Backend should receive:
+
+    /test
+
+✅ Confirms rewrite logic
+
+***
+
+## ✅ 8. Common problems & how to detect them
+
+### ❌ Proxy not triggering
+
+**Symptom:** Backend never gets request  
+**Fix:** Ensure request starts with `/api`
+
+***
+
+### ❌ Using full backend URL in code
+
+```ts
+❌ fetch('https://kmbld2c-optimus-uat.mykotaklife.com/api/...')
+```
+
+✅ Must use:
+
+```ts
+✅ fetch('/api/...')
+```
+
+***
+
+### ❌ Environment variable not loaded
+
+Check in config:
+
+```ts
+console.log(env.VITE_API_GATEWAY_URL);
+```
+
+Restart dev server after `.env` changes ✅
+
+***
+
+## ✅ 9. Golden checklist ✅
+
+Before saying “proxy works”, confirm:
+
+✔ Request URL starts with `/api`  
+✔ Browser shows `localhost`  
+✔ Vite logs show forwarding  
+✔ Backend returns expected response  
+✔ No CORS errors
+
+***
+
+## ✅ Minimal test strategy (TL;DR)
+
+If you remember only 3 things:
+
+1️⃣ Call `/api/...` (never full URL)  
+2️⃣ Add `proxyReq` logging  
+3️⃣ Watch terminal output
+
+That’s enough to prove proxy behavior.
+
+***
+
+## ✅ Final one‑liner (interview‑ready)
+
+> **“A Vite proxy is tested by sending requests to `localhost`, enabling proxy logging, and verifying that the dev server forwards them to the actual backend target—even though the browser URL never changes.”**
+
+***
+
+If you want, I can:
+
+*   ✅ Diagnose a **specific failing proxy**
+*   ✅ Explain Vite proxy vs Nginx reverse proxy
+*   ✅ Show **production‑ready API environment setup**
+*   ✅ Compare Vite, Webpack, and CRA proxies
+
+Just tell me 👍
+

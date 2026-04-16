@@ -1,0 +1,271 @@
+Below is a **clear, practical explanation of `rewrite` vs no‑`rewrite` in a Vite (and similar) proxy**, with mental models, diagrams-in-text, and real examples.
+
+***
+
+# 🔁 `rewrite` vs **no‑rewrite** (Vite Proxy)
+
+## The core question this answers
+
+> **Does the backend expect the same path the frontend uses, or a different one?**
+
+That’s **all** `rewrite` is about.
+
+***
+
+## ✅ No‑rewrite (default, most common)
+
+### ✅ What it means
+
+*   The **frontend path is forwarded as‑is**
+*   The backend **expects the same path**
+
+```text
+Browser → /api/users
+Vite → https://backend.com/api/users
+```
+
+### ✅ Configuration
+
+```ts
+proxy: {
+  '/api': {
+    target: 'https://backend.com',
+    changeOrigin: true
+  }
+}
+```
+
+### ✅ Example flow
+
+Frontend:
+
+```ts
+fetch('/api/quote/v1/saveQuote');
+```
+
+Backend receives:
+
+```text
+https://backend.com/api/quote/v1/saveQuote
+```
+
+✅ Path is preserved  
+✅ No surprises  
+✅ Simple and safe
+
+***
+
+### ✅ When to use **no‑rewrite**
+
+✔ Backend already has `/api`  
+✔ API gateway prefixes endpoints with `/api`  
+✔ You control frontend and backend paths  
+✔ Most enterprise APIs (like yours)
+
+📌 **Your current case falls here** ✅
+
+***
+
+## 🔁 Rewrite (when paths differ)
+
+### ✅ What `rewrite` does
+
+*   Changes the path **before** forwarding
+*   Frontend and backend paths **do not match**
+
+```text
+Browser → /api/users
+Vite → https://backend.com/users
+```
+
+***
+
+### ✅ Configuration (remove `/api` prefix)
+
+```ts
+proxy: {
+  '/api': {
+    target: 'https://backend.com',
+    changeOrigin: true,
+    rewrite: path => path.replace(/^\/api/, '')
+  }
+}
+```
+
+***
+
+### ✅ Example flow
+
+Frontend:
+
+```ts
+fetch('/api/users');
+```
+
+After rewrite:
+
+```text
+/users
+```
+
+Backend receives:
+
+```text
+https://backend.com/users
+```
+
+✅ `/api` was a **frontend‑only prefix**
+
+***
+
+## 🧠 Mental model (remember this)
+
+Think of `/api` like a **virtual mount point**:
+
+| Case       | Meaning                                        |
+| ---------- | ---------------------------------------------- |
+| No rewrite | `/api` is **real** (backend uses it)           |
+| Rewrite    | `/api` is **fake** (frontend convenience only) |
+
+***
+
+## 🧪 Side‑by‑side comparison
+
+### ✅ No‑rewrite
+
+```text
+Frontend URL: /api/orders
+Backend URL : /api/orders
+```
+
+### 🔁 Rewrite
+
+```text
+Frontend URL: /api/orders
+Backend URL : /orders
+```
+
+***
+
+## ❌ Common mistakes (VERY important)
+
+### ❌ Mistake #1: Using rewrite when backend already has `/api`
+
+```ts
+rewrite: path => path.replace(/^\/api/, '')
+```
+
+Backend expects:
+
+```text
+/api/quote
+```
+
+But receives:
+
+```text
+/quote   ❌ 404
+```
+
+➡️ **This is the #1 source of “proxy not working” bugs**
+
+***
+
+### ❌ Mistake #2: Double `/api`
+
+```ts
+target: 'https://backend.com/api'
+```
+
+Frontend:
+
+```text
+/api/users
+```
+
+Backend receives:
+
+```text
+/api/api/users ❌
+```
+
+✅ Fix: remove `/api` from **either** target or request path
+
+***
+
+## ✅ How to decide (simple decision tree)
+
+Ask this question 👇
+
+> **If I open the backend API directly, does it start with `/api`?**
+
+### ✅ If YES
+
+➡️ **No rewrite**
+
+```ts
+fetch('/api/...')
+```
+
+### ❌ If NO
+
+➡️ **Use rewrite**
+
+```ts
+rewrite: path => path.replace(/^\/api/, '')
+```
+
+***
+
+## ✅ Visual summary
+
+    NO REWRITE
+    ──────────
+    /api/foo  ──► https://backend.com/api/foo
+
+    REWRITE
+    ───────
+    /api/foo  ──► https://backend.com/foo
+
+***
+
+## ✅ Your specific setup (final clarity)
+
+You have:
+
+```env
+VITE_API_GATEWAY_URL=https://kmbld2c-optimus-uat.mykotaklife.com
+```
+
+Frontend calls:
+
+```ts
+/api/quote/v1/quote/...
+```
+
+Backend endpoint:
+
+```text
+https://kmbld2c-optimus-uat.mykotaklife.com/api/quote/v1/quote/...
+```
+
+✅ **NO rewrite needed**  
+✅ Your proxy config is correct  
+✅ Browser staying on `localhost` is expected
+
+***
+
+## ✅ One‑line takeaway (interview‑ready)
+
+> **Use no‑rewrite when frontend and backend paths match; use rewrite only when the frontend prefix is virtual and the backend does not include it.**
+
+***
+
+If you want, I can:
+
+*   ✅ Debug a `rewrite` bug instantly
+*   ✅ Draw a request‑flow diagram for your team
+*   ✅ Compare Vite vs Nginx rewrite rules
+*   ✅ Show how rewrite affects cookies & auth headers
+
+Just tell me 👍

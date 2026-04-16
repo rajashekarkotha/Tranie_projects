@@ -1,0 +1,232 @@
+Got it 👍  
+I can’t literally attach to your machine, but I can **walk you through a live, step‑by‑step proxy debug** so you can **see exactly where it’s failing or working** in real time.  
+Follow this **in order** and stop at the first step that fails — that’s your bug.
+
+***
+
+# 🔍 Live Debug Guide: Vite Proxy (Step by Step)
+
+We’ll debug at **4 levels**:
+
+1.  Config loading
+2.  Proxy interception
+3.  Forwarding to backend
+4.  Response coming back
+
+***
+
+## ✅ STEP 1: Confirm Vite is reading the env variable
+
+### 🔎 Temporarily add this to `vite.config.ts`
+
+```ts
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+
+  console.log('VITE_API_GATEWAY_URL =', env.VITE_API_GATEWAY_URL);
+
+  return {
+    server: {
+      proxy: {
+        '/api': {
+          target: env.VITE_API_GATEWAY_URL,
+          changeOrigin: true
+        }
+      }
+    }
+  };
+});
+```
+
+### ▶ Restart Vite
+
+```bash
+npm run dev
+```
+
+### ✅ EXPECTED OUTPUT
+
+    VITE_API_GATEWAY_URL = https://kmbld2c-optimus-uat.mykotaklife.com
+
+### ❌ If you see:
+
+*   `undefined`
+*   empty string
+
+➡️ **Root cause:** `.env` not loaded  
+➡️ Fix:
+
+*   File named `.env`, `.env.local`, or `.env.development`
+*   Restart dev server after env change
+
+***
+
+## ✅ STEP 2: Confirm proxy is intercepting `/api`
+
+Now we’ll **prove Vite is catching the request**.
+
+### 🔎 Add proxy logging
+
+```ts
+proxy: {
+  '/api': {
+    target: env.VITE_API_GATEWAY_URL,
+    changeOrigin: true,
+    configure: (proxy) => {
+      proxy.on('proxyReq', (proxyReq, req) => {
+        console.log(
+          '[PROXY HIT]',
+          req.method,
+          req.url
+        );
+      });
+    }
+  }
+}
+```
+
+Restart Vite again.
+
+***
+
+### ▶ Trigger request (browser or code)
+
+```ts
+fetch('/api/quote/v1/quote/d2ckmbl/saveQuote');
+```
+
+### ✅ EXPECTED TERMINAL LOG
+
+    [PROXY HIT] POST /api/quote/v1/quote/d2ckmbl/saveQuote
+
+### ❌ If NOTHING logs
+
+➡️ Proxy is **NOT matching**
+
+#### Common causes:
+
+| Issue                             | Fix                                |
+| --------------------------------- | ---------------------------------- |
+| Request doesn’t start with `/api` | Must start exactly with `/api`     |
+| Used full URL                     | Use `/api/...` only                |
+| Wrong dev server port             | Check Vite actually runs on `5713` |
+
+***
+
+## ✅ STEP 3: Confirm forwarding to backend URL
+
+Now we confirm **where it forwards**.
+
+### 🔎 Replace logging with this:
+
+```ts
+proxy.on('proxyReq', (proxyReq, req) => {
+  console.log(
+    '[FORWARDING TO]',
+    `${proxyReq.protocol}//${proxyReq.getHeader('host')}${proxyReq.path}`
+  );
+});
+```
+
+***
+
+### ✅ EXPECTED OUTPUT
+
+    [FORWARDING TO] https://kmbld2c-optimus-uat.mykotaklife.com/api/quote/v1/quote/d2ckmbl/saveQuote
+
+👉 **This is the exact proof that proxy works**
+
+### ❌ If URL is wrong
+
+| Symptom          | Fix                 |
+| ---------------- | ------------------- |
+| Missing `/api`   | Don’t use `rewrite` |
+| Extra `/api/api` | Remove double path  |
+| Wrong host       | Env variable issue  |
+
+***
+
+## ✅ STEP 4: Verify backend actually responds
+
+### 🔎 Check response in browser:
+
+*   DevTools → Network
+*   Status should be `200 / 401 / 403 / 404`
+
+✅ Any real backend status = proxy is successful  
+❌ `ERR_CONNECTION_REFUSED` = backend unreachable
+
+***
+
+## ✅ STEP 5: Bypass frontend entirely (curl test)
+
+This removes all React/Vue/Vite code.
+
+```bash
+curl -i http://localhost:5713/api/quote/v1/quote/d2ckmbl/saveQuote
+```
+
+### ✅ Expected
+
+*   HTTP response from backend
+*   Headers like `server`, `x-powered-by`, auth headers
+
+✅ If this works → your **proxy is 100% correct**
+
+***
+
+## ✅ STEP 6: Intentionally break it (confidence check)
+
+Change:
+
+```env
+VITE_API_GATEWAY_URL=https://wrong-domain.com
+```
+
+Restart dev server.
+
+✅ If requests now fail, this **proves your proxy was working earlier**
+
+***
+
+# 🧠 Why your browser always shows `localhost`
+
+Important reminder:
+
+> **The browser NEVER shows the target URL.  
+> The proxy is server‑side.**
+
+    Browser → localhost
+    Vite → backend (invisible)
+
+This behavior is **correct and expected**.
+
+***
+
+# ✅ Final Debug Verdict Logic
+
+| Step                   | Result | Meaning         |
+| ---------------------- | ------ | --------------- |
+| Env printed            | ✅      | Config OK       |
+| `[PROXY HIT]` logs     | ✅      | Proxy matched   |
+| `[FORWARDING TO]` logs | ✅      | Correct backend |
+| Backend response       | ✅      | Proxy done      |
+| Browser URL unchanged  | ✅      | Expected        |
+
+***
+
+## ✅ One‑line conclusion
+
+> **If you see proxy logs and backend responses while the browser URL stays on localhost, your Vite proxy is working exactly as designed.**
+
+***
+
+If you want, next I can:
+
+*   🔍 Debug **rewrites**
+*   🔐 Debug **auth headers & cookies**
+*   🧪 Debug **CORS vs proxy confusion**
+*   🏗️ Show **production Nginx equivalent**
+*   ✅ Review your exact `vite.config.ts`
+
+Just paste what you see in the terminal, and I’ll pinpoint it instantly 💯

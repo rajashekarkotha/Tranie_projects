@@ -1,0 +1,60 @@
+import React, { useState, useEffect, useRef } from 'react';
+import throttle from 'lodash.throttle';
+
+const PAGE_SIZE = 30;
+
+
+const allData = Array.from(
+  { length: 100000 },
+  (_, index) => `Item ${index + 1}`
+);
+
+
+export default function App() {
+  const [items, setItems] = useState([]);
+  const page = useRef(0);
+
+  const loadMore = () => {
+    const start = page.current * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+
+    const nextItems = allData.slice(start, end);
+
+    setItems((prev) => [...prev, ...nextItems]);
+    page.current += 1;
+  };
+
+  useEffect(() => {
+    // initial load
+    loadMore();
+  }, []);
+
+  const handleScroll = () => {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      loadMore();
+    }
+  };
+
+  const throttledScroll = useRef(throttle(handleScroll, 300)).current;
+
+  useEffect(() => {
+    window.addEventListener('scroll', throttledScroll);
+
+    return () => {
+      window.removeEventListener('scroll', throttledScroll);
+      throttledScroll.cancel();
+    };
+  }, [throttledScroll]);
+
+  return (
+    <div>
+      {items.map((item, index) => (
+        <div key={index} style={{ padding: 10 }}>
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+}

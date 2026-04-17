@@ -1,0 +1,227 @@
+To **cancel previous API requests**, especially in **React**, the goal is to **avoid race conditions**, **unnecessary network usage**, and **state updates from stale responses**.
+
+Below are **correct, modern, interview‑ready ways**—from **best practice** to **legacy**—with clear explanations.
+
+***
+
+# ✅ BEST PRACTICE (Modern): `AbortController` ✅
+
+`AbortController` is **native**, **standard**, and works with:
+
+*   `fetch`
+*   Axios (v1+)
+*   React effects
+
+***
+
+## ✅ 1️⃣ Cancel Previous Request using `AbortController + fetch`
+
+### ✅ Example: Search API (classic use case)
+
+```jsx
+import { useEffect, useState } from "react";
+
+function Search({ query }) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (!query) return;
+
+    const controller = new AbortController();
+
+    fetch(`https://api.example.com/search?q=${query}`, {
+      signal: controller.signal,
+    })
+      .then(res => res.json())
+      .then(data => setData(data))
+      .catch(err => {
+        if (err.name === "AbortError") {
+          console.log("Request cancelled");
+        }
+      });
+
+    // ✅ cancel previous request
+    return () => controller.abort();
+  }, [query]);
+
+  return <div>{JSON.stringify(data)}</div>;
+}
+```
+
+### ✅ What Happens?
+
+*   New `query` → effect re-runs
+*   Cleanup runs → **previous request cancelled**
+*   Only latest response updates state ✅
+
+***
+
+## ✅ Why This Works (Interview Explanation)
+
+> **React cleans up the previous effect before running a new one, and `AbortController` cancels the in‑flight request during cleanup.**
+
+***
+
+# ✅ 2️⃣ Using `AbortController` with Axios (Recommended)
+
+Axios **v1+** supports `AbortController`.
+
+***
+
+### ✅ Axios + Cancel Previous Requests
+
+```jsx
+import axios from "axios";
+import { useEffect } from "react";
+
+useEffect(() => {
+  const controller = new AbortController();
+
+  axios.get("/api/data", {
+    signal: controller.signal,
+  })
+  .then(res => console.log(res.data))
+  .catch(err => {
+    if (axios.isCancel(err)) {
+      console.log("Cancelled");
+    }
+  });
+
+  return () => controller.abort();
+}, []);
+```
+
+✅ Same logic  
+✅ Cleaner than old cancel tokens
+
+***
+
+# ⚠️ 3️⃣ Old Axios CancelToken (Deprecated ❌)
+
+```js
+const source = axios.CancelToken.source();
+
+axios.get("/api/data", {
+  cancelToken: source.token,
+});
+
+source.cancel("Request cancelled");
+```
+
+🚨 **Deprecated**  
+❌ Don’t use in new code  
+✅ Mention only for legacy interviews
+
+***
+
+# ✅ 4️⃣ Prevent State Update (Fallback Pattern)
+
+If cancellation is **not supported** (older APIs):
+
+```jsx
+useEffect(() => {
+  let isActive = true;
+
+  fetch("/api/data")
+    .then(res => res.json())
+    .then(data => {
+      if (isActive) setData(data);
+    });
+
+  return () => {
+    isActive = false;
+  };
+}, []);
+```
+
+✅ Prevents stale updates  
+❌ Request still runs in background
+
+***
+
+# ✅ 5️⃣ Cancel Previous Requests on Button Click
+
+```js
+let controller;
+
+function fetchData() {
+  if (controller) controller.abort();
+
+  controller = new AbortController();
+
+  fetch("/api/data", { signal: controller.signal });
+}
+```
+
+✅ Useful outside React effects
+
+***
+
+# ✅ When You MUST Cancel Requests
+
+| Scenario            | Cancel Needed |
+| ------------------- | ------------- |
+| Search autocomplete | ✅ YES         |
+| Filter dropdowns    | ✅ YES         |
+| Infinite scroll     | ✅ YES         |
+| Component unmount   | ✅ YES         |
+| Page navigation     | ✅ YES         |
+| One‑time fetch      | ❌ No          |
+
+***
+
+# ✅ Common Bug This Solves (Very Important)
+
+```txt
+User types fast →
+Request A (slow) →
+Request B (fast) →
+A responds after B ❌ (wrong data shown)
+```
+
+✅ Cancellation ensures **only latest request wins**
+
+***
+
+# ✅ Interview‑Ready Answer ⭐
+
+> **We cancel previous API requests using `AbortController` in React’s `useEffect` cleanup function to prevent race conditions and stale state updates.**
+
+***
+
+# ✅ One‑Line Answer (Very Common)
+
+**“Use `AbortController` and abort the previous request in `useEffect` cleanup.”**
+
+***
+
+# ✅ Simple Mental Model 🧠
+
+    New effect runs
+    ↓
+    Old effect cleanup
+    ↓
+    Abort old request
+    ↓
+    Fire new request
+
+***
+
+# ✅ Summary
+
+✅ Use **AbortController** (standard, modern)  
+✅ Cancel in `useEffect` cleanup  
+✅ Prevent race conditions  
+✅ Improves performance & correctness  
+❌ Don’t rely on flags if cancellation is available
+
+***
+
+If you want next:
+
+*   ✅ Cancel API in **infinite scroll**
+*   ✅ Cancel API with **debounce + throttle**
+*   ✅ React Query / TanStack auto‑cancellation
+*   ✅ Common interview pitfalls
+
+Just tell me 👍

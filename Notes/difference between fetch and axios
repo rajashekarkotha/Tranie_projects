@@ -1,0 +1,259 @@
+Here’s a **clear, interview‑ready comparison of `fetch` vs `axios`**, with **features, differences, examples, and when to use which**.
+
+***
+
+## ✅ High‑Level Difference (One‑Line)
+
+> **`fetch` is a native browser API for HTTP requests, while `axios` is a third‑party library that provides a richer, more convenient API.**
+
+***
+
+## ✅ What is `fetch`?
+
+*   Built‑in browser API
+*   Promise‑based
+*   Low‑level and flexible
+*   Available without installation
+
+```js
+fetch("/api/data")
+  .then(res => res.json())
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
+```
+
+***
+
+## ✅ What is `axios`?
+
+*   Third‑party library
+*   Promise‑based
+*   Higher‑level abstraction
+*   Works in browser **and Node.js**
+
+```js
+axios.get("/api/data")
+  .then(res => console.log(res.data))
+  .catch(err => console.error(err));
+```
+
+***
+
+## ✅ Key Differences (Very Important)
+
+| Feature                    | fetch             | axios             |
+| -------------------------- | ----------------- | ----------------- |
+| Built‑in                   | ✅ Yes             | ❌ No (library)    |
+| Installation               | ❌ Not needed      | ✅ Required        |
+| Browser support            | ✅ Modern browsers | ✅ Browser + Node  |
+| Automatic JSON parsing     | ❌ No              | ✅ Yes             |
+| HTTP error handling        | ❌ Manual          | ✅ Automatic       |
+| Interceptors               | ❌ No              | ✅ Yes             |
+| Request cancellation       | ✅ AbortController | ✅ AbortController |
+| Timeout support            | ❌ Manual          | ✅ Built‑in        |
+| CSRF protection            | ❌ No              | ✅ Yes             |
+| Request/response transform | ❌ No              | ✅ Yes             |
+
+***
+
+## ✅ Error Handling (BIG INTERVIEW POINT)
+
+### ❌ `fetch` does NOT reject on HTTP errors
+
+```js
+fetch("/api/error")
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("HTTP error");
+    }
+    return res.json();
+  });
+```
+
+✅ You **must manually check** `res.ok`
+
+***
+
+### ✅ `axios` rejects automatically on HTTP errors
+
+```js
+axios.get("/api/error")
+  .catch(err => {
+    console.log(err.response.status); // 404, 500 etc.
+  });
+```
+
+✅ Cleaner and safer
+
+***
+
+## ✅ JSON Handling Difference
+
+### fetch ❌ (manual)
+
+```js
+fetch("/api/data")
+  .then(res => res.json());
+```
+
+### axios ✅ (automatic)
+
+```js
+axios.get("/api/data").then(res => res.data);
+```
+
+***
+
+## ✅ Cancellation Support (Modern)
+
+### ✅ fetch with AbortController
+
+```js
+const controller = new AbortController();
+
+fetch("/api/data", {
+  signal: controller.signal
+});
+
+controller.abort();
+```
+
+***
+
+### ✅ axios with AbortController (v1+)
+
+```js
+const controller = new AbortController();
+
+axios.get("/api/data", {
+  signal: controller.signal
+});
+
+controller.abort();
+```
+
+✅ Both now use the **same standard**
+
+***
+
+## ✅ Interceptors (Axios Only)
+
+✅ Very powerful for:
+
+*   Auth tokens
+*   Logging
+*   Global error handling
+
+```js
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = "Bearer token";
+  return config;
+});
+```
+
+❌ Not possible with `fetch` without wrappers
+
+***
+
+## ✅ Timeout Support
+
+### fetch ❌ (manual)
+
+```js
+const controller = new AbortController();
+setTimeout(() => controller.abort(), 3000);
+```
+
+### axios ✅ (built‑in)
+
+```js
+axios.get("/api/data", {
+  timeout: 3000
+});
+```
+
+***
+
+## ✅ Environment Support
+
+| Environment  | fetch                | axios |
+| ------------ | -------------------- | ----- |
+| Browser      | ✅                    | ✅     |
+| Node.js      | ❌ (needs node‑fetch) | ✅     |
+| React Native | ✅                    | ✅     |
+
+***
+
+## ✅ When to Use `fetch` ✅
+
+✔ Small projects  
+✔ No dependencies allowed  
+✔ Simple API calls  
+✔ Browser‑only apps
+
+```txt
+Lightweight & native
+```
+
+***
+
+## ✅ When to Use `axios` ✅ (MOST REAL PROJECTS)
+
+✔ Large applications  
+✔ Complex APIs  
+✔ Auth & interceptors  
+✔ Global error handling  
+✔ SSR / Node support
+
+```txt
+Cleaner & enterprise‑ready
+```
+
+***
+
+## ✅ Common Interview Question
+
+### ❓ Which is better: fetch or axios?
+
+✅ Correct answer:
+
+> Neither is “better” universally. **Fetch is native and lightweight, while Axios offers better defaults, error handling, interceptors, and broader environment support.**
+
+***
+
+## ✅ One‑Line Interview Answer ⭐
+
+**“Fetch is a low‑level native API, while Axios is a higher‑level library that simplifies HTTP requests with better defaults and features.”**
+
+***
+
+## ✅ Final Comparison Summary
+
+    Need simplicity → fetch
+    Need power & scalability → axios
+
+***
+
+## ✅ Pro Tip (Senior‑Level Insight)
+
+Most modern apps use:
+
+*   ✅ **Axios** OR
+*   ✅ **React Query / TanStack Query** (built on fetch/axios)
+
+These libraries handle:
+✔ caching  
+✔ retries  
+✔ cancellation  
+✔ background updates
+
+***
+
+If you want next:
+
+*   ✅ fetch vs axios vs React Query
+*   ✅ Axios interceptors deep dive
+*   ✅ API pattern for large React apps
+*   ✅ Interview MCQs
+
+Just tell me 👍

@@ -674,3 +674,220 @@ If you want next, I can show:
 *   ✅ **Lodash throttle in React**
 
 Just say the word 👌
+
+
+===========================================================`Show lodash throttle in React`=========================================================================
+
+
+Below is the **correct and production‑ready way to use `lodash.throttle` in React**, with **common patterns, pitfalls, and interview explanations**.
+
+***
+
+# ✅ Step 1: Install lodash
+
+```bash
+npm install lodash
+```
+
+(or)
+
+```bash
+npm install lodash.throttle
+```
+
+✅ Prefer `lodash.throttle` to reduce bundle size.
+
+***
+
+# ✅ Step 2: Basic `lodash.throttle` Example in React
+
+### ❌ WRONG usage (common mistake)
+
+```jsx
+// ❌ Do NOT do this
+const throttledFn = _.throttle(handleScroll, 1000);
+```
+
+⚠️ This recreates the throttled function on every render → throttle breaks.
+
+***
+
+# ✅ Correct Pattern (Using `useRef`)
+
+### ✅ Scroll Throttling Example
+
+```jsx
+import { useEffect, useRef } from "react";
+import throttle from "lodash.throttle";
+
+function ScrollTracker() {
+  const handleScroll = () => {
+    console.log("Scroll Y:", window.scrollY);
+  };
+
+  const throttledScroll = useRef(
+    throttle(handleScroll, 1000)
+  ).current;
+
+  useEffect(() => {
+    window.addEventListener("scroll", throttledScroll);
+
+    return () => {
+      window.removeEventListener("scroll", throttledScroll);
+      throttledScroll.cancel(); // ✅ cleanup
+    };
+  }, [throttledScroll]);
+
+  return <div style={{ height: "200vh" }}>Scroll down</div>;
+}
+```
+
+✅ Runs **once every second**  
+✅ Stable throttle reference  
+✅ Proper cleanup (important!)
+
+***
+
+# ✅ Step 3: Throttling Button Clicks (Spam Prevention)
+
+```jsx
+import throttle from "lodash.throttle";
+import { useRef } from "react";
+
+function SubmitButton() {
+  const handleSubmit = () => {
+    console.log("Submitted at", new Date().toLocaleTimeString());
+  };
+
+  const throttledSubmit = useRef(
+    throttle(handleSubmit, 2000)
+  ).current;
+
+  return <button onClick={throttledSubmit}>Submit</button>;
+}
+```
+
+✅ Ignore repeated clicks within 2 seconds  
+✅ Used in payment & form submissions
+
+***
+
+# ✅ Step 4: Throttle with `useCallback` (Less Recommended)
+
+⚠️ Easy to misuse but acceptable if done carefully.
+
+```jsx
+import { useCallback } from "react";
+import throttle from "lodash.throttle";
+
+const throttledFn = useCallback(
+  throttle(() => {
+    console.log("Throttled");
+  }, 1000),
+  []
+);
+```
+
+⚠️ Cleanup still required  
+⚠️ `useRef` is safer for real projects
+
+✅ **Recommendation**: Use `useRef`, not `useCallback`.
+
+***
+
+# ✅ Step 5: Cleanup Is VERY Important
+
+### ❌ Without cleanup
+
+*   Memory leaks
+*   Unexpected delayed function calls
+*   Errors after unmount
+
+### ✅ Proper Cleanup
+
+```jsx
+useEffect(() => {
+  return () => throttledFn.cancel();
+}, []);
+```
+
+***
+
+# ✅ Step 6: Throttle Options (Advanced)
+
+Lodash throttle supports options:
+
+```js
+throttle(func, wait, {
+  leading: true,   // run immediately
+  trailing: false  // run at end
+});
+```
+
+### ✅ Example
+
+```jsx
+const throttledScroll = useRef(
+  throttle(handleScroll, 1000, {
+    leading: true,
+    trailing: false
+  })
+).current;
+```
+
+***
+
+# ✅ Real‑World Use Cases
+
+| Scenario           | Use        |
+| ------------------ | ---------- |
+| Scroll events      | ✅ Throttle |
+| Resize events      | ✅ Throttle |
+| Infinite scrolling | ✅ Throttle |
+| Search API         | ❌ Debounce |
+| Button clicks      | ✅ Throttle |
+
+***
+
+# ✅ Throttle vs Debounce (Interview Focus)
+
+| Feature        | Throttle       | Debounce   |
+| -------------- | -------------- | ---------- |
+| Exec frequency | Fixed interval | After stop |
+| Scroll         | ✅              | ❌          |
+| Resize         | ✅              | ✅          |
+| Search API     | ❌              | ✅          |
+
+***
+
+# ✅ Interview‑Ready Explanation
+
+> **When using lodash throttle in React, we must store the throttled function using `useRef` to avoid recreating it on each render. We also cancel it during cleanup to prevent memory leaks and delayed executions.**
+
+***
+
+# ✅ One‑Line Interview Answer
+
+**“Use lodash throttle with `useRef` and cleanup using `cancel()` for stable and efficient throttling in React.”**
+
+***
+
+# ✅ Best Practices Summary
+
+✅ Use `lodash.throttle` for **scroll, resize, clicks**  
+✅ Always store throttled fn in `useRef`  
+✅ Always call `cancel()` on unmount  
+✅ Prefer `lodash.throttle` over full lodash import
+
+***
+
+If you want next:
+
+*   ✅ `lodash.debounce` in React
+*   ✅ Throttle + debounce custom hook
+*   ✅ Machine coding question (scroll optimization)
+*   ✅ React performance interview Q\&A
+
+Just tell me 👍
+
+

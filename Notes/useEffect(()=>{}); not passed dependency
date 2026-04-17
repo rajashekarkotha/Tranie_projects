@@ -1,0 +1,201 @@
+In React, **what happens depends entirely on the dependency array** you pass to `useEffect`.
+
+Let’s focus specifically on your question:
+
+```js
+useEffect(() => {
+  // effect
+});
+```
+
+***
+
+## ✅ What Happens If You **DON’T** Pass a Dependency Array?
+
+### ✅ Behaviour
+
+> **The effect runs after EVERY render (initial render + every re-render).**
+
+That means:
+
+*   Initial render ✅
+*   Any state change ✅
+*   Any prop change ✅
+*   Parent re-render ✅
+
+***
+
+## ✅ Simple Example
+
+```jsx
+function App() {
+  const [count, setCount] = React.useState(0);
+
+  useEffect(() => {
+    console.log("Effect ran");
+  });
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+### ✅ Output
+
+    Effect ran   // initial render
+    Effect ran   // count = 1
+    Effect ran   // count = 2
+    Effect ran   // count = 3
+    ...
+
+➡️ **Runs on every render**
+
+***
+
+## ✅ Why React Does This
+
+When you omit the dependency array:
+
+*   React **assumes the effect depends on everything**
+*   So it re-runs the effect every time the component renders
+
+This mirrors **class component behavior**:
+
+```js
+componentDidUpdate() {
+  // runs after every update
+}
+```
+
+***
+
+## ❌ Common Problem (Infinite Loop)
+
+```jsx
+useEffect(() => {
+  setCount(count + 1);
+});
+```
+
+💥 This causes an **infinite render loop**
+
+### Why?
+
+1.  Component renders
+2.  `useEffect` runs
+3.  `setCount` triggers re-render
+4.  Effect runs again
+5.  Repeat forever ❌
+
+***
+
+## ✅ Visual Comparison (VERY IMPORTANT)
+
+| useEffect Syntax              | When it Runs            |
+| ----------------------------- | ----------------------- |
+| `useEffect(() => {})`         | After **every render**  |
+| `useEffect(() => {}, [])`     | **Once** (on mount)     |
+| `useEffect(() => {}, [a, b])` | When `a` or `b` changes |
+
+***
+
+## ✅ When Is It OK to Omit Dependency Array?
+
+✅ Rare cases:
+
+*   Logging renders
+*   Measuring DOM after each render
+*   Syncing non-React code every render
+
+### Example (safe)
+
+```js
+useEffect(() => {
+  console.log("Component rendered");
+});
+```
+
+***
+
+## ❌ When It Is a Bad Idea
+
+❌ API calls  
+❌ Event listeners  
+❌ Timers (`setInterval`, `setTimeout`)  
+❌ Subscriptions
+
+Example ❌:
+
+```js
+useEffect(() => {
+  fetchData(); // ❌ will run on every render
+});
+```
+
+***
+
+## ✅ Correct Usage for Common Scenarios
+
+### ✅ Run Once (on mount)
+
+```js
+useEffect(() => {
+  fetchData();
+}, []);
+```
+
+***
+
+### ✅ Run when value changes
+
+```js
+useEffect(() => {
+  fetchData(query);
+}, [query]);
+```
+
+***
+
+### ✅ With cleanup (important!)
+
+```js
+useEffect(() => {
+  const id = setInterval(() => console.log("tick"), 1000);
+
+  return () => clearInterval(id);
+}, []);
+```
+
+***
+
+## ✅ Interview‑Ready Answer ⭐
+
+> **If no dependency array is provided, `useEffect` runs after every render of the component. This can cause performance issues or infinite loops if state is updated inside the effect.**
+
+***
+
+## ✅ One‑Line Version (Most Asked)
+
+**“`useEffect` without dependencies runs after every render.”**
+
+***
+
+## ✅ Golden Rule to Remember 🧠
+
+    No dependency array → runs always
+    Empty array [] → runs once
+    Specific deps → runs on change
+
+***
+
+If you want next:
+
+*   ✅ `useEffect` cleanup explained deeply
+*   ✅ Dependency array mistakes
+*   ✅ Why ESLint warns about missing deps
+*   ✅ `useLayoutEffect` vs `useEffect`
+
+Just tell me 👍

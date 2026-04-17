@@ -1,0 +1,124 @@
+console.log(a);
+var a = 10;
+why a get undefind
+
+This happens because of **JavaScript hoisting**, specifically how **`var` is hoisted**.
+
+Let’s explain it clearly 👇
+
+***
+
+## ✅ Code in question
+
+```js
+console.log(a);
+var a = 10;
+```
+
+### ✅ Output
+
+    undefined
+
+***
+
+## ✅ Why does it print `undefined`?
+
+Because **`var` declarations are hoisted to the top of their scope**, but **their assignments are NOT**.
+
+### What JavaScript actually does behind the scenes:
+
+Your code is interpreted like this:
+
+```js
+var a;          // declaration hoisted
+console.log(a); // a exists but has no value
+a = 10;         // assignment happens here
+```
+
+So at the moment `console.log(a)` runs:
+
+*   ✅ `a` **exists**
+*   ❌ `a` **does not have a value yet**
+
+👉 Default value = **`undefined`**
+
+***
+
+## ✅ Key Concept: Hoisting
+
+> **Hoisting** means JavaScript moves variable and function declarations to the top of their scope during the compilation phase.
+
+But:
+
+*   ✅ **Declarations are hoisted**
+*   ❌ **Assignments are NOT hoisted**
+
+***
+
+## ✅ Why no error?
+
+Because `var a` **is already declared** (hoisted), JavaScript does **not throw a ReferenceError**.
+
+If `a` didn’t exist at all, then you would get an error.
+
+***
+
+## ✅ Compare with `let` and `const`
+
+### Using `let`
+
+```js
+console.log(a);
+let a = 10;
+```
+
+❌ Output:
+
+    ReferenceError: Cannot access 'a' before initialization
+
+### Using `const`
+
+```js
+console.log(a);
+const a = 10;
+```
+
+❌ Same error.
+
+### Why?
+
+*   `let` and `const` are hoisted too
+*   BUT they are placed in the **Temporal Dead Zone (TDZ)**
+*   You cannot access them before initialization
+
+***
+
+## ✅ Summary Table
+
+| Keyword | Hoisted | Initialized | Access Before Declaration |
+| ------- | ------- | ----------- | ------------------------- |
+| `var`   | ✅ Yes   | ❌ No        | ✅ `undefined`             |
+| `let`   | ✅ Yes   | ❌ No        | ❌ Error                   |
+| `const` | ✅ Yes   | ❌ No        | ❌ Error                   |
+
+***
+
+## ✅ Interview‑Ready Explanation
+
+> The variable `a` prints `undefined` because `var` declarations are hoisted to the top of their scope and initialized with `undefined`. The assignment happens later, so accessing it before assignment results in `undefined` rather than an error.
+
+***
+
+## ✅ One‑Line Answer (Common Interview Expectation)
+
+**“Because `var` is hoisted and initialized with `undefined` before execution.”**
+
+***
+
+If you want, I can also explain:
+
+*   🧠 Temporal Dead Zone (TDZ)
+*   🔍 Function hoisting vs variable hoisting
+*   ❓ Tricky hoisting interview questions
+
+Just tell me 👍

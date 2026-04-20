@@ -1,0 +1,78 @@
+const data = [
+  { id: 1, date: '2025-06-01', status: 'Refill', doctor: 'Dr. Smith' },
+  { id: 2, date: '2025-05-20', status: 'On hold', doctor: 'Dr. Adams' },
+  { id: 3, date: '2025-06-10', status: 'Orders', doctor: 'Dr. Lee' },
+  { id: 4, date: '2025-06-15', status: 'Refill', doctor: 'Dr. Smith' },
+  { id: 5, date: '2025-06-18', status: 'Need Rx', doctor: 'Dr. Patel' },
+  { id: 6, date: '2025-06-12', status: 'Archived', doctor: 'Dr. Lee' },
+  { id: 7, date: '2025-06-20', status: 'Refill', doctor: 'Dr. Adams' },
+  { id: 8, date: '2025-06-22', status: 'Orders', doctor: 'Dr. Smith' },
+  { id: 9, date: '2025-06-23', status: 'On hold', doctor: 'Dr. Patel' },
+  { id: 10, date: '2025-06-24', status: 'Refill', doctor: 'Dr. Lee' },
+];
+
+const latestItem = data.reduce((latest, current) => {
+  return new Date(current.date) > new Date(latest.date)
+    ? current
+    : latest;
+});
+
+console.log('Latest date:', latestItem.date);
+console.log('Latest record:', latestItem);
+
+
+
+const latestDate = new Date(
+  Math.max(...data.map(item => new Date(item.date)))
+);
+
+console.log(latestDate.toISOString().split('T')[0]);
+
+
+
+
+
+const latestDate = new Date(
+  Math.max(...data.map(item => new Date(item.date)))
+);
+
+console.log(latestDate.toISOString().split('T')[0]);
+
+
+
+
+let latest = data[0];
+
+data.forEach(item => {
+  if (item.date > latest.date) {
+    latest = item;
+  }
+});
+
+console.log(latest.date);
+
+
+
+
+const latest = data.reduce((a, b) =>
+  a.date > b.date ? a : b
+);
+
+console.log(latest.date);
+
+
+
+const latestDate = data.reduce(
+  (max, item) => (item.date > max ? item.date : max),
+  data[0].date
+);
+
+console.log(latestDate);
+``
+
+
+
+const latest = _.maxBy(data, item => item.date);
+console.log(latest.date);
+``
+

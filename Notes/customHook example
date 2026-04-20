@@ -1,0 +1,94 @@
+import { useEffect, useState } from 'react';
+
+const useFetchData = ({ url }: { url: string }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(url)
+      .then(res => res.json())
+      .then(result => {
+        setData(result);
+        setLoading(false);
+      });
+  }, [url]);
+
+  return { data, loading };
+};
+
+export default useFetchData;
+
+
+
+const { data, loading } = useFetchData({ url });
+
+if (loading) return <div>Loading...</div>;
+
+
+===========================================================================================================================================
+
+import { useState, useEffect } from 'react';
+
+interface FetchResult<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
+
+const useFetchData = <T,>({ url }: { url: string }): FetchResult<T> => {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!url) return;
+
+    setLoading(true);
+    setError(null);
+
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        return res.json();
+      })
+      .then((result) => {
+        setData(result);
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [url]);
+
+  return { data, loading, error };
+};
+
+
+const { data, loading, error } = useFetchData<User[]>({
+  url: 'https://jsonplaceholder.typicode.com/todos',
+});
+
+if (loading) {
+  return <div>Loading...</div>;
+}
+
+if (error) {
+  return <div>Error: {error}</div>;
+}
+
+return (
+  <ul>
+    {data?.map((item) => (
+      <li key={item.id}>{item.title}</li>
+    ))}
+  </ul>
+);
+
+
+========================================================================================================================
+
+export default useFetchData;

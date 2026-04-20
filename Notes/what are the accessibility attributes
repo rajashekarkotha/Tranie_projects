@@ -1,0 +1,249 @@
+**Accessibility attributes** are HTML and **ARIA (Accessible Rich Internet Applications)** attributes that help people using **screen readers, keyboards, or assistive technologies** understand and interact with web content.
+
+They answer questions like:
+
+*   *What is this element?*
+*   *What does it do?*
+*   *What is its current state?*
+
+***
+
+## 1️⃣ Two Types of Accessibility Attributes
+
+### ✅ A. Native HTML Accessibility (Preferred ✅)
+
+Built‑in HTML attributes and elements that provide accessibility **automatically**.
+
+### ✅ B. ARIA Attributes
+
+Used **only when native HTML is not sufficient** (e.g., custom components).
+
+> **Rule:** Use native HTML first, ARIA second.
+
+***
+
+## 2️⃣ Native HTML Accessibility Attributes ✅
+
+### ✅ Semantic HTML (Most Important)
+
+
+
+✔ Screen readers understand these automatically\
+✔ No ARIA needed
+
+***
+
+### ✅ `alt` (Images)
+
+
+
+*   Describes the image for screen readers
+*   Required for accessibility
+
+❌ Bad:
+
+
+
+***
+
+### ✅ `label` (Form Inputs)
+
+
+
+✔ Announces purpose of input\
+✔ Essential for forms
+
+***
+
+### ✅ `disabled`
+
+
+
+✔ Screen readers announce it as disabled
+
+***
+
+## 3️⃣ ARIA Attributes (When Needed)
+
+ARIA attributes start with **`aria-`**
+
+***
+
+## 4️⃣ Commonly Used ARIA Attributes ✅
+
+### ✅ `aria-label`
+
+Provides an accessible name.
+
+
+
+Used when text is missing or unclear.
+
+***
+
+### ✅ `aria-labelledby`
+
+Refers to another element’s text.
+
+
+
+✔ Better than `aria-label` when visible text exists
+
+***
+
+### ✅ `aria-describedby`
+
+Adds extra description.
+
+
+
+***
+
+### ✅ `aria-hidden`
+
+Hides content from screen readers.
+
+
+
+⚠️ Still visible visually
+
+***
+
+### ✅ `aria-disabled`
+
+For custom components (not native buttons).
+
+
+
+***
+
+### ✅ `aria-expanded`
+
+Used for collapsible content.
+
+
+
+***
+
+### ✅ `aria-checked`
+
+Used for custom checkboxes.
+
+
+
+***
+
+## 5️⃣ Roles (ARIA Roles)
+
+Defines **what an element is** when not using semantic HTML.
+
+
+
+Common roles:
+
+*   `button`
+*   `dialog`
+*   `checkbox`
+*   `alert`
+*   `navigation`
+
+⚠️ Do NOT use roles on native elements:
+
+
+
+***
+
+## 6️⃣ Accessibility in React (Very Important)
+
+### ✅ HTML‑first approach
+
+```jsx
+<button onClick={save}>Save</button>
+```
+
+✅ No ARIA needed
+
+***
+
+### ✅ When ARIA is required
+
+```jsx
+<div
+  role="button"
+  tabIndex={0}
+  aria-label="Close"
+  onClick={close}
+/>
+```
+
+***
+
+## 7️⃣ Keyboard Accessibility Attributes
+
+### ✅ `tabIndex`
+
+
+
+*   `0` → keyboard focusable
+*   `-1` → programmatically focusable
+
+***
+
+## 8️⃣ Accessibility States (ARIA)
+
+| Attribute     | Meaning         |
+| ------------- | --------------- |
+| aria-selected | Selected item   |
+| aria-pressed  | Toggle button   |
+| aria-live     | Dynamic updates |
+| aria-busy     | Loading state   |
+
+Example:
+
+
+
+***
+
+## 9️⃣ What NOT to Do ❌
+
+❌ Overusing ARIA\
+❌ Using ARIA instead of HTML\
+❌ Adding roles to semantic elements\
+❌ Ignoring keyboard navigation
+
+***
+
+## 🔑 Golden Rules of Accessibility ✅
+
+1️⃣ Use **semantic HTML first**\
+2️⃣ Add ARIA only when necessary\
+3️⃣ Ensure keyboard navigation\
+4️⃣ Always label form fields\
+5️⃣ Test with screen readers
+
+***
+
+## ✅ Interview‑Ready Definition
+
+> **Accessibility attributes make web content usable by people with disabilities by providing semantic meaning, labels, roles, and states to assistive technologies.**
+
+***
+
+## ✅ Common Interview Questions
+
+*   Difference between `aria-label` and `aria-labelledby`
+*   When should you use ARIA?
+*   Native HTML vs ARIA
+*   Accessibility in React
+*   Keyboard navigation support
+
+***
+
+If you want next, I can explain:
+
+*   ✅ WCAG guidelines
+*   ✅ Accessibility testing tools
+*   ✅ Screen reader behavior
+*   ✅ Real‑world React accessibility examples
+
+Just tell me 👍

@@ -1,0 +1,317 @@
+Yes 👍 — here are **very clear, practical examples** that show **how a component unmounts using `useEffect` cleanup**.
+
+***
+
+## ✅ Example 1: Simple Mount & Unmount (Beginner)
+
+### Parent Component
+
+```jsx
+import { useState } from "react";
+import Child from "./Child";
+
+export default function App() {
+  const [show, setShow] = useState(true);
+
+  return (
+    <div>
+      <button onClick={() => setShow(!show)}>
+        Toggle Component
+      </button>
+
+      {show && <Child />}
+    </div>
+  );
+}
+```
+
+***
+
+### Child Component (Unmount happens here)
+
+```jsx
+import { useEffect } from "react";
+
+export default function Child() {
+  useEffect(() => {
+    console.log("✅ Component Mounted");
+
+    return () => {
+      console.log("❌ Component Unmounted");
+    };
+  }, []);
+
+  return <h2>I am Child Component</h2>;
+}
+```
+
+### 🔍 What happens?
+
+1.  App loads → Child mounts → `"Component Mounted"`
+2.  Click **Toggle** → Child removed → `"Component Unmounted"`
+
+✅ **Cleanup function runs on unmount**
+
+***
+
+## ✅ Example 2: Cleaning up `setInterval`
+
+```jsx
+useEffect(() => {
+  const timer = setInterval(() => {
+    console.log("Running...");
+  }, 1000);
+
+  return () => {
+    clearInterval(timer);
+    console.log("Interval cleared on unmount");
+  };
+}, []);
+```
+
+### ✅ Why cleanup matters
+
+Without cleanup:
+
+*   Interval keeps running
+*   Memory leak occurs ❌
+
+***
+
+## ✅ Example 3: Event Listener Cleanup (Real‑world)
+
+```jsx
+useEffect(() => {
+  const handleResize = () => {
+    console.log("Window resized");
+  };
+
+  window.addEventListener("resize", handleResize);
+
+  return () => {
+    window.removeEventListener("resize", handleResize);
+    console.log("Resize listener removed");
+  };
+}, []);
+```
+
+✅ Prevents multiple listeners after component removal
+
+***
+
+## ✅ Example 4: API Call Cleanup (Most Important for Interviews)
+
+```jsx
+useEffect(() => {
+  const controller = new AbortController();
+
+  fetch("https://jsonplaceholder.typicode.com/users", {
+    signal: controller.signal
+  })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(err => {
+      if (err.name !== "AbortError") {
+        console.error(err);
+      }
+    });
+
+  return () => {
+    controller.abort();
+    console.log("Request aborted on unmount");
+  };
+}, []);
+```
+
+✅ Prevents:
+
+*   `"Can’t perform a React state update on an unmounted component"` error
+
+***
+
+## ✅ Example 5: Cleanup runs on dependency change AND unmount
+
+```jsx
+useEffect(() => {
+  console.log("Effect running");
+
+  return () => {
+    console.log("Cleanup running");
+  };
+}, [id]);
+```
+
+### Execution order:
+
+1.  Mount → Effect runs
+2.  `id` changes → Cleanup → Effect runs again
+3.  Component unmounts → Cleanup runs ✅
+
+***
+
+## 🧠 Mental Model (REMEMBER THIS)
+
+```text
+Mount      → useEffect runs
+Update     → cleanup → useEffect runs
+Unmount    → cleanup runs
+```
+
+***
+
+## ✅ Interview‑Ready Answer (1‑liner)
+
+> In React, a component unmounts in `useEffect` by returning a cleanup function. React automatically calls this cleanup function when the component is removed from the DOM or before the effect re‑runs.
+
+***
+
+If you want, I can also:
+
+*   ✅ Explain **StrictMode double cleanup**
+*   ✅ Compare `useEffect` vs `useLayoutEffect`
+*   ✅ Show **real React bug caused by missing cleanup**
+*   ✅ Convert this to **class lifecycle equivalent**
+
+Just tell me 👍
+
+
+
+Sure ✅  
+Here’s the **API call example using `useEffect` *WITHOUT* `AbortController`**, using the **classic and still commonly asked interview pattern**.
+
+> ⚠️ Note: This pattern works, but **AbortController is preferred** in modern React.
+
+***
+
+## ✅ API Call in `useEffect` WITHOUT AbortController
+
+### ✅ Technique: `isMounted` flag (boolean cleanup)
+
+***
+
+## 🔹 Example: `Users.jsx`
+
+```jsx
+import { useEffect, useState } from "react";
+
+export default function Users() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true; // ✅ track component mount state
+
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted) {
+          setUsers(data); // ✅ update state only if mounted
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        if (isMounted) {
+          console.error(error);
+          setLoading(false);
+        }
+      });
+
+    // ✅ cleanup runs on unmount
+    return () => {
+      isMounted = false;
+      console.log("Component unmounted, state update prevented");
+    };
+  }, []);
+
+  if (loading) return <h3>Loading...</h3>;
+
+  return (
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+***
+
+## 🔍 How this works (step‑by‑step)
+
+1.  Component mounts → `isMounted = true`
+2.  API request starts
+3.  Component unmounts before response
+4.  Cleanup runs → `isMounted = false`
+5.  API resolves → `setState` is **skipped**
+6.  ✅ No React warning
+7.  ✅ No memory leak
+
+***
+
+## ✅ Parent Component to Trigger Unmount
+
+```jsx
+import { useState } from "react";
+import Users from "./Users";
+
+export default function App() {
+  const [show, setShow] = useState(true);
+
+  return (
+    <div>
+      <button onClick={() => setShow(!show)}>
+        Toggle Users
+      </button>
+
+      {show && <Users />}
+    </div>
+  );
+}
+```
+
+Click **Toggle Users** while request is in progress → cleanup runs ✅
+
+***
+
+## ⚠️ Important Limitations of This Approach
+
+❌ **API request still runs in the background**  
+❌ **Network resources are not cancelled**  
+✅ Only prevents `setState()` after unmount
+
+That’s why React now recommends **AbortController** instead.
+
+***
+
+## ✅ Interview Comparison (Very Important)
+
+| Approach         | Cancels API | Prevents setState | Recommended |
+| ---------------- | ----------- | ----------------- | ----------- |
+| `isMounted` flag | ❌ No        | ✅ Yes             | ⚠️ Legacy   |
+| AbortController  | ✅ Yes       | ✅ Yes             | ✅ Best      |
+
+***
+
+## ✅ Interview‑Ready Answer
+
+> Without `AbortController`, we handle API calls in `useEffect` using an `isMounted` flag.  
+> The cleanup function sets the flag to `false` on unmount, and we conditionally update state only if the component is still mounted, preventing memory leaks and React warnings.
+
+***
+
+## 🧠 When should you mention this?
+
+*   Old React codebases
+*   When interviewer asks **“without AbortController”**
+*   Understanding cleanup fundamentals
+
+***
+
+If you want next, I can also show:
+✅ Axios example without AbortController  
+✅ Why React StrictMode causes double API calls  
+✅ Real production bug caused by missing cleanup  
+✅ Best modern API pattern using custom hooks
+
+Just tell me 👍

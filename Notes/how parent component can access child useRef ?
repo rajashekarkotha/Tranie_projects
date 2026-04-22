@@ -1,0 +1,150 @@
+Great question 👍  
+In React, **a parent component cannot directly access a child’s `useRef`** by default.  
+To do this **correctly and safely**, React provides **`forwardRef`** and **`useImperativeHandle`**.
+
+***
+
+## ✅ Correct Way: `forwardRef` + `useImperativeHandle`
+
+### ✅ WHY this is needed
+
+*   `useRef` inside a child is **private**
+*   Parent cannot read or control child internals directly
+*   React enforces **encapsulation**
+*   `forwardRef` allows passing a ref **from parent to child**
+*   `useImperativeHandle` controls **what the parent can access**
+
+***
+
+## ✅ Basic Flow
+
+    Parent ref → Child component → useImperativeHandle → Parent methods
+
+***
+
+## ✅ Example: Parent accessing child `useRef`
+
+***
+
+### 📌 Child Component (`Child.jsx`)
+
+```jsx
+import { forwardRef, useImperativeHandle, useRef } from "react";
+
+const Child = forwardRef((props, ref) => {
+  const inputRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    focusInput() {
+      inputRef.current.focus();
+    },
+    getValue() {
+      return inputRef.current.value;
+    }
+  }));
+
+  return <input ref={inputRef} />;
+});
+
+export default Child;
+```
+
+***
+
+### 📌 Parent Component (`Parent.jsx`)
+
+```jsx
+import { useRef } from "react";
+import Child from "./Child";
+
+export default function Parent() {
+  const childRef = useRef();
+
+  return (
+    <div>
+      <Child ref={childRef} />
+
+      <button onClick={() => childRef.current.focusInput()}>
+        Focus Input
+      </button>
+
+      <button onClick={() =>
+        alert(childRef.current.getValue())
+      }>
+        Get Value
+      </button>
+    </div>
+  );
+}
+```
+
+***
+
+## ✅ What is happening step‑by‑step
+
+1.  Parent creates a ref: `childRef`
+2.  Parent passes ref to `<Child ref={childRef} />`
+3.  Child captures it using `forwardRef`
+4.  `useImperativeHandle` exposes **controlled methods**
+5.  Parent calls child methods via `childRef.current`
+
+✅ Parent **does not access inputRef directly**  
+✅ Encapsulation is preserved
+
+***
+
+## ❌ What NOT to do (Anti‑Pattern)
+
+```jsx
+// ❌ NOT POSSIBLE
+const childInputRef = child.useRef; // invalid
+```
+
+✅ Parent **cannot directly read child hooks**
+
+***
+
+## ✅ When should you use this pattern?
+
+✅ Custom input components  
+✅ Modals (`open()`, `close()`)  
+✅ Tooltips  
+✅ Scroll to child element  
+✅ Focus management
+
+❌ Avoid for normal state communication
+
+***
+
+## ✅ Alternative (Recommended First)
+
+Before using refs, consider:
+
+*   ✅ Props
+*   ✅ Callback functions
+*   ✅ Lifting state up
+
+Refs are for **imperative actions**, not data flow.
+
+***
+
+## ✅ Interview‑Ready Answer
+
+> A parent component can access a child’s `useRef` only by using `forwardRef` and `useImperativeHandle`.  
+> `forwardRef` passes the ref to the child, and `useImperativeHandle` controls what the parent is allowed to access.
+
+***
+
+## ✅ One‑Line Answer
+
+> Parent access to child `useRef` is done using `React.forwardRef` and `useImperativeHandle`.
+
+***
+
+If you want, I can also explain:
+✅ Why `forwardRef` is rarely needed  
+✅ Refs vs props (when to use which)  
+✅ Common interview pitfalls  
+✅ Real‑world modal example
+
+Just tell me 😊

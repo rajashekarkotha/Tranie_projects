@@ -182,6 +182,19 @@ Problem:
 
 ***
 
+| Old Redux         | Redux Toolkit   |
+| ----------------- | --------------- |
+| Boilerplate heavy | Minimal code    |
+| Manual actions    | Auto‑generated  |
+| Switch statements | Slice reducers  |
+| Error‑prone       | Safe with Immer |
+
+***
+
+## ✅ Interview‑Ready One‑Liner ✅
+
+> **A slice in Redux Toolkit is a combination of state, reducers, and actions created using `createSlice` to reduce boilerplate and simplify Redux logic.**
+
 ## 🧾 Code Comparison (Very Important ⭐)
 
 ### ❌ Redux (Old Way)

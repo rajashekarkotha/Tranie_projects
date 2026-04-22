@@ -1,0 +1,201 @@
+This is a **very common and very good question** 👍  
+The short answer is:
+
+> **We usually don’t use `return` in `useEffect` because most effects don’t need cleanup.**  
+> `return` in `useEffect` is **only meant for cleanup logic**, not for normal execution.
+
+Let’s explain this clearly and practically.
+
+***
+
+## 1️⃣ What `return` REALLY means in `useEffect`
+
+In `useEffect`, **`return` does NOT work like normal `return`**.
+
+```js
+useEffect(() => {
+  // effect logic
+
+  return () => {
+    // cleanup logic
+  };
+}, []);
+```
+
+✅ The returned function is **NOT executed immediately**  
+✅ React stores it and calls it later:
+
+*   when the component **unmounts**
+*   or before the effect **re-runs**
+
+So:
+
+> **`return` in `useEffect` = cleanup hook**
+
+***
+
+## 2️⃣ Why most `useEffect`s don’t need `return`
+
+Most effects are **one-time or harmless side effects**, like:
+
+```js
+useEffect(() => {
+  console.log("Component mounted");
+}, []);
+```
+
+Here:
+
+*   No subscription
+*   No timer
+*   No event listener
+*   No background process
+
+✅ **Nothing to clean up**
+✅ So **no `return` needed**
+
+***
+
+## 3️⃣ When `return` IS required ✅
+
+You use `return` **only when the effect creates something that must be cleaned up**.
+
+### ✅ Things that REQUIRE cleanup
+
+| Side Effect       | Cleanup Needed? |
+| ----------------- | --------------- |
+| `setInterval`     | ✅ Yes           |
+| `setTimeout`      | ✅ Yes           |
+| Event listeners   | ✅ Yes           |
+| WebSocket         | ✅ Yes           |
+| API subscriptions | ✅ Yes           |
+| Observers         | ✅ Yes           |
+
+***
+
+## 4️⃣ Example: Why `return` is NOT usually written
+
+### ✅ No cleanup needed
+
+```js
+useEffect(() => {
+  document.title = "Dashboard";
+}, []);
+```
+
+*   Setting title does not persist resources
+*   React does not need to undo anything
+
+✅ No `return`
+
+***
+
+## 5️⃣ Example: Why `return` IS written
+
+### ❗ With event listener
+
+```js
+useEffect(() => {
+  const onScroll = () => console.log("scrolling");
+
+  window.addEventListener("scroll", onScroll);
+
+  return () => {
+    window.removeEventListener("scroll", onScroll);
+  };
+}, []);
+```
+
+❌ Without `return`:
+
+*   Listener keeps running after component removal
+*   Memory leak
+*   Duplicate listeners
+
+✅ `return` prevents this
+
+***
+
+## 6️⃣ Common misunderstanding ❌
+
+### ❌ Wrong thinking
+
+> “Why don’t we use `return` to return data from `useEffect`?”
+
+```js
+useEffect(() => {
+  return data; // ❌ WRONG
+}, []);
+```
+
+❌ React ignores this  
+❌ `useEffect` **cannot return values**
+
+✅ Data must go through:
+
+*   `useState`
+*   props
+*   context
+
+***
+
+## 7️⃣ Why beginners think `return` is unnecessary
+
+Because:
+
+*   Many examples are simple
+*   Initial learning effects don’t allocate resources
+*   Cleanup is an advanced concept
+
+So beginners often see:
+
+```js
+useEffect(() => {
+  fetchData();
+}, []);
+```
+
+And assume `return` is optional everywhere — ❌ not true.
+
+***
+
+## 8️⃣ Mental model (VERY IMPORTANT)
+
+Think of `useEffect` like this:
+
+```text
+Effect creates something?
+ ├─ No  → No return needed
+ └─ Yes → Must return cleanup
+```
+
+***
+
+## 9️⃣ Comparison with lifecycle methods
+
+| Class Component      | useEffect         |
+| -------------------- | ----------------- |
+| componentDidMount    | effect body       |
+| componentWillUnmount | returned function |
+
+✅ If you don’t need `componentWillUnmount`, you don’t write it  
+✅ Same rule applies to `useEffect`
+
+***
+
+## ✅ Final Answer (Interview‑ready)
+
+> We usually don’t use `return` in `useEffect` because `return` is only meant for cleanup logic.  
+> Most effects don’t create subscriptions, listeners, or timers, so there’s nothing to clean up.  
+> We add a `return` only when the effect allocates resources that must be released on unmount.
+
+***
+
+If you want, I can also explain:
+
+*   ✅ Why cleanup runs before re‑execution
+*   ✅ StrictMode double cleanup confusion
+*   ✅ Common bugs caused by missing cleanup
+*   ✅ Difference between `useEffect` and `useLayoutEffect`
+
+Just tell me 👍

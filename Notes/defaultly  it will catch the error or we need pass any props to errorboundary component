@@ -1,0 +1,163 @@
+Short, clear answer first 👇  
+**React Error Boundaries catch errors *by default*. You do NOT need to pass any special props for them to work.**  
+But **you DO need to wrap components with the Error Boundary**.
+
+Now let’s explain this properly (interview‑ready ✅).
+
+***
+
+## ✅ Do Error Boundaries catch errors by default?
+
+### ✅ **Yes — automatically**
+
+Once an Error Boundary is defined **correctly** and **wraps child components**, React will automatically route qualifying errors to it.
+
+❌ No props needed  
+❌ No manual triggering  
+✅ React handles it internally
+
+***
+
+## ✅ What you MUST do (important)
+
+### ✅ 1. Define an Error Boundary
+
+An Error Boundary is a **class component** that implements **either one or both**:
+
+*   `static getDerivedStateFromError()`
+*   `componentDidCatch()`
+
+```jsx
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error(error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h2>Something went wrong</h2>;
+    }
+    return this.props.children;
+  }
+}
+```
+
+***
+
+### ✅ 2. Wrap the components you want to protect
+
+This part is **mandatory**.
+
+```jsx
+<ErrorBoundary>
+  <MyComponent />
+</ErrorBoundary>
+```
+
+✅ If `MyComponent` fails → Error Boundary catches it  
+✅ If you don’t wrap it → error crashes the app
+
+***
+
+## ❌ What you do NOT need
+
+| Item                        | Required? |
+| --------------------------- | --------- |
+| Passing `error` prop        | ❌ No      |
+| Passing `hasError` manually | ❌ No      |
+| try/catch in JSX            | ❌ No      |
+| Manual error forwarding     | ❌ No      |
+
+React does all of this automatically.
+
+***
+
+## ✅ How errors flow (mentally useful)
+
+```text
+Child Component throws error
+        ↓
+Nearest Error Boundary above it
+        ↓
+Fallback UI rendered
+```
+
+📌 Only the **nearest parent Error Boundary** catches the error.
+
+***
+
+## ✅ Multiple Error Boundaries (real use)
+
+```jsx
+<GlobalErrorBoundary>
+  <Header />
+
+  <PageErrorBoundary>
+    <PageContent />
+  </PageErrorBoundary>
+
+  <Footer />
+</GlobalErrorBoundary>
+```
+
+✅ Header/footer stay intact  
+✅ Only page content fails safely
+
+This is very common in real projects.
+
+***
+
+## ❌ Common misunderstanding (INTERVIEW ALERT)
+
+> “Do we need to pass the error as a prop to the Error Boundary?”
+
+✅ **No** ❌  
+React injects the error **internally** via lifecycle methods.
+
+***
+
+## ✅ In Next.js (important difference)
+
+### App Router (`app/`)
+
+*   React Error Boundaries ❌ don’t catch server errors
+*   Use **`error.js`** instead (Next.js handles it automatically)
+
+```txt
+app/products/error.js
+```
+
+✅ No props needed here either  
+✅ Next.js wires it up automatically
+
+***
+
+## 🧠 Interview‑ready answer (30 seconds)
+
+> Error Boundaries catch errors automatically once they are implemented correctly and wrap child components. We don’t need to pass any props to trigger error handling. React detects errors during rendering or lifecycle methods and routes them to the nearest Error Boundary. Only wrapping the component tree is required.
+
+***
+
+## ✅ One‑line power statement
+
+> **Error Boundaries work automatically—wrapping is required, props are not.**
+
+***
+
+If you want, I can:
+
+*   ✅ Show **Error Boundary vs Next.js `error.js`**
+*   ✅ Explain **where to place them in large apps**
+*   ✅ Give **real interview trick questions**
+*   ✅ Convert this into **Next.js App Router examples**
+
+Just tell me 👍

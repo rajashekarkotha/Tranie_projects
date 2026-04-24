@@ -1,0 +1,170 @@
+**Short answer:**  
+❌ **No. Server‑side errors are NOT caught by React Error Boundary components.**
+
+Now let’s break this down clearly, because this is a **very common interview trap**.
+
+***
+
+## ✅ What Error Boundaries do catch (recap)
+
+React **Error Boundaries** only catch **client‑side rendering errors**:
+
+✅ Errors during:
+
+*   Render phase
+*   Lifecycle methods (`componentDidMount`, etc.)
+*   Constructors of **child components**
+
+They work **only in the browser / React tree**.
+
+***
+
+## ❌ Do Error Boundaries catch **server‑side errors**?
+
+### ❌ **NO — they do not**
+
+Server‑side errors include:
+
+*   API failures
+*   Database errors
+*   Exceptions thrown in backend logic
+*   Errors in Next.js Server Components
+*   Errors in `getServerSideProps`
+*   Errors in Server Actions
+*   Node.js runtime errors
+
+👉 **React Error Boundaries never see these errors**, because:
+
+> Error Boundaries exist **only after React is running in the browser**
+
+***
+
+## ✅ Why server‑side errors cannot be caught
+
+Error Boundaries work:
+
+*   **After HTML is rendered**
+*   **During client‑side rendering**
+
+Server‑side errors happen:
+
+*   Before React reaches the browser
+*   While generating HTML or data
+
+So technically:
+
+```text
+Server crash ❌ → HTML never completes → Error Boundary never runs
+```
+
+***
+
+## ✅ Correct handling of server‑side errors
+
+### 1️⃣ In **Next.js App Router** (Recommended)
+
+Use **route‑level error handling**
+
+📁 Example:
+
+```txt
+app/products/error.js
+```
+
+```js
+"use client";
+
+export default function Error({ error, reset }) {
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button onClick={reset}>Try again</button>
+    </div>
+  );
+}
+```
+
+✅ Catches:
+
+*   Server Component errors
+*   Server Action errors
+*   Rendering errors in that route segment
+
+⚠️ This is **NOT a React Error Boundary**
+It’s a **Next.js server‑aware error boundary**
+
+***
+
+### 2️⃣ In **Pages Router**
+
+Handle errors inside data‑fetching methods:
+
+```js
+export async function getServerSideProps() {
+  try {
+    const data = await fetchData();
+    return { props: { data } };
+  } catch (error) {
+    return { notFound: true };
+  }
+}
+```
+
+✅ Or return fallback props
+✅ Or redirect to error page
+
+***
+
+### 3️⃣ Backend/API Error Handling
+
+Use:
+
+*   `try/catch`
+*   Proper HTTP status codes
+*   Logging & monitoring (Sentry, Logs)
+
+```js
+try {
+  await db.query();
+} catch (error) {
+  console.error(error);
+  res.status(500).json({ error: "Server error" });
+}
+```
+
+***
+
+## ✅ Summary Table (INTERVIEW GOLD)
+
+| Error Type              | Caught by React Error Boundary? |
+| ----------------------- | ------------------------------- |
+| Render errors (client)  | ✅ Yes                           |
+| Lifecycle errors        | ✅ Yes                           |
+| Button click errors     | ❌ No                            |
+| Async errors            | ❌ No                            |
+| API/server errors       | ❌ No                            |
+| Server Component errors | ❌ No                            |
+| Database errors         | ❌ No                            |
+
+***
+
+## 🧠 Interview‑ready answer (30 seconds)
+
+> No, server‑side errors are not caught by React Error Boundaries. Error Boundaries only catch client‑side rendering and lifecycle errors. Server‑side errors occur before React runs in the browser, so they must be handled using server‑specific mechanisms such as try/catch in APIs, Next.js `error.js` in the App Router, or error handling in data‑fetching methods.
+
+***
+
+## ✅ One‑line power statement
+
+> **Error Boundaries protect the React UI, not the server.**
+
+***
+
+If you want next, I can:
+
+*   ✅ Compare **React Error Boundary vs Next.js `error.js`**
+*   ✅ Show **real production error‑handling architecture**
+*   ✅ Give **interview coding examples**
+*   ✅ Explain **SSR vs Client error handling**
+
+Just tell me 👍

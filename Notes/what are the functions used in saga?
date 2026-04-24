@@ -1,0 +1,267 @@
+In **Redux‑Saga**, “functions” usually refers to **Saga effects and helpers** that help you handle **side effects** (API calls, async logic, background tasks) in a clean, testable way using **generator functions**.
+
+Below is a **clear, interview‑ready list of the most commonly used saga functions**, grouped by purpose.
+
+***
+
+# ✅ Core Functions Used in Redux‑Saga
+
+## 1️⃣ Saga Watcher Functions
+
+These functions **listen for dispatched Redux actions**.
+
+### 🔹 `takeEvery`
+
+*   Runs a saga **for every matching action**
+*   Allows parallel execution
+
+```js
+yield takeEvery("FETCH_DATA", fetchDataSaga);
+```
+
+✅ Use when **all actions must be handled**  
+✅ Example: logging, non‑blocking API calls
+
+***
+
+### 🔹 `takeLatest`
+
+*   Cancels previous saga if a new action arrives
+*   Runs **only the latest one**
+
+```js
+yield takeLatest("SEARCH", searchSaga);
+```
+
+✅ Use for **search, autocomplete, rapid clicks**
+
+***
+
+### 🔹 `takeLeading`
+
+*   Takes the **first action**, ignores others until done
+
+```js
+yield takeLeading("SUBMIT_FORM", submitSaga);
+```
+
+✅ Use for **submit buttons / save operations**
+
+***
+
+### 🔹 `take`
+
+*   Pauses saga until a specific action is dispatched
+
+```js
+yield take("LOGIN_SUCCESS");
+```
+
+✅ Low‑level control  
+✅ Useful in complex flows
+
+***
+
+## 2️⃣ Effect Creator Functions (Most Important)
+
+These are yielded inside sagas.
+
+***
+
+### 🔹 `call`
+
+*   Used to call **blocking async functions**
+*   Saga waits until it completes
+
+```js
+const response = yield call(api.fetchUsers);
+```
+
+✅ Best for API calls  
+✅ Easy to test
+
+***
+
+### 🔹 `put`
+
+*   Dispatches a Redux action
+
+```js
+yield put({ type: "FETCH_SUCCESS", payload: data });
+```
+
+✅ Similar to `dispatch`
+
+***
+
+### 🔹 `select`
+
+*   Reads data from the Redux store
+
+```js
+const user = yield select(state => state.user);
+```
+
+✅ Used to access state inside saga
+
+***
+
+### 🔹 `fork`
+
+*   Calls a function **non‑blocking**
+*   Saga continues immediately
+
+```js
+yield fork(backgroundTask);
+```
+
+✅ Used for background tasks
+
+***
+
+### 🔹 `spawn`
+
+*   Like `fork`, but **detached**
+*   Errors won’t affect parent saga
+
+```js
+yield spawn(watchSaga);
+```
+
+✅ Safer for long‑running sagas
+
+***
+
+### 🔹 `join`
+
+*   Waits for a forked task to finish
+
+```js
+const task = yield fork(workerSaga);
+yield join(task);
+```
+
+***
+
+### 🔹 `cancel`
+
+*   Cancels a running saga
+
+```js
+yield cancel(task);
+```
+
+✅ Used in cleanup or logout scenarios
+
+***
+
+## 3️⃣ Control & Utility Effects
+
+### 🔹 `all`
+
+*   Runs multiple sagas **in parallel**
+
+```js
+yield all([
+  call(fetchUser),
+  call(fetchOrders),
+]);
+```
+
+✅ Improves performance
+
+***
+
+### 🔹 `race`
+
+*   Runs effects in parallel
+*   Only the **first completed** wins
+
+```js
+yield race({
+  data: call(fetchData),
+  timeout: delay(5000),
+});
+```
+
+✅ Timeout handling  
+✅ API fail‑safe patterns
+
+***
+
+### 🔹 `delay`
+
+*   Pauses saga for a given time
+
+```js
+yield delay(1000);
+```
+
+✅ Debounce, retry logic
+
+***
+
+## 4️⃣ Error Handling in Saga
+
+Use standard `try / catch`:
+
+```js
+function* fetchSaga() {
+  try {
+    const data = yield call(api.fetch);
+    yield put({ type: "SUCCESS", data });
+  } catch (error) {
+    yield put({ type: "FAILURE", error });
+  }
+}
+```
+
+✅ Very common interview topic
+
+***
+
+## 5️⃣ Root Saga Function
+
+### 🔹 `rootSaga`
+
+Combines all watcher sagas.
+
+```js
+export default function* rootSaga() {
+  yield all([
+    watchLogin(),
+    watchFetchData(),
+  ]);
+}
+```
+
+✅ Entry point of Redux‑Saga
+
+***
+
+## 🧠 Interview‑Ready Summary (30 Seconds)
+
+> Redux‑Saga provides effect functions like `takeEvery`, `takeLatest` for watching actions, and `call`, `put`, `select`, `fork`, and `all` for handling async logic and side effects. These generator‑based effects make complex async flows easier to manage, test, and maintain compared to traditional middleware.
+
+***
+
+## ✅ Most Important Ones to Remember (Must‑Know)
+
+✅ `takeEvery`  
+✅ `takeLatest`  
+✅ `call`  
+✅ `put`  
+✅ `select`  
+✅ `all`  
+✅ `fork`
+
+***
+
+If you want, I can next:
+
+*   ✅ Explain **takeEvery vs takeLatest vs takeLeading**
+*   ✅ Give **Redux‑Saga interview coding examples**
+*   ✅ Compare **Redux‑Saga vs Redux‑Thunk**
+*   ✅ Provide a **1‑page Redux‑Saga cheat sheet**
+
+Just tell me 👍

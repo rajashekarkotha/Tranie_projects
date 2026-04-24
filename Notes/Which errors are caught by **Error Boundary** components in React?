@@ -1,0 +1,190 @@
+### ✅ Which errors are caught by **Error Boundary** components in React?
+
+An **Error Boundary** in React is designed to catch **certain types of runtime errors** in the component tree and display a fallback UI instead of crashing the entire app.
+
+***
+
+## ✅ Errors that **ARE caught** by Error Boundaries
+
+Error Boundaries catch errors that happen **during rendering or React lifecycle phases** of **child components**.
+
+### ✅ 1. Errors during **render**
+
+Any error thrown while rendering JSX in a child component.
+
+```jsx
+function BuggyComponent() {
+  throw new Error("Render error");
+}
+```
+
+✅ **Caught** by Error Boundary
+
+***
+
+### ✅ 2. Errors in **lifecycle methods**
+
+Errors thrown in lifecycle methods such as:
+
+*   `componentDidMount`
+*   `componentDidUpdate`
+*   `componentWillUnmount`
+
+```jsx
+componentDidMount() {
+  throw new Error("Lifecycle error");
+}
+```
+
+✅ **Caught**
+
+***
+
+### ✅ 3. Errors in **constructors** of child components
+
+```jsx
+constructor() {
+  super();
+  throw new Error("Constructor error");
+}
+```
+
+✅ **Caught**
+
+***
+
+### ✅ 4. Errors in **function components during render**
+
+```jsx
+function Profile({ user }) {
+  return <div>{user.name.toUpperCase()}</div>; // user = null
+}
+```
+
+✅ **Caught**
+
+***
+
+## ❌ Errors that **ARE NOT caught** by Error Boundaries
+
+This is the most important interview part 👇
+
+***
+
+### ❌ 1. Errors inside **event handlers**
+
+```jsx
+<button onClick={() => { throw new Error("Click error"); }}>
+  Click
+</button>
+```
+
+❌ **NOT caught**
+
+✅ Must handle manually using `try/catch`
+
+```js
+const handleClick = () => {
+  try {
+    // logic
+  } catch (e) {
+    console.error(e);
+  }
+};
+```
+
+***
+
+### ❌ 2. Errors in **asynchronous code**
+
+*   `setTimeout`
+*   `setInterval`
+*   `Promise.catch`
+*   `async/await`
+
+```js
+setTimeout(() => {
+  throw new Error("Async error");
+}, 1000);
+```
+
+❌ **NOT caught**
+
+✅ Handle inside async logic:
+
+```js
+try {
+  await fetchData();
+} catch (e) {
+  console.error(e);
+}
+```
+
+***
+
+### ❌ 3. Errors inside the **Error Boundary itself**
+
+If the boundary throws an error, React cannot recover.
+
+❌ **NOT caught**
+
+***
+
+### ❌ 4. Errors in **Server‑Side / Node.js**
+
+*   API routes
+*   Server Components logic
+*   Backend failures
+
+❌ **NOT caught**  
+✅ Must be handled server‑side
+
+***
+
+### ❌ 5. Errors in non‑React code
+
+*   Global scripts
+*   Non‑React utilities
+
+❌ **NOT caught**
+
+***
+
+## ✅ Summary Table (Interview‑Friendly)
+
+### ✅ Caught by Error Boundary
+
+*   Render phase errors
+*   Lifecycle method errors
+*   Constructor errors of child components
+*   Function component render errors
+
+### ❌ Not caught
+
+*   Event handlers
+*   Async code
+*   Errors inside the boundary itself
+*   Server‑side / backend errors
+
+***
+
+## 🧠 Interview‑Ready 30‑Second Answer
+
+> Error Boundaries in React catch errors that occur during rendering, in lifecycle methods, and in constructors of child components. They do not catch errors in event handlers, asynchronous code, server‑side logic, or errors thrown inside the boundary itself. Those must be handled separately using try/catch or other error‑handling mechanisms.
+
+***
+
+## ✅ One‑Line Power Statement
+
+> **Error Boundaries protect rendering, not user actions or async logic.**
+
+***
+
+If you want, I can:
+
+*   ✅ Show **Error Boundary with real project structure**
+*   ✅ Compare **Error Boundary vs try/catch**
+*   ✅ Explain **Next.js `error.js` vs React Error Boundaries**
+*   ✅ Prepare **React error‑handling interview questions**
+
+Just tell me 👍

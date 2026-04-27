@@ -1,0 +1,190 @@
+**SSR (Server‑Side Rendering) in Next.js** happens when your page is **rendered on the server for every request**, and the generated HTML is sent to the browser. Let’s break it down clearly—from *what triggers it* to *how Next.js executes it*.
+
+***
+
+## 1. What SSR means in Next.js (simple view)
+
+In plain React (CSR):
+
+*   Browser loads empty HTML
+*   JS runs
+*   Data is fetched
+*   UI appears
+
+In **Next.js SSR**:
+
+*   Request hits the server
+*   Server fetches data
+*   Server renders HTML
+*   Browser receives **fully rendered HTML**
+*   React hydrates it (adds interactivity)
+
+📌 Result: **Faster first paint + better SEO**
+
+***
+
+## 2. How SSR happens in Next.js (Pages Router)
+
+### Trigger
+
+SSR happens when you export:
+
+```js
+export async function getServerSideProps(context) {
+  return { props: {} }
+}
+```
+
+### Request Flow
+
+1.  User requests `/profile`
+2.  Next.js server runs `getServerSideProps`
+3.  Data is fetched (DB / API)
+4.  React component renders on **server**
+5.  HTML is generated
+6.  HTML is sent to browser
+7.  React hydrates on client
+
+### Example
+
+```js
+export async function getServerSideProps() {
+  const res = await fetch('https://api.example.com/user')
+  const user = await res.json()
+
+  return {
+    props: { user }
+  }
+}
+
+export default function Profile({ user }) {
+  return <h1>{user.name}</h1>
+}
+```
+
+✅ This page is **SSR**
+❌ It runs **on every request**
+
+***
+
+## 3. SSR in Next.js App Router (Next 13+)
+
+In the **App Router**, SSR is the **default behavior**.
+
+### By default:
+
+```js
+export default async function Page() {
+  const data = await fetch('https://api.example.com/data')
+  return <div>Data</div>
+}
+```
+
+This runs on the **server**.
+
+### Explicit SSR (force dynamic)
+
+```js
+export const dynamic = 'force-dynamic'
+```
+
+OR
+
+```js
+fetch(url, { cache: 'no-store' })
+```
+
+📌 Any `no-store` fetch → Page becomes SSR
+
+***
+
+## 4. What actually runs on the server?
+
+✅ Runs on server:
+
+*   `getServerSideProps`
+*   Server Components
+*   API routes
+*   Database queries
+*   Secure keys (`process.env.SECRET`)
+
+❌ Does **not** run on server:
+
+*   `useEffect`
+*   Browser APIs (`window`, `document`)
+*   Local storage
+
+***
+
+## 5. Hydration (important concept)
+
+After SSR HTML reaches the browser:
+
+*   React runs again on client
+*   Attaches event handlers
+*   Makes page interactive
+
+This process is called **hydration**
+
+⚠️ Mismatch between server HTML and client render causes hydration errors.
+
+***
+
+## 6. SSR vs SSG vs CSR (quick compare)
+
+| Type    | Render Time   | Use Case               |
+| ------- | ------------- | ---------------------- |
+| **SSR** | Every request | Auth pages, dashboards |
+| **SSG** | Build time    | Blogs, marketing       |
+| **ISR** | Incremental   | Large content sites    |
+| **CSR** | Browser       | Internal tools         |
+
+***
+
+## 7. When SSR is chosen by Next.js automatically
+
+SSR happens when:
+
+*   `getServerSideProps` is used
+*   `cache: 'no-store'`
+*   Cookies/headers are read
+*   `dynamic = 'force-dynamic'`
+*   Server Actions depend on request data
+
+***
+
+## 8. Real‑world example (Auth page)
+
+Why SSR?
+
+*   Needs cookies
+*   User‑specific data
+*   Cannot be cached
+
+```js
+import { cookies } from 'next/headers'
+
+export default function Dashboard() {
+  const token = cookies().get('token')
+  return <h1>Welcome</h1>
+}
+```
+
+✅ Automatically SSR
+
+***
+
+## 9. Summary (one‑liner)
+
+> **SSR in Next.js happens when a page must be rendered on the server per request due to dynamic, user‑specific, or uncached data—producing ready HTML before React hydrates it in the browser.**
+
+***
+
+If you want, I can:
+
+*   Explain **SSR vs ISR with diagrams**
+*   Debug **hydration errors**
+*   Map **React lifecycle → SSR**
+*   Give **Cognizant interview‑style explanation**
+
+Just tell me 👍

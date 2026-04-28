@@ -1,0 +1,120 @@
+Below is a well‑structured list of Next.js interview questions, asked frequently in frontend + full‑stack interviews, especially for Senior Software Engineer roles.
+I’ve grouped them from basic → advanced → real‑world scenarios so you can prepare smartly.
+
+✅ Next.js Interview Questions (2024–2026 Aligned)
+🔹 1. Basics & Fundamentals
+	1. What is Next.js and how is it different from React?
+	2. What are the main features of Next.js?
+	3. Explain SSR, SSG, ISR in Next.js.
+	4. What is the difference between CSR and SSR?
+	5. What is the purpose of the pages directory?
+	6. How does routing work in Next.js?
+	7. What is file‑based routing?
+	8. What is Link component used for?
+	9. How is Next.js SEO‑friendly?
+	10. What is _app.js and its use?
+
+🔹 2. Rendering & Data Fetching
+	11. Difference between getStaticProps and getServerSideProps?
+	12. When would you use ISR (Incremental Static Regeneration)?
+	13. What is getStaticPaths?
+	14. Can you use multiple data‑fetching methods in one page?
+	15. How do you handle API calls in Next.js?
+	16. What happens if getServerSideProps throws an error?
+	17. How does caching work in ISR?
+
+🔹 3. Routing & Navigation (Pages Router + App Router)
+	18. What is dynamic routing ([id].js)?
+	19. What is catch‑all routing ([...slug].js)?
+	20. Difference between Pages Router and App Router?
+	21. What are layout.js and template.js in App Router?
+	22. What are Server Components?
+	23. Difference between Server Components and Client Components?
+	24. Why do we use "use client"?
+	25. How does navigation work in App Router?
+
+🔹 4. Performance & Optimization
+	26. How does Next.js improve performance?
+	27. What is the Image component and why is it used?
+	28. Explain automatic code splitting.
+	29. What is lazy loading in Next.js?
+	30. How do you optimize third‑party scripts?
+	31. How does Next.js handle prefetching?
+	32. How would you reduce page load time in Next.js?
+
+🔹 5. API Routes & Backend Capabilities
+	33. What are API Routes in Next.js?
+	34. When would you use Next.js API routes vs external backend?
+	35. How do you secure API routes?
+	36. Can Next.js replace Node.js backend?
+	37. What are Edge Functions?
+	38. Difference between API Routes and Server Actions?
+	39. How do you handle authentication in Next.js?
+
+🔹 6. Styling & Assets
+	40. What styling options are supported in Next.js?
+	41. Difference between CSS Modules and Styled Components?
+	42. How do you add global CSS?
+	43. How do you handle themes (dark/light mode)?
+	44. How do you manage static assets?
+	45. How does Next.js handle fonts?
+
+🔹 7. Security & SEO
+	46. How do you handle SEO in Next.js?
+	47. What is next/head used for?
+	48. How do you prevent XSS attacks?
+	49. How do you protect environment variables?
+	50. How do you implement authentication and authorization?
+	51. How do you handle sensitive data on server vs client?
+
+🔹 8. Testing & Error Handling
+	52. How do you test a Next.js application?
+	53. How do you handle 404 and 500 pages?
+	54. What is error.js in App Router?
+	55. How do you log errors in production?
+	56. How do you handle fallback pages?
+
+🔹 9. Deployment & Environment
+	57. How do you deploy a Next.js app?
+	58. What is Vercel and why is it preferred?
+	59. How do environment variables work?
+	60. Difference between build time and runtime variables?
+	61. How do you handle multi‑environment setup?
+	62. What is output: standalone?
+
+🔹 10. Real‑World / Scenario‑Based Questions (Client‑Round)
+	63. How would you design a SEO‑friendly product page?
+	64. When would you choose SSR vs SSG?
+	65. How do you handle high traffic in Next.js?
+	66. How would you migrate a React app to Next.js?
+	67. How do you secure pages based on user role?
+	68. What challenges did you face in a Next.js project?
+	69. How do you improve Core Web Vitals?
+	70. How do you debug production issues in Next.js?
+
+🔥 Advanced / Senior‑Level Questions
+	71. Explain streaming and Suspense in Next.js.
+	72. How do Server Actions work?
+	73. How do you manage large‑scale applications in Next.js?
+	74. How do you share logic between server and client?
+	75. What are common performance pitfalls?
+	76. How does Next.js handle hydration?
+	77. Difference between Edge Runtime and Node Runtime?
+
+✅ Interview Tip (Very Important)
+When answering:
+	• Start with concept
+	• Give real‑project example
+	• End with business or performance benefit
+Example ending:
+	“This helped us improve SEO and reduce page load time by 30%.”
+
+👉 Want next?
+I can:
+	• ✅ Provide answers to all questions
+	• ✅ Create Next.js client‑round cheat sheet
+	• ✅ Prepare coding questions + solutions
+	• ✅ Do mock interview Q&A (you answer, I refine)
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 

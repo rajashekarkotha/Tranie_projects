@@ -1,0 +1,192 @@
+React Hooks are **not allowed inside loops, conditions, or event handlers** because they rely on a **strict and predictable call order** to work correctly. This is commonly summarized as the **“Rules of Hooks.”**
+
+Let’s break it down clearly.
+
+***
+
+## 1. How Hooks Work Internally (Key Reason)
+
+React does **not** identify hooks by name.  
+Instead, it tracks them by **call order** during rendering.
+
+Example (simplified idea):
+
+```txt
+Render 1:
+useState → index 0
+useEffect → index 1
+
+Render 2:
+useState → index 0
+useEffect → index 1
+```
+
+React assumes:
+
+> “The first hook call is always state, the second is always effect”
+
+If the order changes, React gets confused and reads the wrong state.
+
+***
+
+## 2. What Goes Wrong in Loops or Conditions
+
+### ❌ Hook inside a loop
+
+```jsx
+function MyComponent({ items }) {
+  items.forEach(item => {
+    const [state, setState] = useState(item); // ❌
+  });
+}
+```
+
+✅ Problem:
+
+*   Number of hook calls depends on `items.length`
+*   Next render might have more or fewer items
+*   Hook order changes → **state corruption**
+
+***
+
+### ❌ Hook inside a condition
+
+```jsx
+function MyComponent({ loggedIn }) {
+  if (loggedIn) {
+    useEffect(() => {
+      console.log("User logged in");
+    }, []);
+  }
+}
+```
+
+✅ Problem:
+
+*   First render: hook runs
+*   Second render (`loggedIn = false`): hook doesn’t run
+*   React’s hook index is now misaligned
+
+***
+
+## 3. Why Hooks Are Not Used Inside Event Handlers
+
+### ❌ This is invalid
+
+```jsx
+function MyComponent() {
+  function handleClick() {
+    const [count, setCount] = useState(0); // ❌
+  }
+}
+```
+
+✅ Why?
+
+*   Hooks must run during **render**, not later
+*   Event handlers run **after rendering**
+*   React can’t track or subscribe to state updates created outside render
+
+Hooks are **not regular functions** — they are tied to React’s render cycle.
+
+***
+
+## 4. Correct Mental Model
+
+### ✅ Hooks must be:
+
+*   Called at the **top level**
+*   Called **unconditionally**
+*   Called **in the same order on every render**
+
+```jsx
+function MyComponent({ loggedIn }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (loggedIn) {
+      console.log("User logged in");
+    }
+  }, [loggedIn]);
+
+  return <button onClick={() => setCount(count + 1)}>+</button>;
+}
+```
+
+✅ Conditional logic goes **inside the hook**, not around it
+
+***
+
+## 5. Why JavaScript "Event Loop" Is Not the Reason (Common Confusion)
+
+This rule is **not about the JS event loop** (microtasks, macrotasks, callbacks).
+
+It’s about:
+
+*   **React’s render phase**
+*   **Deterministic hook ordering**
+*   **State mapping by index**
+
+Even synchronous loops break hooks, not just async events.
+
+***
+
+## 6. How to Fix the Problem Properly
+
+### ✅ Move logic into the hook
+
+```jsx
+useEffect(() => {
+  if (condition) {
+    doSomething();
+  }
+}, [condition]);
+```
+
+### ✅ Use custom hooks
+
+```jsx
+function useAuthEffect(loggedIn) {
+  useEffect(() => {
+    if (loggedIn) {
+      console.log("Logged in");
+    }
+  }, [loggedIn]);
+}
+```
+
+***
+
+## 7. Official Rule (One Sentence)
+
+> **Hooks must be called at the top level of a React function component or custom hook.**
+
+This guarantees:
+
+*   Same order
+*   Same count
+*   Same state mapping
+
+***
+
+## Summary
+
+| Scenario                 | Allowed? | Why                 |
+| ------------------------ | -------- | ------------------- |
+| Top-level component body | ✅        | Predictable order   |
+| Inside condition         | ❌        | Order can change    |
+| Inside loop              | ❌        | Count can change    |
+| Inside event handler     | ❌        | Runs outside render |
+| Inside custom hook       | ✅        | Follows same rules  |
+
+***
+
+### One‑line takeaway:
+
+**Hooks aren’t allowed in loops or events because React tracks them by call order, and loops/events break that guarantee.**
+
+If you want, I can also explain:
+
+*   Hooks vs class lifecycle
+*   How ESLint enforces hook rules
+*   Why custom hooks solve reuse better than HOCs

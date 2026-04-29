@@ -1,0 +1,133 @@
+In **Redux‑Saga**, the core logic is written using **Generator functions**.
+
+***
+
+## ✅ Main Type of Function Used in Saga
+
+### 🔹 **Generator Function (`function*`)**
+
+Redux‑Saga uses **ES6 generator functions**, identified by `function*`, because they can **pause and resume execution**, which is perfect for handling async flows.
+
+```js
+function* mySaga() {
+  // saga logic
+}
+```
+
+🔑 Generator functions:
+
+*   Use `yield`
+*   Return an iterator
+*   Pause at each `yield` until resumed by Redux‑Saga middleware
+
+***
+
+## ✅ Why Generator Functions?
+
+Redux‑Saga needs to:
+
+*   Handle async calls
+*   Pause until a response arrives
+*   Control execution flow like synchronous code
+
+✅ Generator functions provide:
+
+*   Declarative async flow
+*   Easier testing
+*   Better control over side effects
+
+***
+
+## ✅ Common Types of Saga Functions
+
+### 1️⃣ **Worker Saga**
+
+Performs the actual work (API call, logic, etc.)
+
+```js
+function* fetchUser(action) {
+  try {
+    const data = yield call(apiFetchUser, action.payload);
+    yield put({ type: "FETCH_SUCCESS", payload: data });
+  } catch (error) {
+    yield put({ type: "FETCH_FAILURE", error });
+  }
+}
+```
+
+***
+
+### 2️⃣ **Watcher Saga**
+
+Listens for dispatched actions and triggers worker saga
+
+```js
+function* watchFetchUser() {
+  yield takeLatest("FETCH_USER", fetchUser);
+}
+```
+
+***
+
+### 3️⃣ **Root Saga**
+
+Combines all watcher sagas
+
+```js
+function* rootSaga() {
+  yield all([
+    watchFetchUser(),
+  ]);
+}
+```
+
+***
+
+## ✅ Effects Used Inside Generator Functions
+
+These are **plain JavaScript objects** created by redux‑saga helpers:
+
+| Effect         | Purpose               |
+| -------------- | --------------------- |
+| `call()`       | Call async function   |
+| `put()`        | Dispatch action       |
+| `take()`       | Wait for action       |
+| `takeLatest()` | Take latest action    |
+| `takeEvery()`  | Take every action     |
+| `fork()`       | Non‑blocking call     |
+| `spawn()`      | Detached task         |
+| `all()`        | Run sagas in parallel |
+| `select()`     | Read Redux state      |
+| `delay()`      | Pause for time        |
+
+Example:
+
+```js
+yield call(apiFunction);
+yield put({ type: "ACTION" });
+```
+
+***
+
+## ✅ Important Interview Answer (Short & Crisp)
+
+> **Redux‑Saga uses generator functions (`function*`) to manage asynchronous side effects using `yield`, allowing synchronous‑like code flow and easy testing.**
+
+***
+
+## ✅ Follow‑up Questions You Might Get
+
+✅ Why not async/await?  
+✅ Difference between Saga and Thunk  
+✅ `call` vs `fork`  
+✅ `takeEvery` vs `takeLatest`  
+✅ How saga middleware works
+
+If you want, I can:
+
+*   Compare **Saga vs Thunk**
+*   Explain **`call` vs `fork` with examples**
+*   Show **real project saga structure**
+*   Give **interview Q\&A**
+
+Just tell me 👍

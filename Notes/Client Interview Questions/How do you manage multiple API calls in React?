@@ -1,0 +1,123 @@
+Got it — you want how to manage multiple API calls specifically in React, explained in a clear, interview‑ready way (not generic theory).
+Below is the best senior‑level React answer, structured exactly how clients expect.
+
+✅ How do you manage multiple API calls in React?
+
+✅ High‑Level Interview Answer
+	In React, I manage multiple API calls by deciding whether they should run in parallel, sequentially, or conditionally, handling them inside hooks, centralizing API logic, and managing loading, error, and cancellation states properly to avoid race conditions and performance issues.
+
+✅ 1️⃣ Parallel API Calls in React
+Used when APIs are independent.
+✅ Example Use Case
+	• Homepage data
+	• Dashboard widgets
+	• Product list + banner + offers
+✅ How I Handle
+	• Trigger calls in the same useEffect
+	• Maintain separate state for each response
+	• Show section‑level loaders
+✅ Faster load
+✅ Better UX
+
+✅ 2️⃣ Sequential API Calls in React
+Used when one API depends on another.
+✅ Example Use Case
+	• Login → Fetch user profile
+	• Insurance policy → Get dependent riders
+	• Get order → Get order details
+✅ How I Handle
+	• Call second API only after first success
+	• Use conditional logic inside useEffect
+✅ Data consistency
+✅ Avoids failures
+
+✅ 3️⃣ Conditional API Calls
+Executed based on:
+	• User action
+	• Role/permission
+	• Feature flags
+	• Form step completion
+✅ Example
+	• Insurance eligibility API only after DOB field valid
+	• Load recommendations only for logged‑in users
+✅ Avoids unnecessary calls
+✅ Improves performance
+
+✅ 4️⃣ Managing Loading State in React
+For multiple calls, I never block the whole UI unless required.
+✅ Best Practice:
+	• Page‑level loader (for critical calls)
+	• Component‑level loader (for independent sections)
+This avoids:
+	• Flickering UI
+	• Poor user experience
+
+✅ 5️⃣ Error Handling Strategy
+Each API has independent error handling.
+✅ Why?
+	• One API failure should not break the entire screen
+	• Display fallback UI where required
+Example:
+	• Dashboard loads partially even if one widget fails
+
+✅ 6️⃣ Avoiding Duplicate API Calls
+In React, duplicate calls can happen due to:
+	• Re‑renders
+	• Dependency mistakes in useEffect
+✅ How I prevent it:
+	• Proper dependency arrays
+	• Debounce user actions (search/filter)
+	• Cache previously fetched data
+	• Execute API only when required props/state changes
+
+✅ 7️⃣ Cancelling API Calls (Very Important in React)
+When:
+	• Component unmounts
+	• Search text changes quickly
+	• User navigates away
+✅ I cancel ongoing requests to avoid:
+	• Memory leaks
+	• Race conditions
+	• Wrong UI updates
+
+✅ 8️⃣ Centralized API Layer
+All API calls go through:
+	• Single API service
+	• Common interceptors for: 
+		○ Authentication
+		○ Error handling
+		○ Logging
+✅ Cleaner React components
+✅ Easier maintenance
+
+✅ 9️⃣ Authentication‑Aware Multiple Calls
+When token expires:
+	• Multiple APIs may fail together
+	• I allow only one token refresh
+	• Queue pending API calls
+	• Retry after token update
+✅ Prevents logout storms
+✅ Ensures stability
+
+✅ Real‑World Examples
+🛒 eCommerce
+	• Parallel: Product list, banners, recommendations
+	• Sequential: Checkout → Payment → Order confirmation
+	• Conditional: Apply coupon API only if coupon entered
+
+🏦 Insurance
+	• Sequential: Policy → Eligibility → Premium calculation
+	• Conditional: Rider API based on user selection
+	• Background: Auto‑save draft APIs
+
+✅ One‑Line Power Answer (Very Important)
+	In React, I manage multiple API calls using hooks by executing them in parallel, sequentially, or conditionally, while handling loading, errors, caching, and cancellation properly to ensure performance and stability.
+
+✅ Ultra‑Short Version (If Time Is Less)
+	I control how APIs run inside React hooks and manage loading, errors, and cancellations individually so multiple calls don’t impact user experience or performance.
+
+If you want, I can next: ✅ Explain this using React Query ✅ Provide simple React pseudo‑code ✅ Prepare client follow‑up questions ✅ Explain real production issues & fixes
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 
+

@@ -1,0 +1,185 @@
+Awesome 👍 let’s move to the **next logical step**.
+
+***
+
+# 🟢 TASK 3: Modules in Node.js (`require` & `module.exports`)
+
+### 🎯 Goal
+
+Learn:
+
+*   What **modules** are
+*   How to **split code into multiple files**
+*   How to **export and import** code using `module.exports` and `require()`
+
+👉 This is **critical** for real‑world Node.js apps and interviews.
+
+***
+
+## ✅ Step 1: What is a Module in Node.js?
+
+In Node.js:
+
+*   **Every file is a module**
+*   You can **export** things from one file
+*   You can **import** them into another file
+
+✅ Helps in:
+
+*   Code reusability
+*   Clean structure
+*   Maintainability
+
+***
+
+## ✅ Step 2: Create Files
+
+Inside your `node-learning` folder, create:
+
+    task3/
+      ├── math.js
+      └── app.js
+
+***
+
+## ✅ Step 3: Export from a Module (`math.js`)
+
+### 📄 `math.js`
+
+```js
+function add(a, b) {
+  return a + b;
+}
+
+function subtract(a, b) {
+  return a - b;
+}
+
+module.exports = {
+  add,
+  subtract
+};
+```
+
+✅ `module.exports` makes functions **available to other files**
+
+***
+
+## ✅ Step 4: Import Module using `require` (`app.js`)
+
+### 📄 `app.js`
+
+```js
+const math = require("./math");
+
+console.log("Addition:", math.add(10, 5));
+console.log("Subtraction:", math.subtract(10, 5));
+```
+
+***
+
+## ✅ Step 5: Run the Program
+
+```bash
+cd task3
+node app.js
+```
+
+✅ Output:
+
+    Addition: 15
+    Subtraction: 5
+
+🎉 You just used your own module!
+
+***
+
+## ✅ Step 6: Export a Single Function (Alternate Way)
+
+### 📄 `greet.js`
+
+```js
+module.exports = function (name) {
+  return `Hello ${name}`;
+};
+```
+
+### 📄 `app.js`
+
+```js
+const greet = require("./greet");
+
+console.log(greet("Rajashekar"));
+```
+
+✅ Output:
+
+    Hello Rajashekar
+
+***
+
+## ✅ Step 7: Built‑in Modules vs Custom Modules
+
+### ✅ Built‑in module example
+
+```js
+const fs = require("fs");
+```
+
+### ✅ Custom module example
+
+```js
+const math = require("./math");
+```
+
+📌 **Rule**
+
+*   Built‑in / node\_modules → no `./`
+*   Your files → must use `./`
+
+***
+
+## ✅ Step 8: Practice Task (VERY IMPORTANT)
+
+👉 Create a module `user.js`  
+👉 Export:
+
+*   `getName()`
+*   `getRole()`
+
+👉 Import it in `app.js` and print:
+
+    Name: Rajashekar
+    Role: Software Engineer
+
+***
+
+## ✅ What You Learned
+
+✅ Every file is a module  
+✅ `module.exports` is used to export  
+✅ `require()` is used to import  
+✅ Clean separation of code
+
+***
+
+## ✅ Interview One‑Liner 💡
+
+> In Node.js, modules allow splitting code into reusable files using `module.exports` and `require()` for better maintainability.
+
+***
+
+## ✅ Common Interview Follow‑ups
+
+*   CommonJS vs ES Modules
+*   `require` vs `import`
+*   `module.exports` vs `exports`
+
+***
+
+### ✅ Stop here and finish Task 3
+
+When you’re done, reply:
+👉 **“Next task”**
+
+✅ **Next Task:** Building a **Simple HTTP Server** 🌐

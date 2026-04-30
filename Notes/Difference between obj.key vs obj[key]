@@ -1,0 +1,186 @@
+Here’s a **clear, practical explanation** of the difference between  
+**`obj.key`** and **`obj[key]`** in JavaScript 👇
+
+***
+
+## ✅ Short Answer
+
+| Syntax     | When to use                                                  |
+| ---------- | ------------------------------------------------------------ |
+| `obj.key`  | When the **property name is fixed and known**                |
+| `obj[key]` | When the **property name is dynamic (stored in a variable)** |
+
+***
+
+## 1️⃣ `obj.key` → **Dot notation**
+
+### ✅ Use when the property name is **literal**
+
+```js
+const obj = {
+  name: "JS",
+  version: "ES6"
+};
+
+console.log(obj.name);    // "JS"
+console.log(obj.version); // "ES6"
+```
+
+### 🔒 Rules
+
+*   Property name must be:
+    *   a **valid identifier**
+    *   known at **write time**
+*   ❌ Cannot use variables
+
+```js
+const key = "name";
+console.log(obj.key); // ❌ undefined (looks for literal "key")
+```
+
+***
+
+## 2️⃣ `obj[key]` → **Bracket notation**
+
+### ✅ Use when the property name is **dynamic**
+
+```js
+const obj = {
+  name: "JS",
+  version: "ES6"
+};
+
+const key = "name";
+console.log(obj[key]); // ✅ "JS"
+```
+
+### ✅ Also required when:
+
+*   Property name has **spaces**
+*   Property name starts with a **number**
+*   Property name has **special characters**
+
+```js
+const user = {
+  "first name": "Shekar",
+  "1role": "Admin"
+};
+
+console.log(user["first name"]); // ✅ "Shekar"
+console.log(user["1role"]);      // ✅ "Admin"
+```
+
+❌ Dot notation fails here:
+
+```js
+user.first name // ❌ syntax error
+user.1role     // ❌ invalid
+```
+
+***
+
+## 🔑 Key Difference (Interview Important)
+
+### Dot notation
+
+```js
+obj.key
+```
+
+➡️ Always looks for property named **"key"**
+
+### Bracket notation
+
+```js
+obj[key]
+```
+
+➡️ Looks for property whose name is the **value of `key`**
+
+***
+
+## 3️⃣ Real Example (Why your earlier code returned `undefined`)
+
+```js
+const obj = {
+  name: "JS"
+};
+
+const key = "shekar";
+
+console.log(obj[key]); // undefined
+```
+
+Because JavaScript evaluates:
+
+```js
+obj["shekar"] // property does not exist
+```
+
+***
+
+## 4️⃣ When both give same result
+
+```js
+obj.name      === obj["name"]; // ✅ true
+```
+
+Only when:
+
+*   Property name is valid
+*   Property name is known
+*   No variables involved
+
+***
+
+## 5️⃣ Real‑World Use Cases
+
+### ✅ Use `obj.key`
+
+*   Simple objects
+*   Config files
+*   Known properties
+
+```js
+config.apiUrl
+user.isActive
+```
+
+### ✅ Use `obj[key]`
+
+*   Loops
+*   API responses
+*   Dynamic data
+*   Forms
+
+```js
+for (let key in obj) {
+  console.log(obj[key]);
+}
+```
+
+***
+
+## ✅ Final Summary (One‑Glance)
+
+| Feature            | `obj.key` | `obj[key]` |
+| ------------------ | --------- | ---------- |
+| Uses variable      | ❌         | ✅          |
+| Dynamic access     | ❌         | ✅          |
+| Special characters | ❌         | ✅          |
+| Simple & readable  | ✅         | ❌          |
+| Interview safe     | ✅         | ✅          |
+
+***
+
+### 🧠 One line to remember
+
+> **Use dot notation for static access, bracket notation for dynamic access.**
+
+If you want, I can also explain:
+
+*   How this works with arrays
+*   Optional chaining (`obj?.[key]`)
+*   Common JS interview traps on property access
+
+Just say 👍

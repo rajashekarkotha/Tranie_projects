@@ -1,0 +1,290 @@
+It sounds like you’re asking for **interview-style tests/questions that specifically check whether someone understands *reference equality* and *parent-driven re-renders in React***.
+
+Below is a **clean, structured set of questions** (with answers) that are **commonly used in interviews** to test *real understanding*, not memorization.
+
+***
+
+# ✅ React Interview Tests: Reference Equality & Parent Re-renders
+
+These questions expose whether a candidate understands:
+
+*   **Re-render triggers**
+*   **Reference vs value equality**
+*   **Why memoization is needed**
+*   **Why “props didn’t change” is often misleading**
+
+***
+
+## 🧪 Test 1: Parent Re-render with Same Primitive Prop
+
+### ❓ Question
+
+```jsx
+function Parent() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <>
+      <button onClick={() => setCount(c => c + 1)}>+</button>
+      <Child name="Raja" />
+    </>
+  );
+}
+
+function Child({ name }) {
+  console.log("Child rendered");
+  return <div>{name}</div>;
+}
+```
+
+Click the button.  
+**Does `Child` re-render? Why?**
+
+***
+
+### ✅ Correct Answer
+
+Yes, `Child` re-renders.
+
+### ✅ Why This Tests Understanding
+
+*   Even though `"Raja"` didn’t change
+*   **Parent re-render → child function re-executes**
+*   React does *not* skip child renders by default
+
+> ✅ Passing the same value does NOT prevent re-render
+
+***
+
+## 🧪 Test 2: React.memo + Primitive Prop
+
+### ❓ Question
+
+```jsx
+const Child = React.memo(function Child({ name }) {
+  console.log("Child rendered");
+  return <div>{name}</div>;
+});
+```
+
+Same `Parent` as before.  
+Does `Child` still re-render?
+
+***
+
+### ✅ Correct Answer
+
+No.
+
+### ✅ Why
+
+*   `React.memo` performs a **shallow comparison**
+*   `"Raja" === "Raja"` is `true`
+*   React safely skips the render
+
+***
+
+## 🧪 Test 3: Object Literal Prop (Classic Reference Trap)
+
+### ❓ Question
+
+```jsx
+<Child user={{ id: 1 }} />
+```
+
+Wrapped in `React.memo`.
+
+**Will `Child` re-render on every parent re-render?**
+
+***
+
+### ✅ Correct Answer
+
+Yes.
+
+### ✅ Why (Critical Concept)
+
+```js
+{ id: 1 } !== { id: 1 }
+```
+
+*   Objects are compared **by reference**
+*   New object created on every render
+*   Shallow comparison fails
+
+> ✅ This single question filters out weak React knowledge
+
+***
+
+## 🧪 Test 4: Fixing the Reference Problem
+
+### ❓ Question
+
+How do you prevent re-renders in Test 3?
+
+***
+
+### ✅ Correct Answer
+
+Stabilize the reference.
+
+```jsx
+const user = React.useMemo(() => ({ id: 1 }), []);
+
+<Child user={user} />
+```
+
+***
+
+## 🧪 Test 5: Function Props & Reference Equality
+
+### ❓ Question
+
+```jsx
+<Child onClick={() => doSomething()} />
+```
+
+Even with `React.memo`, does `Child` re-render?
+
+***
+
+### ✅ Correct Answer
+
+Yes.
+
+### ✅ Why
+
+*   New function created every render
+*   Functions are objects
+*   Reference changes every time
+
+***
+
+## 🧪 Test 6: Fixing Function Re-renders
+
+### ✅ Correct Fix
+
+```jsx
+const onClick = React.useCallback(() => {
+  doSomething();
+}, []);
+
+<Child onClick={onClick} />
+```
+
+✅ Reference stability achieved
+
+***
+
+## 🧪 Test 7: Context Change Test
+
+### ❓ Question
+
+```jsx
+const theme = useContext(ThemeContext);
+```
+
+Props don’t change. Parent doesn’t change.  
+Theme value changes.
+
+Does component re-render?
+
+***
+
+### ✅ Correct Answer
+
+Yes.
+
+### ✅ Why
+
+*   Context subscriptions bypass props
+*   Context change forces re-render
+
+***
+
+## 🧪 Test 8: “Re-render” vs “DOM Update”
+
+### ❓ Question
+
+Does a re-render mean the DOM updates?
+
+***
+
+### ✅ Correct Answer
+
+No.
+
+### ✅ Why This Tests Depth
+
+*   Re-render = function execution
+*   DOM updates happen **only if diff changes**
+*   React reconciler prevents unnecessary DOM work
+
+***
+
+## 🧪 Test 9: StrictMode Confusion
+
+### ❓ Question
+
+Why does a component render twice in development?
+
+***
+
+### ✅ Correct Answer
+
+Because of `React.StrictMode`.
+
+### ✅ Why
+
+*   Intentional double-invocation
+*   Helps detect side effects
+*   Does not happen in production
+
+***
+
+## 🧪 Test 10: Final Understanding Check
+
+### ❓ Question
+
+What actually causes a re-render?
+
+***
+
+### ✅ Perfect Answer
+
+A component re-renders when:
+
+*   Its **state changes**
+*   Its **parent re-renders**
+*   Its **context value changes**
+*   React StrictMode (dev only)
+
+Props being “the same” does **not** matter unless memoized.
+
+***
+
+# ✅ Core Concepts Being Tested (What Interviewers Want)
+
+✅ Parent → child re-render behavior  
+✅ Reference vs value equality  
+✅ Shallow comparison  
+✅ Why `useMemo` / `useCallback` exist  
+✅ Why memoization is opt-in  
+✅ Mental model of React rendering
+
+***
+
+# ✅ One-Line Interview-Level Summary
+
+> React re-renders children by default when parents render, and since objects and functions are compared by reference, stable references are required to prevent unnecessary re-renders.
+
+***
+
+If you want, next I can:
+
+*   ✅ Give **MCQs**
+*   ✅ Give **live coding tests**
+*   ✅ Show **React DevTools re-render tracing**
+*   ✅ Explain **why React chose this design**
+
+Just say 👍

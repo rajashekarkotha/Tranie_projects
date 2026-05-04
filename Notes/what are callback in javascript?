@@ -1,0 +1,244 @@
+### ✅ What are **Callbacks** in JavaScript?
+
+A **callback** is a **function that is passed as an argument to another function** and is **executed later**, usually after some operation is completed.
+
+***
+
+## 🔹 Simple Definition (Interview‑ready)
+
+> A **callback function** is a function passed to another function to be executed after a task completes.
+
+***
+
+## 🔹 Why Callbacks Are Needed
+
+JavaScript is **single‑threaded** and uses **asynchronous operations** for:
+
+*   API calls
+*   Timers
+*   File reading
+*   Event handling
+
+Callbacks allow JavaScript to:
+✅ Continue executing code  
+✅ Run dependent logic **after** async tasks finish
+
+***
+
+## ✅ Basic Callback Example (Synchronous)
+
+```js
+function greet(name, callback) {
+  console.log("Hello " + name);
+  callback();
+}
+
+function sayBye() {
+  console.log("Goodbye");
+}
+
+greet("Raja", sayBye);
+```
+
+### ✅ Output
+
+    Hello Raja
+    Goodbye
+
+***
+
+## ✅ Callback Example (Asynchronous)
+
+```js
+setTimeout(function () {
+  console.log("This runs after 2 seconds");
+}, 2000);
+```
+
+✅ `setTimeout` takes a **callback function**  
+✅ Callback runs **after** delay
+
+***
+
+## ✅ Callbacks with Arrow Functions
+
+```js
+setTimeout(() => {
+  console.log("Arrow callback");
+}, 1000);
+```
+
+✅ Cleaner syntax  
+✅ Very common in modern JavaScript
+
+***
+
+## ✅ Real‑World Example: API Call Simulation
+
+```js
+function fetchData(callback) {
+  setTimeout(() => {
+    callback("Data from server");
+  }, 2000);
+}
+
+fetchData(data => {
+  console.log(data);
+});
+```
+
+### ✅ Output (after 2 seconds)
+
+    Data from server
+
+***
+
+## ✅ Callbacks in Event Handling (Very Important)
+
+```js
+button.addEventListener("click", function () {
+  console.log("Button clicked");
+});
+```
+
+✅ Event handlers are callbacks  
+✅ Runs **only when event occurs**
+
+***
+
+## ❌ Callback Hell (Major Drawback)
+
+Nested callbacks make code:
+
+*   Hard to read
+*   Hard to manage
+*   Hard to debug
+
+### ❌ Example (Callback Hell)
+
+```js
+getUser(id, function (user) {
+  getOrders(user.id, function (orders) {
+    getDetails(orders[0], function (details) {
+      console.log(details);
+    });
+  });
+});
+```
+
+😖 Deep nesting
+
+***
+
+## ✅ Solution to Callback Hell
+
+### ✅ Promises
+
+```js
+getUser(id)
+  .then(user => getOrders(user.id))
+  .then(orders => getDetails(orders[0]))
+  .then(details => console.log(details))
+  .catch(err => console.error(err));
+```
+
+***
+
+### ✅ `async / await`
+
+```js
+async function fetchDetails() {
+  try {
+    const user = await getUser(id);
+    const orders = await getOrders(user.id);
+    const details = await getDetails(orders[0]);
+    console.log(details);
+  } catch (err) {
+    console.error(err);
+  }
+}
+```
+
+✅ Cleaner  
+✅ Readable  
+✅ Modern JavaScript standard
+
+***
+
+## ✅ Callback vs Promise vs async/await
+
+| Feature        | Callback  | Promise  | async/await |
+| -------------- | --------- | -------- | ----------- |
+| Readability    | ❌ Poor    | ✅ Better | ✅✅ Best     |
+| Error handling | ❌ Hard    | ✅ Easy   | ✅ Easy      |
+| Chaining       | ❌ No      | ✅ Yes    | ✅ Yes       |
+| Modern usage   | ⚠️ Legacy | ✅ Yes    | ✅ Preferred |
+
+***
+
+## ⚠️ Common Interview Traps
+
+### ❓ Are callbacks synchronous?
+
+✅ Can be **both**
+
+*   Sync: array methods
+*   Async: `setTimeout`, `fetch`
+
+***
+
+### ❓ Is `setTimeout` callback async?
+
+✅ Yes — callback runs after call stack clears
+
+***
+
+### ❓ Do callbacks block JS execution?
+
+❌ No — async callbacks don’t block the call stack
+
+***
+
+## ✅ Callback Example in Array Methods
+
+```js
+const nums = [1, 2, 3];
+
+nums.forEach(function (num) {
+  console.log(num);
+});
+```
+
+✅ `forEach` receives a callback  
+✅ Very common interview example
+
+***
+
+## ✅ One‑Line Interview Answer
+
+> A callback is a function passed to another function and executed later, often used to handle asynchronous operations in JavaScript.
+
+***
+
+## ✅ 10‑Second Interview Explanation
+
+> Callbacks allow JavaScript to execute code after an operation completes, especially for async operations like events, timers, and API calls.
+
+***
+
+## ✅ When Callbacks Are Still Used Today
+
+✅ Event listeners  
+✅ Array methods  
+✅ Legacy code  
+✅ Library APIs
+
+***
+
+If you want:
+✅ **Callback vs Promise output questions**  
+✅ **Callback hell deep‑dive**  
+✅ **Event loop + callback queue explanation**  
+✅ **Real interview problems**
+
+Just tell me 👍

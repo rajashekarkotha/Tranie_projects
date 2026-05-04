@@ -1,0 +1,281 @@
+Great question. Garbage collection (GC) is often mentioned, but **when it happens and why** is what really matters.
+
+Below is a **clear, practical explanation of *when* garbage collection happens**, especially in **JavaScript / React environments**.
+
+***
+
+# ✅ When Does Garbage Collection Happen?
+
+## 🔹 Short, accurate answer (interview‑ready)
+
+> Garbage collection happens **automatically when the JavaScript engine detects that memory is no longer reachable and memory pressure requires cleanup**.
+
+There is **no fixed time**, **no fixed interval**, and **no manual trigger**.
+
+***
+
+# 🧠 First: What Garbage Collection Really Is
+
+Garbage Collection is the process of **freeing memory** by removing objects that are:
+
+*   ❌ No longer reachable
+*   ❌ No longer referenced
+*   ❌ No longer needed by the program
+
+In JavaScript, memory is managed by the **engine** (V8, SpiderMonkey, etc.), not the developer.
+
+***
+
+# 🔑 Core Rule (Memorize This)
+
+> **An object becomes eligible for garbage collection when it is no longer reachable from a root.**
+
+***
+
+# 🌳 What Are “Roots”?
+
+Roots are starting points the JS engine uses to check reachability.
+
+Common roots:
+
+*   Global variables (`window`, `global`)
+*   Currently executing function stack
+*   Active closures
+*   DOM references
+*   Active event listeners
+*   Timers (`setTimeout`, `setInterval`)
+
+If an object is **reachable from a root**, it **cannot be garbage‑collected**.
+
+***
+
+# ✅ WHEN GC HAPPENS — THE REAL ANSWER
+
+Garbage collection happens when **all of these are true**:
+
+### ✅ 1. Memory is allocated (automatic)
+
+```js
+const obj = { name: "Raja" };
+```
+
+### ✅ 2. The object becomes unreachable
+
+```js
+obj = null;
+```
+
+### ✅ 3. The engine decides it is a good time to clean up
+
+This decision is based on:
+
+*   Memory pressure
+*   Allocation rate
+*   Heap size
+*   Performance heuristics
+
+👉 **GC is heuristic‑driven, not predictable**
+
+***
+
+# 🚫 What GC Is *NOT*
+
+❌ It does **not** happen:
+
+*   After every function returns
+*   After every variable goes out of scope
+*   Immediately after you set something to `null`
+*   On a fixed timer
+
+***
+
+# 🧩 Example: When GC *Can* Happen
+
+```js
+function createUser() {
+  const user = { name: "Raja" };
+  return user;
+}
+
+let u = createUser();
+u = null; // eligible for GC
+```
+
+### Timeline
+
+1.  `user` is created → memory allocated
+2.  `u` references it → reachable
+3.  `u = null` → unreachable ✅
+4.  ✅ **GC may happen later**, not immediately
+
+***
+
+# ⏱️ Why GC Is Deferred (Important)
+
+If the engine collected memory **immediately**, it would:
+
+*   Pause execution frequently
+*   Hurt performance
+*   Cause UI jank
+
+So engines like **V8** use:
+
+*   Incremental GC
+*   Concurrent GC
+*   Generational GC
+
+All to **delay and distribute cleanup work**.
+
+***
+
+# 🧠 Generational GC (Why Timing Varies)
+
+Most JS engines use **generational garbage collection**:
+
+## 🔹 Young Generation (frequent GC)
+
+*   Short‑lived objects
+*   Collected often
+*   Usually cheap
+
+```js
+{ x: 1 }  // very short-lived
+```
+
+## 🔹 Old Generation (infrequent GC)
+
+*   Long‑lived objects
+*   Collected rarely
+*   More expensive
+
+```js
+globalCache = bigObject;
+```
+
+✅ This is why some GC pauses are tiny, and others are noticeable.
+
+***
+
+# 🔄 GC in Async / Closures / React (Very Common Confusion)
+
+## Example: Stale references block GC
+
+```js
+let data = { value: 42 };
+
+setTimeout(() => {
+  console.log(data.value);
+}, 10000);
+```
+
+Even if you do:
+
+```js
+data = null;
+```
+
+❌ The object is **still reachable** via the closure  
+➡️ GC **will not run**
+
+***
+
+# 🧠 GC in React Applications
+
+GC commonly occurs when:
+
+*   Components unmount
+*   Event listeners are removed
+*   Timers are cleared
+*   Effects cleanup runs
+*   References are dropped
+
+### But GC still:
+
+*   ✅ Happens later
+*   ❌ Not immediate
+*   ✅ Only when unreachable
+
+***
+
+# 🚨 Why Memory Leaks Happen
+
+GC **fails to reclaim memory** when:
+
+*   References are accidentally retained
+*   Closures hold values
+*   Event listeners aren’t removed
+*   Global variables grow indefinitely
+*   Refs are misused
+
+This is **not GC’s fault** — memory is still reachable.
+
+***
+
+# ✅ How You Know GC Has Happened
+
+You usually **don’t**.
+
+But signs include:
+
+*   Reduced heap size (DevTools Memory tab)
+*   Fewer detached DOM nodes
+*   Stable memory usage over time
+
+⚠️ You **cannot rely on GC for cleanup timing logic**.
+
+***
+
+# ❓ Can You Force GC?
+
+❌ No (in browsers & React apps)
+
+Some debugging tools allow:
+
+```js
+window.gc();
+```
+
+…but this is **not available in production** and should **never be relied on**.
+
+***
+
+# 📊 Summary: When GC Happens
+
+| Condition               | GC Happens?    |
+| ----------------------- | -------------- |
+| Object unreachable      | ✅ Eligible     |
+| Immediately after       | ❌ No guarantee |
+| Under memory pressure   | ✅ Likely       |
+| Engine idle             | ✅ Possible     |
+| Object still referenced | ❌ Never        |
+
+***
+
+# ✅ Perfect Interview Answer (One‑Line)
+
+> Garbage collection happens automatically when objects become unreachable and the engine decides it needs memory, based on heuristics rather than fixed timing.
+
+***
+
+# ✅ 10‑Second Interview Explanation
+
+> JavaScript GC runs automatically when memory is unreachable and the engine detects memory pressure; it’s non‑deterministic and cannot be manually triggered.
+
+***
+
+# 🧠 Final Mental Model (Memorize This)
+
+> **You control references.  
+> The engine controls garbage collection.**
+
+That single sentence avoids most GC misunderstandings.
+
+***
+
+If you want next, I can explain:
+✅ GC vs memory leaks with diagrams  
+✅ How closures prevent GC  
+✅ React patterns that block GC  
+✅ GC pauses and performance impact
+
+Just say 👍

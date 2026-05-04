@@ -1,0 +1,202 @@
+### Difference between **Pure** and **Impure** Functions
+
+This is a **very common interview question**, especially for **JavaScript, React, and functional programming**.
+
+***
+
+## ✅ Pure Function
+
+### 🔹 Definition
+
+A **pure function** is a function that:
+
+1.  **Always returns the same output** for the same input
+2.  **Does not cause side effects** (does not modify external state)
+
+***
+
+### ✅ Key Characteristics
+
+*   Deterministic (predictable)
+*   No dependency on external variables
+*   Does not modify global variables, objects, or arguments
+*   Easier to test and debug
+
+***
+
+### ✅ Example (Pure Function)
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+
+add(2, 3); // always returns 5
+```
+
+✅ Same input → same output  
+✅ No external state involved
+
+***
+
+### ✅ Another Example
+
+```javascript
+function square(num) {
+  return num * num;
+}
+```
+
+***
+
+## ❌ Impure Function
+
+### 🔹 Definition
+
+An **impure function** is a function that:
+
+*   Depends on **external state**, OR
+*   **Modifies data outside** its scope (side effects)
+
+***
+
+### ❌ Side Effects Include
+
+*   Modifying global variables
+*   Modifying function arguments (objects/arrays)
+*   API calls
+*   Logging to console
+*   Reading / writing files
+*   Using `Date`, `Math.random()`
+
+***
+
+### ❌ Example (Impure Function)
+
+```javascript
+let count = 0;
+
+function increment() {
+  count++;
+  return count;
+}
+```
+
+❌ Output depends on external variable  
+❌ Modifies global state
+
+***
+
+### ❌ Another Example
+
+```javascript
+function addItem(arr, item) {
+  arr.push(item); // modifies original array
+  return arr;
+}
+```
+
+❌ Changes the input array → side effect
+
+***
+
+## 🔹 Pure vs Impure (Side‑by‑Side)
+
+### ❌ Impure Version
+
+```javascript
+function calculateTotal(price) {
+  return price + tax; // depends on external variable
+}
+```
+
+### ✅ Pure Version
+
+```javascript
+function calculateTotal(price, tax) {
+  return price + tax;
+}
+```
+
+***
+
+## ✅ Comparison Table
+
+| Aspect                   | Pure Function | Impure Function |
+| ------------------------ | ------------- | --------------- |
+| Same input → same output | ✅ Yes         | ❌ No            |
+| Side effects             | ❌ None        | ✅ Yes           |
+| Relies on external state | ❌ No          | ✅ Yes           |
+| Modifies input           | ❌ No          | ✅ Yes           |
+| Easy to test             | ✅ Yes         | ❌ Hard          |
+| Used in React hooks      | ✅ Preferred   | ❌ Avoid         |
+
+***
+
+## ✅ Why Pure Functions Matter (React / Redux)
+
+### 🚀 Benefits
+
+*   Predictable behavior
+*   Easy debugging
+*   Better performance (memoization)
+*   Safe for concurrency
+*   Easier unit tests
+
+### ✅ Example (React Reducer – must be pure)
+
+```javascript
+function reducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+    default:
+      return state;
+  }
+}
+```
+
+***
+
+## ⚠️ Common Confusions
+
+### ❓ Is `console.log()` allowed in pure functions?
+
+❌ No — it’s a side effect.
+
+***
+
+### ❓ Is `Math.random()` pure?
+
+❌ No — output changes every call.
+
+***
+
+### ❓ Is object mutation impure?
+
+✅ Yes — mutating objects/arrays causes side effects.
+
+```javascript
+// ❌ Impure
+arr.push(1);
+
+// ✅ Pure
+return [...arr, 1];
+```
+
+***
+
+## ✅ One‑Line Interview Answer
+
+> **A pure function always produces the same output for the same input and has no side effects, whereas an impure function depends on or modifies external state.**
+
+***
+
+If you want:
+
+*   ✅ Pure vs impure in **React optimization**
+*   ✅ Interview trick questions
+*   ✅ Real project examples
+*   ✅ How immutability relates to pure functions
+
+Just tell me 👍

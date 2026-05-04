@@ -1,0 +1,217 @@
+### ✅ What are **Interceptors**?
+
+**Interceptors** are pieces of code that **intercept (run before or after)** a request or a response, allowing you to **inspect, modify, log, or handle errors** centrally.
+
+***
+
+## 🔹 Simple Definition (Interview‑ready)
+
+> **Interceptors** are middleware-like functions that intercept HTTP requests or responses to add common logic such as authentication, logging, or error handling.
+
+***
+
+## 🔹 Why Interceptors Are Used
+
+Without interceptors:
+
+*   You repeat the same logic in every API call
+*   Hard to manage auth headers and errors consistently
+
+With interceptors:
+✅ Centralized logic  
+✅ Cleaner code  
+✅ Better maintainability  
+✅ Consistent behavior
+
+***
+
+## ✅ Common Responsibilities of Interceptors
+
+*   ✅ Add authorization tokens (JWT)
+*   ✅ Handle errors globally (401, 403, 500)
+*   ✅ Log requests & responses
+*   ✅ Modify headers
+*   ✅ Retry failed requests
+*   ✅ Show loaders / hide loaders
+
+***
+
+# ✅ Types of Interceptors (High Level)
+
+1.  **Request Interceptors** – run **before** request is sent
+2.  **Response Interceptors** – run **after** response is received
+
+***
+
+# ✅ Interceptors in Frontend (Axios Example)
+
+### ✅ Request Interceptor
+
+```js
+axios.interceptors.request.use(
+  (config) => {
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+```
+
+✅ Automatically adds auth token  
+✅ Runs for **every request**
+
+***
+
+### ✅ Response Interceptor
+
+```js
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      console.log("Unauthorized");
+    }
+    return Promise.reject(error);
+  }
+);
+```
+
+✅ Global error handling  
+✅ Avoids duplicate error logic
+
+***
+
+# ✅ Interceptors in Angular (Very Common Interview Topic)
+
+### ✅ Create an HTTP Interceptor
+
+```ts
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    const authReq = req.clone({
+      setHeaders: {
+        Authorization: 'Bearer token'
+      }
+    });
+    return next.handle(authReq);
+  }
+}
+```
+
+✅ Modifies outgoing request  
+✅ Uses `clone()` (immutability)
+
+***
+
+### ✅ Register Interceptor
+
+```ts
+providers: [
+  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+]
+```
+
+***
+
+# ✅ Interceptors in Backend (Express.js Example)
+
+### ✅ Middleware = Interceptor Equivalent
+
+```js
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+```
+
+✅ Executes before routes  
+✅ Used for auth, logging, validation
+
+***
+
+# ✅ Interceptors vs Middleware
+
+| Feature  | Interceptor             | Middleware           |
+| -------- | ----------------------- | -------------------- |
+| Used in  | Frontend & backend      | Backend              |
+| Scope    | HTTP request/response   | Request lifecycle    |
+| Examples | Axios, Angular          | Express, NestJS      |
+| Purpose  | Modify request/response | Control request flow |
+
+***
+
+# ✅ Real‑World Example (Auth Flow)
+
+```text
+Request →
+[Auth Interceptor] → adds token →
+[API Call] →
+[Response Interceptor] → handles errors →
+Application
+```
+
+✅ One place to maintain auth logic
+
+***
+
+# ✅ Advantages of Using Interceptors
+
+✅ DRY principle  
+✅ Centralized error handling  
+✅ Cleaner components  
+✅ Easy maintenance  
+✅ Better scalability
+
+***
+
+# ⚠️ Common Interview Traps
+
+### ❓ Do interceptors modify original requests?
+
+❌ No (immutable in Angular)  
+✅ They return a modified copy
+
+***
+
+### ❓ Can we have multiple interceptors?
+
+✅ Yes — they execute in order
+
+***
+
+### ❓ Are interceptors asynchronous?
+
+✅ Yes — they work with promises/observables
+
+***
+
+# ✅ One‑Line Interview Answer
+
+> Interceptors are functions that intercept HTTP requests or responses to apply common logic like authentication, logging, and error handling.
+
+***
+
+# ✅ 10‑Second Interview Explanation
+
+> Interceptors act as a centralized layer to modify or handle HTTP requests and responses before they reach the application logic.
+
+***
+
+# ✅ Where You’ll See Interceptors in Projects
+
+✅ Axios (React)  
+✅ Angular HTTP Client  
+✅ Express / NestJS  
+✅ Fetch wrappers  
+✅ Security & logging layers
+
+***
+
+If you want:
+✅ **Interceptor execution order questions**  
+✅ **Axios vs Angular interceptors**  
+✅ **Auth + refresh token implementation**  
+✅ **Real interview interceptor problems**
+
+Just tell me 👍

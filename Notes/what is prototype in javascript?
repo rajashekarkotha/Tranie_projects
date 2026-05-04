@@ -1,0 +1,238 @@
+### ✅ What is **Prototype** in JavaScript?
+
+In JavaScript, **prototype** is the mechanism by which **objects inherit properties and methods from other objects**.
+
+***
+
+## 🔹 Simple Definition (Interview‑ready)
+
+> A **prototype** is an object from which other objects inherit properties and methods in JavaScript.
+
+***
+
+## 🔹 Key Idea to Remember
+
+✅ JavaScript uses **prototype‑based inheritance**  
+✅ Every object has an internal link to another object called its **prototype**  
+✅ This link forms a **prototype chain**
+
+***
+
+## 🔹 Two Important Terms (Very Important 🔥)
+
+### 1️⃣ `__proto__` (internal / instance side)
+
+*   Exists on **every JavaScript object**
+*   Points to the object’s prototype
+
+### 2️⃣ `prototype` (constructor side)
+
+*   Exists **only on constructor functions**
+*   Used as a blueprint for objects created with `new`
+
+***
+
+## ✅ Basic Example
+
+```js
+const obj = {};
+```
+
+Prototype chain:
+
+    obj → Object.prototype → null
+
+```js
+obj.toString(); // works
+```
+
+✅ `toString()` comes from `Object.prototype`
+
+***
+
+## ✅ Constructor Function Example
+
+```js
+function Person(name) {
+  this.name = name;
+}
+
+Person.prototype.greet = function () {
+  console.log("Hello " + this.name);
+};
+
+const p1 = new Person("Raja");
+```
+
+### 🔹 Prototype Chain
+
+    p1
+     ↓ __proto__
+    Person.prototype
+     ↓ __proto__
+    Object.prototype
+     ↓
+    null
+
+✅ `p1.greet()` works because of prototype lookup
+
+***
+
+## 🔍 How Property Lookup Works (Very Important)
+
+When you access a property:
+
+```js
+p1.greet();
+```
+
+JavaScript looks in this order:
+
+1.  `p1` object
+2.  `Person.prototype`
+3.  `Object.prototype`
+4.  `null` → stop
+
+✅ First match wins
+
+***
+
+## ✅ `prototype` vs `__proto__` (Classic Interview Question)
+
+```js
+p1.__proto__ === Person.prototype; // ✅ true
+```
+
+| Term        | Belongs To  | Purpose                 |
+| ----------- | ----------- | ----------------------- |
+| `prototype` | Constructor | Blueprint for instances |
+| `__proto__` | Object      | Points to its prototype |
+
+***
+
+## ✅ ES6 Classes (Same Under the Hood)
+
+```js
+class Person {
+  greet() {
+    console.log("Hello");
+  }
+}
+
+const p = new Person();
+```
+
+Prototype chain:
+
+    p → Person.prototype → Object.prototype → null
+
+📌 **Classes are just syntactic sugar over prototypes**
+
+***
+
+## ✅ Inheritance Using Prototype (`extends`)
+
+```js
+class Employee extends Person {
+  work() {
+    console.log("Working");
+  }
+}
+
+const e = new Employee();
+```
+
+Prototype chain:
+
+    e
+     ↓
+    Employee.prototype
+     ↓
+    Person.prototype
+     ↓
+    Object.prototype
+     ↓
+    null
+
+✅ This is how JavaScript achieves inheritance
+
+***
+
+## ✅ Object.create() (Direct Prototype Control)
+
+```js
+const parent = {
+  greet() {
+    console.log("Hello");
+  }
+};
+
+const child = Object.create(parent);
+```
+
+Prototype chain:
+
+    child → parent → Object.prototype → null
+
+✅ No constructor needed  
+✅ Very clean prototype inheritance
+
+***
+
+## 🔥 Why Prototype Is Important
+
+✅ Memory efficiency (methods shared)  
+✅ Inheritance  
+✅ Method reuse  
+✅ Foundation of `class` and `extends`  
+✅ Understanding bugs & performance
+
+***
+
+## ✅ Common Interview Traps
+
+### ❓ Is prototype copying?
+
+❌ No — it's **referencing**, not copying
+
+***
+
+### ❓ Do all objects have a prototype?
+
+✅ Yes (except objects created with `Object.create(null)`)
+
+***
+
+### ❓ Is prototype the same as class?
+
+❌ No — **classes use prototypes internally**
+
+***
+
+## ✅ One‑Line Interview Answer
+
+> Prototype is the mechanism by which JavaScript objects inherit properties and methods from other objects through a prototype chain.
+
+***
+
+## ✅ 10‑Second Interview Explanation
+
+> Every JavaScript object has a prototype, and when a property is not found on the object, JavaScript looks up the prototype chain until it finds the property or reaches null.
+
+***
+
+## ✅ Real‑World Tip (React / JS)
+
+*   Many bugs happen due to **prototype shadowing**
+*   Understanding prototypes helps debug `undefined is not a function`
+*   Libraries & frameworks rely heavily on prototypes
+
+***
+
+If you want next:
+✅ **Prototype chain diagrams**  
+✅ **Tricky prototype output questions**  
+✅ **Prototype vs class comparison**  
+✅ **How React uses prototypes internally**
+
+Just tell me 👍

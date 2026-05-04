@@ -1,0 +1,247 @@
+### ✅ What is the **Task Queue** in JavaScript?
+
+The **Task Queue** (also called the **Callback Queue** or **Macrotask Queue**) is a queue that holds **asynchronous callbacks** that are ready to be executed **after the Call Stack is empty**.
+
+It is a core part of **JavaScript’s concurrency model** and works together with the **Call Stack**, **Event Loop**, and **Web APIs**.
+
+***
+
+## 🔹 Simple Definition (Interview‑ready)
+
+> The **task queue** stores callback functions of asynchronous tasks (like `setTimeout`, DOM events) and sends them to the call stack when it becomes empty.
+
+***
+
+## 🔧 Why the Task Queue Exists
+
+JavaScript is **single‑threaded**, meaning:
+
+*   It can execute **only one piece of code at a time**
+*   Long‑running tasks would block the UI
+
+So:
+✅ Async tasks are handled outside the call stack  
+✅ Their callbacks are placed in the **task queue**  
+✅ The **event loop** decides when to run them
+
+***
+
+## 🧠 Key Components Involved
+
+1.  **Call Stack** – Executes synchronous code
+2.  **Web APIs** – Handle async tasks (timers, DOM events, fetch\* setup)
+3.  **Task Queue (Macrotask Queue)** – Stores callbacks of completed async tasks
+4.  **Microtask Queue** – Stores promises (`.then`, `queueMicrotask`)
+5.  **Event Loop** – Moves tasks to call stack when possible
+
+***
+
+## ✅ How the Task Queue Works (Step‑by‑Step)
+
+```js
+console.log("Start");
+
+setTimeout(() => {
+  console.log("Timeout");
+}, 0);
+
+console.log("End");
+```
+
+### ✅ Output
+
+    Start
+    End
+    Timeout
+
+### ✅ Why?
+
+1.  `"Start"` → pushed to **call stack**
+2.  `setTimeout` → sent to **Web API**
+3.  `"End"` → executed
+4.  Timer finishes → callback goes to **task queue**
+5.  Call stack is empty → event loop moves callback to stack
+6.  `"Timeout"` is logged
+
+***
+
+## 📊 Visual Flow
+
+    Call Stack:
+    [ console.log("Start") ]
+    [ console.log("End") ]
+
+    Web APIs:
+    [ setTimeout() ]
+
+    Task Queue:
+    [ () => console.log("Timeout") ]
+
+    Event Loop:
+    Checks → Call Stack empty → Push task
+
+***
+
+## ✅ What Goes Into the Task Queue?
+
+Examples of **macrotasks**:
+
+*   `setTimeout`
+*   `setInterval`
+*   DOM events (`click`, `scroll`)
+*   `setImmediate` (Node.js)
+*   Message events
+
+```js
+setTimeout(() => {}, 100);
+button.addEventListener("click", () => {});
+```
+
+✅ Their callbacks go to the **task queue**
+
+***
+
+## 🔁 Task Queue vs Microtask Queue (VERY IMPORTANT 🔥)
+
+### ✅ Microtask Queue (Runs FIRST)
+
+*   `Promise.then`
+*   `Promise.catch`
+*   `queueMicrotask`
+*   `MutationObserver`
+
+### ✅ Task Queue (Runs AFTER microtasks)
+
+*   `setTimeout`
+*   `setInterval`
+*   Events
+
+***
+
+### ✅ Example Showing Priority
+
+```js
+console.log("Start");
+
+setTimeout(() => console.log("Timeout"), 0);
+
+Promise.resolve().then(() => console.log("Promise"));
+
+console.log("End");
+```
+
+### ✅ Output
+
+    Start
+    End
+    Promise
+    Timeout
+
+### ✅ Explanation
+
+1.  Sync code runs first
+2.  **Microtasks** (Promises) run next
+3.  **Task queue** callbacks run last
+
+📌 **Microtasks always have higher priority**
+
+***
+
+## ✅ Event Loop Rule (Must Memorize 🔥)
+
+> The event loop:
+>
+> 1.  Executes all synchronous code
+> 2.  Executes ALL microtasks
+> 3.  Executes ONE macrotask
+> 4.  Repeats
+
+***
+
+## ✅ Task Queue in Browsers vs Node.js
+
+### ✅ Browser
+
+*   Task Queue (macrotask)
+*   Microtask Queue
+
+### ✅ Node.js (More Complex)
+
+*   Timers phase
+*   I/O callbacks
+*   Check phase (`setImmediate`)
+*   Microtasks between each phase
+
+(But interviewers usually expect **browser model first**.)
+
+***
+
+## ✅ Common Interview Traps
+
+### ❓ Does `setTimeout(fn, 0)` run immediately?
+
+❌ No  
+✅ It runs **after the call stack and microtasks finish**
+
+***
+
+### ❓ Is task queue FIFO?
+
+✅ Yes — First In, First Out
+
+***
+
+### ❓ Can async code run while sync code is running?
+
+❌ No — JavaScript executes **one thing at a time**
+
+***
+
+## ✅ One‑Line Interview Answer
+
+> The task queue holds asynchronous callbacks and executes them when the call stack is empty, under the control of the event loop.
+
+***
+
+## ✅ 10‑Second Interview Explanation
+
+> After an async operation completes, its callback goes into the task queue, and the event loop pushes it to the call stack when the stack is free.
+
+***
+
+## ✅ Real‑World Importance
+
+*   Prevents UI freezing
+*   Enables async behavior
+*   Explains `setTimeout(0)` behavior
+*   Critical for debugging async bugs
+
+***
+
+## ✅ Quick Comparison Table
+
+| Concept         | Purpose                  |
+| --------------- | ------------------------ |
+| Call Stack      | Executes sync code       |
+| Task Queue      | Stores async callbacks   |
+| Microtask Queue | Stores promise callbacks |
+| Event Loop      | Coordination logic       |
+
+***
+
+### 💡 Final Interview Tip
+
+If asked *“Why does `setTimeout(0)` run later?”*  
+Answer confidently:
+
+> Because the callback is placed in the task queue and only runs after the call stack and microtasks are cleared.
+
+***
+
+If you want next:
+✅ **Event Loop deep‑dive with diagrams**  
+✅ **Microtask queue explained deeply**  
+✅ **Tricky output‑based event loop questions**  
+✅ **Node.js task queue phases**
+
+Just say 👍

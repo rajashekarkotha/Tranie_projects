@@ -215,3 +215,310 @@ If you want:
 ✅ **Real interview interceptor problems**
 
 Just tell me 👍
+
+
+===================================?Interceptor execution order questions?=======================================
+
+Below are **high‑quality, interview‑style questions (with answers)** focused specifically on **Interceptor execution order**. These come up a lot for **Axios, Angular, and backend middleware** interviews.
+
+***
+
+# ✅ Interceptor Execution Order – Interview Questions & Answers
+
+***
+
+## 🔹 Q1: In what order do **request** and **response interceptors** execute?
+
+### ✅ Answer
+
+*   **Request interceptors** execute in the **order they are added**
+*   **Response interceptors** execute in the **reverse order**
+
+### ✅ Diagram
+
+    Request:
+    Interceptor 1 → Interceptor 2 → Interceptor 3 → API CALL
+
+    Response:
+    Interceptor 3 → Interceptor 2 → Interceptor 1 → Application
+
+📌 Think of it like a **stack (LIFO)** for responses.
+
+***
+
+## 🔹 Q2: Axios – What is the execution order here?
+
+```js
+axios.interceptors.request.use(req => {
+  console.log("Request A");
+  return req;
+});
+
+axios.interceptors.request.use(req => {
+  console.log("Request B");
+  return req;
+});
+
+axios.interceptors.response.use(res => {
+  console.log("Response A");
+  return res;
+});
+
+axios.interceptors.response.use(res => {
+  console.log("Response B");
+  return res;
+});
+```
+
+### ✅ Output
+
+    Request A
+    Request B
+    Response B
+    Response A
+
+### ✅ Explanation
+
+*   Requests → FIFO
+*   Responses → LIFO
+
+✅ **Very common interview question**
+
+***
+
+## 🔹 Q3: What happens if a **request interceptor throws an error**?
+
+```js
+axios.interceptors.request.use(
+  config => {
+    throw new Error("Failed");
+  },
+  error => Promise.reject(error)
+);
+```
+
+### ✅ Answer
+
+*   Request is **terminated**
+*   No API call is made
+*   Response interceptors **do NOT run**
+*   Control goes to `.catch()`
+
+✅ Important for auth failures
+
+***
+
+## 🔹 Q4: Angular – In what order are HTTP interceptors executed?
+
+```ts
+providers: [
+  { provide: HTTP_INTERCEPTORS, useClass: FirstInterceptor, multi: true },
+  { provide: HTTP_INTERCEPTORS, useClass: SecondInterceptor, multi: true }
+]
+```
+
+### ✅ Request Order
+
+    FirstInterceptor → SecondInterceptor → HTTP Call
+
+### ✅ Response Order
+
+    SecondInterceptor → FirstInterceptor → Subscriber
+
+📌 Angular interceptors behave like **nested pipes**
+
+***
+
+## 🔹 Q5: Angular – What if an interceptor does not call `next.handle()`?
+
+```ts
+intercept(req, next) {
+  // no next.handle()
+}
+```
+
+### ✅ Answer
+
+*   Request **stops immediately**
+*   No HTTP call is made
+*   Remaining interceptors **do not execute**
+*   Subscriber never receives a response
+
+✅ Frequent Angular interview trap
+
+***
+
+## 🔹 Q6: Axios – Can you control interceptor order?
+
+### ✅ Answer
+
+✅ Yes — order is determined by **registration order**
+
+```js
+const id = axios.interceptors.request.use(fn);
+axios.interceptors.request.eject(id);
+```
+
+✅ You can:
+
+*   Add
+*   Remove
+*   Re‑register interceptors dynamically
+
+📌 Useful for feature‑based auth
+
+***
+
+## 🔹 Q7: What happens if a **response interceptor rejects**?
+
+```js
+axios.interceptors.response.use(
+  res => res,
+  err => Promise.reject(err)
+);
+```
+
+### ✅ Answer
+
+*   Remaining success interceptors are skipped
+*   Error goes to:
+    *   Next response error interceptor
+    *   Or final `.catch()`
+
+✅ Error propagates **backward**
+
+***
+
+## 🔹 Q8: Execution Order with Multiple Error Interceptors (Axios)
+
+```js
+axios.interceptors.response.use(
+  res => res,
+  err => {
+    console.log("Error A");
+    return Promise.reject(err);
+  }
+);
+
+axios.interceptors.response.use(
+  res => res,
+  err => {
+    console.log("Error B");
+    return Promise.reject(err);
+  }
+);
+```
+
+### ✅ Output
+
+    Error B
+    Error A
+
+✅ Reverse execution  
+✅ Same as success interceptors
+
+***
+
+## 🔹 Q9: Backend – Express Middleware vs Interceptors Order
+
+```js
+app.use(middlewareA);
+app.use(middlewareB);
+app.get("/", handler);
+```
+
+### ✅ Execution Order
+
+    middlewareA → middlewareB → handler
+
+### ✅ On response (`res.send`)
+
+    middlewareB → middlewareA
+
+📌 This mirrors interceptor behavior
+
+***
+
+## 🔹 Q10: Can multiple interceptors modify the same request?
+
+### ✅ Answer
+
+✅ Yes  
+✅ Each interceptor receives the **modified output** of the previous one
+
+```text
+Request →
+Auth Interceptor (adds token) →
+Logging Interceptor (logs token) →
+API
+```
+
+⚠️ Order matters greatly
+
+***
+
+## 🔹 Q11: Where should **auth token interceptors** be placed?
+
+### ✅ Best Practice
+
+✅ Register **auth interceptor first**
+
+```text
+Auth → Logging → Retry → API
+```
+
+So response order becomes:
+
+    Retry → Logging → Auth
+
+✅ Ensures token is available to all
+
+***
+
+## 🔹 Q12: Interview Trick – What If Order Is Wrong?
+
+```js
+LoggingInterceptor
+AuthInterceptor
+```
+
+❌ Logging runs **before token is attached**
+
+✅ Correct order:
+
+    Auth → Logging
+
+***
+
+# ✅ Quick Summary Cheat‑Sheet
+
+| Interceptor Type | Execution Order    |
+| ---------------- | ------------------ |
+| Request          | Registration order |
+| Response         | Reverse order      |
+| Error handling   | Reverse order      |
+| Angular          | Nested pipe flow   |
+| Axios            | Stack‑based flow   |
+
+***
+
+## ✅ One‑Line Interview Answer
+
+> Request interceptors execute in the order they are registered, while response interceptors execute in reverse order.
+
+***
+
+## ✅ 10‑Second Interview Explanation
+
+> Interceptors behave like a stack: requests go forward through interceptors, responses come back in reverse order, allowing centralized and layered processing.
+
+***
+
+If you want next:
+✅ **Auth + refresh token interceptor flow**  
+✅ **Axios vs Angular interceptor comparison**  
+✅ **Interceptor memory leak pitfalls**  
+✅ **Production‑ready interceptor architecture**
+
+Just say 👍
+

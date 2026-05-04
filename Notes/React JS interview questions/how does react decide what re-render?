@@ -1,0 +1,298 @@
+Great question. This goes straight to the **core of how React works internally**.
+
+Below is a **clear, accurate, mental‑model‑level explanation** of **how React decides *what* to re-render**, not just *when*.
+
+***
+
+# ✅ How Does React Decide What to Re‑Render?
+
+## 🔑 Short, precise answer (interview‑ready)
+
+> React re‑renders a component when it is scheduled for work (state, props, context, parent render), then **reconciles** the new render output with the previous one to decide **which parts of the UI actually need DOM updates**.
+
+There are **two separate steps**:
+
+1.  **Which components to re‑render (execute again)**
+2.  **Which DOM nodes to update**
+
+Most confusion comes from mixing these up.
+
+***
+
+## 🧠 Step 0: Important distinction (memorize this)
+
+| Concept        | Meaning                       |
+| -------------- | ----------------------------- |
+| **Re‑render**  | Component function runs again |
+| **DOM update** | Browser DOM is modified       |
+
+✅ React often re‑renders **without touching the DOM**.
+
+***
+
+# 🧩 Step‑by‑Step: React’s Decision Process
+
+***
+
+## 🧱 STEP 1: Something Triggers an Update
+
+React only starts work when one of these happens:
+
+### ✅ Triggers that schedule re‑render
+
+*   `setState` / `dispatch`
+*   Parent component re‑renders
+*   Context value changes
+*   Force update (rare)
+*   StrictMode (dev only)
+
+Example:
+
+```js
+setCount(c => c + 1);
+```
+
+👉 This **marks the component as dirty**
+👉 React schedules work for that component’s **Fiber**
+
+***
+
+## 🧱 STEP 2: React Finds the Render Boundary
+
+When a component is scheduled:
+
+*   React **must re‑execute that component**
+*   React **also re‑executes all child components by default**
+
+This is critical:
+
+> **Render flows downward**
+
+    Parent re-renders
+       ↓
+    Children re-render
+       ↓
+    Grandchildren re-render
+
+Unless explicitly stopped.
+
+***
+
+## 🧱 STEP 3: Memoization Can Stop Re‑Render
+
+React checks:
+
+### If component is wrapped in `React.memo`
+
+```jsx
+const Child = React.memo(ChildComponent);
+```
+
+React performs a **shallow comparison** of props:
+
+```js
+Object.is(prevProp, nextProp)
+```
+
+*   ✅ Same → skip re‑render
+*   ❌ Different → re‑render
+
+⚠️ Objects & functions usually fail this check.
+
+***
+
+## 🧱 STEP 4: Component Function Executes (Render Phase)
+
+If React decides to re‑render:
+
+```jsx
+function Component(props) {
+  // Executes again
+  return <div>{props.value}</div>;
+}
+```
+
+At this point:
+
+*   ✅ No DOM updates
+*   ✅ Just computing UI description (Virtual DOM / Fiber)
+
+***
+
+## 🧱 STEP 5: Virtual DOM (Fiber) Is Generated
+
+React builds a **new Fiber tree** for the render.
+
+Think:
+
+    Old Fiber Tree  →  New Fiber Tree
+
+Each node represents:
+
+*   Component
+*   Element
+*   Text
+*   Props
+*   State
+
+***
+
+## 🧱 STEP 6: Reconciliation (DIFFING)
+
+React now asks:
+
+> “What actually changed?”
+
+Comparison rules:
+
+*   Same element type? → reuse
+*   Different element type? → replace subtree
+*   Same key & type in list? → move/update
+*   Same component & props? → reuse
+
+Example:
+
+```jsx
+<div>Hello</div>
+```
+
+→
+
+```jsx
+<div>Hello</div>
+```
+
+✅ No DOM change needed  
+✅ Even though component re‑rendered
+
+***
+
+## 🧱 STEP 7: Commit Phase (DOM Updates)
+
+ONLY after diffing:
+
+*   React applies **minimal DOM changes**
+*   Updates text, attributes, listeners
+*   Performs mount/unmount
+
+<!---->
+
+    DOM is updated here ✅
+
+Most renders do nothing at this step.
+
+***
+
+## 🧩 Visual Timeline
+
+    Trigger (setState)
+            ↓
+    Component scheduled
+            ↓
+    Component function runs (re-render)
+            ↓
+    New Virtual DOM created
+            ↓
+    Diff old vs new
+            ↓
+    DOM updates (only if needed)
+
+***
+
+# 🧠 What React Does NOT Do
+
+❌ React does NOT:
+
+*   Deep‑compare props
+*   Skip child renders automatically
+*   Assume unchanged props mean safe reuse
+*   Update DOM on every render
+
+***
+
+# 🔥 Why Children Re‑Render Even If Props Don’t Change
+
+This is crucial:
+
+> React **cannot assume** child output is pure.
+
+Example:
+
+```jsx
+function Child({ value }) {
+  console.log(value);
+  return <div>{value}</div>;
+}
+```
+
+Even if `value` is the same:
+
+*   Child might log
+*   Might derive some internal state
+*   Might have side‑effects (in render — bad but possible)
+
+✅ Therefore React **re‑executes by default**
+
+Memoization is explicit for safety.
+
+***
+
+# 🧠 Rules React Uses During Reconciliation (Simplified)
+
+| Case                 | React Action           |
+| -------------------- | ---------------------- |
+| Same type + same key | Reuse node             |
+| Same type, new props | Update attributes/text |
+| Different type       | Destroy & recreate     |
+| List reorder (keys)  | Move nodes             |
+| Memo + same props    | Skip render            |
+
+***
+
+# ✅ How YOU Control What Re‑Renders
+
+| Tool             | Stops what                 |
+| ---------------- | -------------------------- |
+| `React.memo`     | Component re‑execution     |
+| `useMemo`        | Expensive calculations     |
+| `useCallback`    | Function reference changes |
+| Stable keys      | List re‑ordering           |
+| Split components | Narrow render scope        |
+
+***
+
+# ✅ One‑Line Interview Answer
+
+> React decides what to re-render by scheduling components whose state, props, or context change, re-executing them, and then reconciling the new output with the previous virtual DOM to apply only necessary DOM updates.
+
+***
+
+# ✅ 10‑Second Interview Explanation
+
+> React re-renders a component when it’s scheduled by state, props, or parent renders, then diffs the new virtual DOM against the old one to decide what actually changes in the browser.
+
+***
+
+# ✅ Senior‑Level Insight (Say This)
+
+> Re-rendering is cheap; reconciliation determines actual cost. React optimizes DOM updates, not render executions.
+
+That line shows **deep understanding**.
+
+***
+
+## ✅ Final Mental Model (Very Important)
+
+> **Schedule → Render → Diff → Commit**
+
+If you understand this pipeline, you understand React rendering.
+
+***
+
+If you want next:
+✅ Diagram of Fiber tree traversal  
+✅ Why keys affect rendering  
+✅ Concurrent rendering decision flow  
+✅ React DevTools render tracing explanation
+
+Just say 👍

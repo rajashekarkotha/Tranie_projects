@@ -1,0 +1,323 @@
+Below is a **clear, interview‑ready comparison** of  
+**`Promise.all()`**, **`Promise.allSettled()`**, **`Promise.any()`**, and **`Promise.race()`**, with **behavior, outputs, use cases, and traps**.
+
+***
+
+# ✅ Differences Between Promise Combinators
+
+These methods handle **multiple promises at once**, but they differ in **when they resolve/reject and what they return**.
+
+***
+
+## 🔹 Quick One‑Line Summary (Interview‑Ready)
+
+> `all` waits for **all success**, `allSettled` waits for **all results**, `any` waits for **first success**, and `race` waits for **first settled (success or failure)**.
+
+***
+
+## ✅ 1️⃣ `Promise.all()`
+
+### 🔹 Behavior
+
+*   ✅ Resolves when **ALL promises fulfill**
+*   ❌ Rejects immediately if **ANY promise rejects**
+*   ❌ Remaining promises are ignored after a rejection
+
+***
+
+### ✅ Example
+
+```js
+Promise.all([
+  Promise.resolve(1),
+  Promise.resolve(2),
+  Promise.resolve(3)
+])
+.then(result => console.log(result))
+.catch(err => console.log(err));
+```
+
+✅ Output:
+
+```js
+[1, 2, 3]
+```
+
+***
+
+### ❌ If One Fails
+
+```js
+Promise.all([
+  Promise.resolve(1),
+  Promise.reject("Error"),
+  Promise.resolve(3)
+])
+.catch(err => console.log(err));
+```
+
+❌ Output:
+
+```js
+Error
+```
+
+***
+
+### ✅ Use Case
+
+*   All API calls must succeed
+*   Page load with mandatory dependencies
+
+***
+
+## ✅ 2️⃣ `Promise.allSettled()` (ES2020)
+
+### 🔹 Behavior
+
+*   ✅ Waits for **ALL promises to settle**
+*   ✅ Never rejects
+*   ✅ Returns **status + value/reason** for each promise
+
+***
+
+### ✅ Example
+
+```js
+Promise.allSettled([
+  Promise.resolve(1),
+  Promise.reject("Fail"),
+  Promise.resolve(3)
+])
+.then(result => console.log(result));
+```
+
+✅ Output:
+
+```js
+[
+  { status: "fulfilled", value: 1 },
+  { status: "rejected", reason: "Fail" },
+  { status: "fulfilled", value: 3 }
+]
+```
+
+***
+
+### ✅ Use Case
+
+*   Show partial results
+*   Dashboard widgets
+*   Logging results of batch operations
+
+***
+
+## ✅ 3️⃣ `Promise.any()` (ES2021)
+
+### 🔹 Behavior
+
+*   ✅ Resolves when **FIRST promise fulfills**
+*   ❌ Rejects only if **ALL promises reject**
+*   ❌ Ignores rejected promises unless all fail
+
+***
+
+### ✅ Example
+
+```js
+Promise.any([
+  Promise.reject("Fail 1"),
+  Promise.resolve("Success"),
+  Promise.resolve("Another success")
+])
+.then(result => console.log(result))
+.catch(err => console.log(err));
+```
+
+✅ Output:
+
+```js
+Success
+```
+
+***
+
+### ❌ If All Reject
+
+```js
+Promise.any([
+  Promise.reject("A"),
+  Promise.reject("B")
+])
+.catch(err => console.log(err));
+```
+
+❌ Output:
+
+```js
+AggregateError: All promises were rejected
+```
+
+***
+
+### ✅ Use Case
+
+*   First successful API among replicas
+*   Fallback services
+*   Feature probing
+
+***
+
+## ✅ 4️⃣ `Promise.race()`
+
+### 🔹 Behavior
+
+*   ✅ Settles as soon as **FIRST promise settles**
+*   ✅ Could resolve OR reject
+*   ❌ Does not wait for others
+
+***
+
+### ✅ Example (Resolve first)
+
+```js
+Promise.race([
+  new Promise(res => setTimeout(res, 100, "Fast")),
+  new Promise(res => setTimeout(res, 200, "Slow"))
+])
+.then(result => console.log(result));
+```
+
+✅ Output:
+
+```js
+Fast
+```
+
+***
+
+### ✅ Example (Reject first)
+
+```js
+Promise.race([
+  Promise.reject("Error"),
+  Promise.resolve("Success")
+])
+.catch(err => console.log(err));
+```
+
+❌ Output:
+
+```js
+Error
+```
+
+***
+
+### ✅ Use Case
+
+*   Timeout logic
+*   API race conditions
+*   Cancel‑like behavior
+
+***
+
+# 🔥 Side‑by‑Side Comparison (Must Memorize)
+
+| Method               | When it Resolves | When it Rejects | Output         |
+| -------------------- | ---------------- | --------------- | -------------- |
+| `Promise.all`        | All fulfilled    | Any rejected    | Values array   |
+| `Promise.allSettled` | All settled      | Never           | Status objects |
+| `Promise.any`        | First fulfilled  | If all rejected | Single value   |
+| `Promise.race`       | First settled    | First rejected  | Single value   |
+
+***
+
+## ✅ Visual Execution Flow
+
+    Promises: P1   P2   P3
+
+    all        → wait ✅ ✅ ✅
+    allSettled → wait ✅ ❌ ✅
+    any        → ✅ stop
+    race       → ✅ OR ❌ stop
+
+***
+
+## ⚠️ Common Interview Traps
+
+### ❓ Does `Promise.any()` ignore failures?
+
+✅ Yes — until all fail
+
+***
+
+### ❓ Does `Promise.race()` always return success?
+
+❌ No — first settlement may be rejection
+
+***
+
+### ❓ Does `Promise.allSettled()` ever reject?
+
+❌ Never
+
+***
+
+### ❓ Does `Promise.all()` cancel remaining promises?
+
+❌ No — they still run, but results are ignored
+
+***
+
+## ✅ Real‑World Examples
+
+### ✅ Page Load (Strict)
+
+```js
+Promise.all([auth(), profile(), settings()]);
+```
+
+### ✅ Widget Dashboard (Flexible)
+
+```js
+Promise.allSettled([weather(), news(), stocks()]);
+```
+
+### ✅ API Fallback
+
+```js
+Promise.any([api1(), api2(), api3()]);
+```
+
+### ✅ Request Timeout
+
+```js
+Promise.race([
+  fetch(url),
+  new Promise((_, reject) => 
+    setTimeout(() => reject("Timeout"), 5000))
+]);
+```
+
+***
+
+## ✅ One‑Line Interview Answer
+
+> `Promise.all` requires all promises to succeed, `allSettled` reports all results, `any` resolves on the first success, and `race` settles on the first completion regardless of success or failure.
+
+***
+
+## ✅ 10‑Second Interview Tip (Say This)
+
+> Use `all` for strict dependencies, `allSettled` for partial success, `any` for fallbacks, and `race` for timeouts or first response wins.
+
+***
+
+If you want next:
+✅ **Tricky output‑based promise questions**  
+✅ **Promise combinators vs async/await**  
+✅ **Microtask queue + promises deep‑dive**  
+✅ **React data‑fetching patterns with promises**
+
+Just say 👍

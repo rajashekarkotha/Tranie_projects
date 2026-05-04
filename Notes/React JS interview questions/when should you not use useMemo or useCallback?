@@ -1,0 +1,264 @@
+Great question. This is **exactly** the level where many React developers over‑optimize and accidentally make things worse.
+
+Below is a **clear, practical guide** to **when you should NOT use `useMemo` or `useCallback`**, with reasoning, examples, and interview‑ready takeaways.
+
+***
+
+# ✅ When You Should **NOT** Use `useMemo` or `useCallback`
+
+## 🔑 Core Principle (Memorize This)
+
+> **Memoization is a performance tool, not a best practice.  
+> Don’t use `useMemo` or `useCallback` unless there is a proven problem.**
+
+React does **not** encourage default memoization.
+
+***
+
+## 1️⃣ Don’t Use Them for Cheap Computations
+
+### ❌ Unnecessary `useMemo`
+
+```jsx
+const doubled = useMemo(() => count * 2, [count]);
+```
+
+### ✅ Why this is wrong
+
+*   Multiplication is extremely cheap
+*   `useMemo` itself has overhead
+*   You are trading clarity for no benefit
+
+✅ **React is faster than you think**
+
+### ✅ Correct
+
+```jsx
+const doubled = count * 2;
+```
+
+***
+
+## 2️⃣ Don’t Use Them If Nothing Depends on Reference Equality
+
+Memoization only matters when:
+
+*   Values are passed as props **and**
+*   Child components are memoized (`React.memo`)
+
+### ❌ Pointless `useCallback`
+
+```jsx
+const handleClick = useCallback(() => {
+  console.log("clicked");
+}, []);
+```
+
+If:
+
+*   `handleClick` is not passed to a memoized child
+*   Or not part of a dependency array
+
+👉 **No benefit at all**
+
+***
+
+## 3️⃣ Don’t Use Them to “Silence ESLint Warnings”
+
+### ❌ Common misuse
+
+```jsx
+const fn = useCallback(() => doSomething(a), []);
+// ESLint warning ignored intentionally
+```
+
+This creates **stale closures** and **bugs**.
+
+### ✅ Correct thinking
+
+*   ESLint warns about correctness, not performance
+*   Memoization should not be used to “make warnings go away”
+
+***
+
+## 4️⃣ Don’t Use Them When the Function/Object Changes Anyway
+
+### ❌ Useless memoization
+
+```jsx
+const value = useMemo(() => ({ count }), [count]);
+```
+
+If `count` changes frequently:
+
+*   The memoized value changes every time
+*   Reference stability is lost anyway
+
+✅ No optimization gained  
+❌ Added complexity
+
+***
+
+## 5️⃣ Don’t Use Them Prematurely (“Just in Case”)
+
+This is the **#1 mistake**.
+
+### ❌ Over‑engineering mindset
+
+> “I’ll memoize everything to be safe.”
+
+### Reality:
+
+*   Extra hooks slow development
+*   Increase mental load
+*   Make debugging harder
+*   Hide real bottlenecks
+
+✅ **Premature optimization is worse than no optimization**
+
+***
+
+## 6️⃣ Don’t Use Them Inside Tight Render Loops
+
+```jsx
+items.map(item => {
+  const value = useMemo(() => compute(item), [item]);
+  return <Item value={value} />;
+});
+```
+
+### ❌ Why this is bad
+
+*   Hook per list item
+*   Overhead > benefit
+*   Breaks hook rules mentally even if valid
+
+✅ Move memoization **outside** or rethink structure
+
+***
+
+## 7️⃣ Don’t Use Them When React.memo Isn’t Used
+
+`useCallback` and `useMemo` are often paired with `React.memo`.
+
+If child components are **not memoized**, then:
+
+```jsx
+useCallback(() => {}, [])
+```
+
+✅ Prevents nothing  
+❌ Adds complexity
+
+***
+
+## 8️⃣ Don’t Use Them to Avoid Re-rendering the Parent
+
+Important clarification:
+
+> **`useMemo` and `useCallback` do NOT prevent the component itself from re‑rendering.**
+
+They only:
+
+*   Stabilize values
+*   Help children avoid re‑renders
+
+If your goal is:
+
+*   “Stop this component from re-rendering”
+
+👉 Memoization won’t help.
+
+***
+
+## 9️⃣ Don’t Use Them for Values Not Used in Render
+
+### ❌ Pointless
+
+```jsx
+const memoized = useMemo(() => expensiveCalc(), []);
+```
+
+If:
+
+*   It doesn’t affect rendering
+*   Not passed as props
+*   Not in dependencies
+
+✅ It should not be memoized there
+
+***
+
+## 10️⃣ Don’t Assume Memoization Makes Apps Faster
+
+### ❗ Reality check
+
+*   Memoization has CPU + memory cost
+*   Equality checks are not free
+*   Garbage collection increases
+
+✅ Memoization helps **only when it prevents expensive work**
+
+***
+
+# ✅ When You *Should* Use Them (Quick Contrast)
+
+Use `useMemo` / `useCallback` when:
+
+*   ✅ You have **measured** a performance issue
+*   ✅ Props are passed to `React.memo` components
+*   ✅ Computation is **heavy**
+*   ✅ Reference stability is **actually required**
+*   ✅ Re-renders are frequent and expensive
+
+***
+
+## 🧠 Simple Decision Rule (Very Important)
+
+Before using `useMemo` / `useCallback`, ask:
+
+1.  Is this expensive?
+2.  Is reference equality required?
+3.  Is there a memoized child?
+4.  Is this called often?
+5.  Did profiling show it matters?
+
+If **any answer is NO**, don’t use it.
+
+***
+
+## ✅ Interview‑Ready One‑Line Answer
+
+> You should not use `useMemo` or `useCallback` for cheap computations, premature optimization, or when reference stability isn’t required, because memoization adds complexity and overhead without benefit.
+
+***
+
+## ✅ 10‑Second Interview Explanation
+
+> Memoization should be used only when it prevents expensive re‑renders or computations; using it everywhere adds overhead and can even degrade performance.
+
+***
+
+## ✅ Senior‑Level Insight (Very Impressive)
+
+> React’s default rendering is already optimized; `useMemo` and `useCallback` are escape hatches, not defaults.
+
+If you say that → ✅ strong signal.
+
+***
+
+## ✅ Final Takeaway (Memorize This)
+
+> **Correctness first. Measure second. Optimize last.**
+
+That philosophy will prevent 90% of misuse of `useMemo` and `useCallback`.
+
+***
+
+If you want next:
+✅ Real profiling examples  
+✅ useMemo vs React.memo confusion  
+✅ Interview code snippets with traps  
+✅ Performance debugging workflow
+
+Just say 👍

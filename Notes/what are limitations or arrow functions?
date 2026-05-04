@@ -1,0 +1,231 @@
+### ✅ Limitations of **Arrow Functions** in JavaScript
+
+Arrow functions (`=>`) are concise and powerful, but they **cannot replace normal functions in every situation**. Below are the **key limitations**, with **examples and interview‑ready explanations**.
+
+***
+
+## 1️⃣ No Own `this` (Lexical `this`)
+
+**Limitation:**  
+Arrow functions **do not have their own `this`**. They inherit `this` from the surrounding scope.
+
+### ❌ Problem Example
+
+```js
+const obj = {
+  name: "Raja",
+  greet: () => {
+    console.log(this.name);
+  }
+};
+
+obj.greet(); // ❌ undefined
+```
+
+### ✅ Why
+
+*   `this` refers to the outer scope (likely `window`/`undefined`), not `obj`
+
+### ✅ Use Case Note
+
+Arrow functions are **bad for object methods** that rely on `this`.
+
+***
+
+## 2️⃣ Cannot Be Used as Constructors
+
+**Limitation:**  
+Arrow functions **cannot be called with `new`**.
+
+### ❌ Example
+
+```js
+const Person = (name) => {
+  this.name = name;
+};
+
+new Person("Raja"); // ❌ TypeError
+```
+
+### ✅ Why
+
+*   Arrow functions **do not have `[[Construct]]`**
+*   They don’t create instances
+
+✅ **Use normal functions or classes instead**
+
+***
+
+## 3️⃣ No `arguments` Object
+
+**Limitation:**  
+Arrow functions **do not have their own `arguments` object**.
+
+### ❌ Example
+
+```js
+const sum = () => {
+  console.log(arguments);
+};
+
+sum(1, 2); // ❌ ReferenceError
+```
+
+### ✅ Why
+
+*   `arguments` belongs to regular functions only
+
+✅ **Solution**
+
+```js
+const sum = (...args) => args.reduce((a, b) => a + b);
+```
+
+***
+
+## 4️⃣ Cannot Be Used as Object Methods (Usually)
+
+**Limitation:**  
+Because of lexical `this`, arrow functions usually **fail as object methods**.
+
+### ❌ Example
+
+```js
+const user = {
+  name: "Raja",
+  sayHi: () => console.log(`Hi ${this.name}`)
+};
+
+user.sayHi(); // ❌ Hi undefined
+```
+
+✅ Use **normal functions** for methods.
+
+***
+
+## 5️⃣ No `super` Keyword
+
+**Limitation:**  
+Arrow functions **do not have their own `super`**.
+
+### ❌ Example
+
+```js
+class Child extends Parent {
+  method = () => {
+    super.sayHi(); // ❌ Error in some contexts
+  }
+}
+```
+
+### ✅ Why
+
+*   `super` depends on method context
+*   Arrow functions don’t create that context
+
+***
+
+## 6️⃣ Cannot Be Used as Generator Functions
+
+**Limitation:**  
+Arrow functions **cannot use `yield`**.
+
+### ❌ Invalid
+
+```js
+const gen = () => {
+  yield 1; // ❌ SyntaxError
+};
+```
+
+✅ Generator functions must use `function*`.
+
+***
+
+## 7️⃣ Not Suitable for Event Handlers When `this` Is Needed
+
+**Limitation:**  
+In DOM events, arrow functions **don’t bind `this` to the element**.
+
+### ❌ Example
+
+```js
+button.addEventListener("click", () => {
+  console.log(this); // ❌ window / undefined
+});
+```
+
+### ✅ Correct
+
+```js
+button.addEventListener("click", function () {
+  console.log(this); // ✅ button element
+});
+```
+
+***
+
+## 8️⃣ Reduced Readability for Complex Logic
+
+**Limitation:**  
+Arrow functions can **hurt readability** when logic becomes complex.
+
+### ❌ Example
+
+```js
+const fn = (a, b) => a > b ? (a - b > 10 ? "big" : "small") : "invalid";
+```
+
+✅ Prefer normal functions for **complex logic**.
+
+***
+
+## 🔥 Summary Table (Interview Favorite)
+
+| Limitation                   | Arrow Function    |
+| ---------------------------- | ----------------- |
+| Own `this`                   | ❌ No              |
+| Usable with `new`            | ❌ No              |
+| `arguments` object           | ❌ No              |
+| Object methods               | ❌ Not recommended |
+| Event handlers (`this`)      | ❌ No              |
+| Generators (`yield`)         | ❌ No              |
+| Suitable for methods/classes | ❌ Limited         |
+
+***
+
+## ✅ When to Use Arrow Functions
+
+✅ Callbacks  
+✅ Array methods (`map`, `filter`, `reduce`)  
+✅ Short utility functions  
+✅ Lexical `this` scenarios (e.g., React handlers)
+
+***
+
+## ✅ When NOT to Use Arrow Functions
+
+❌ Object methods  
+❌ Constructors  
+❌ Prototype methods  
+❌ Event listeners needing `this`  
+❌ Generator functions
+
+***
+
+## ✅ One‑Line Interview Answer
+
+> Arrow functions have limitations such as no own `this`, no `arguments`, cannot be used as constructors or generators, making them unsuitable for object methods and event handlers.
+
+***
+
+## ✅ 10‑Second Interview Tip
+
+> Arrow functions are best for callbacks and short functions, but regular functions should be used when `this`, `arguments`, or `new` is required.
+
+If you want:
+✅ **Arrow vs regular function comparison**  
+✅ **Tricky arrow function output questions**  
+✅ **Arrow functions in React interviews**
+
+Just say 👍

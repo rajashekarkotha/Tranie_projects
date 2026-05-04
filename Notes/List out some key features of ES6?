@@ -1,0 +1,236 @@
+Here are the **key features of ES6 (ECMAScript 2015)** that are most commonly asked in **interviews** and widely used in **modern JavaScript & React applications**.
+
+***
+
+## ✅ Key Features of ES6
+
+***
+
+## 1️⃣ `let` and `const`
+
+Block‑scoped variable declarations (unlike `var`, which is function‑scoped).
+
+```js
+let count = 1;
+const PI = 3.14;
+```
+
+✅ `let` → value can change  
+✅ `const` → cannot be reassigned  
+✅ Prevents accidental redeclaration
+
+***
+
+## 2️⃣ Arrow Functions
+
+Shorter syntax and **lexical `this` binding**.
+
+```js
+const add = (a, b) => a + b;
+```
+
+✅ No own `this`  
+✅ Cleaner callbacks  
+✅ Very common in React
+
+***
+
+## 3️⃣ Template Literals
+
+String interpolation using backticks `` ` ``.
+
+```js
+const name = "Raja";
+console.log(`Hello ${name}`);
+```
+
+✅ Easier multiline strings  
+✅ No string concatenation
+
+***
+
+## 4️⃣ Default Parameters
+
+Provides default values to function parameters.
+
+```js
+function greet(name = "Guest") {
+  return name;
+}
+```
+
+✅ Avoids undefined checks
+
+***
+
+## 5️⃣ Destructuring Assignment
+
+Extract values from arrays or objects easily.
+
+### Object destructuring
+
+```js
+const user = { name: "Raja", age: 30 };
+const { name, age } = user;
+```
+
+### Array destructuring
+
+```js
+const nums = [1, 2];
+const [a, b] = nums;
+```
+
+✅ Very common in React props & state
+
+***
+
+## 6️⃣ Spread (`...`) and Rest (`...`) Operator
+
+### Spread operator
+
+```js
+const arr = [1, 2];
+const newArr = [...arr, 3];
+```
+
+### Rest operator
+
+```js
+function sum(...args) {
+  return args.reduce((a, b) => a + b);
+}
+```
+
+✅ Helps maintain immutability  
+✅ Frequently used in Redux / React state
+
+***
+
+## 7️⃣ Classes
+
+Syntactic sugar over prototypes.
+
+```js
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+
+  greet() {
+    console.log(this.name);
+  }
+}
+```
+
+✅ Cleaner than prototype syntax  
+✅ Used in older React class components
+
+***
+
+## 8️⃣ Modules (`import` / `export`)
+
+Supports modular JavaScript.
+
+```js
+// export
+export const add = (a, b) => a + b;
+
+// import
+import { add } from "./math";
+```
+
+✅ Code reusability  
+✅ Mandatory in modern frontend frameworks
+
+***
+
+## 9️⃣ Promises
+
+Handles asynchronous operations.
+
+```js
+const promise = new Promise((resolve, reject) => {
+  resolve("Success");
+});
+```
+
+✅ Avoids callback hell  
+✅ Foundation for `async/await`
+
+***
+
+## 🔟 Enhanced Object Literals
+
+Shorter syntax for object creation.
+
+```js
+const name = "Raja";
+
+const user = {
+  name,
+  greet() {
+    console.log(name);
+  }
+};
+```
+
+✅ Cleaner and readable code
+
+***
+
+## 1️⃣1️⃣ `for...of` Loop
+
+Iterates over iterable objects.
+
+```js
+for (const value of [1, 2, 3]) {
+  console.log(value);
+}
+```
+
+✅ Works with arrays, strings, maps, sets
+
+***
+
+## 1️⃣2️⃣ New Data Structures
+
+Introduced:
+
+*   `Map`
+*   `Set`
+*   `WeakMap`
+*   `WeakSet`
+
+```js
+const set = new Set([1, 2, 2]);
+```
+
+✅ Prevents duplicates  
+✅ Better than plain objects for some use cases
+
+***
+
+## ✅ Interview‑Friendly Summary
+
+> ES6 introduced **block scoping (`let`, `const`), arrow functions, template literals, destructuring, spread/rest operators, classes, modules, promises, and new data structures**, making JavaScript more readable, maintainable, and powerful.
+
+***
+
+## ✅ Most Important ES6 Features for React
+
+✅ Arrow functions  
+✅ Destructuring  
+✅ Spread operator  
+✅ `import` / `export`  
+✅ `let` / `const`
+
+***
+
+If you want:
+✅ ES6 vs ES5 comparison  
+✅ Output‑based interview questions  
+✅ ES6 features used in React projects  
+✅ Code challenges
+
+Just tell me 👍

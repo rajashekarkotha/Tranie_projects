@@ -1,0 +1,25 @@
+export default function App() {
+
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+
+    const handleClick = () => {
+
+      console.log("Counter is:", counter);
+
+    };
+
+    document.addEventListener("click", handleClick);
+
+  }, []);
+
+  return (
+
+    <div className="App">
+
+      <button onClick={() => setCounter(counter + 1)}>Click</button>
+
+    </div>
+
+  );

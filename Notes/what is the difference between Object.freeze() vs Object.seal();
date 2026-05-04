@@ -1,0 +1,224 @@
+Here’s a **clear, interview‑ready comparison** of **`Object.freeze()`** vs **`Object.seal()`**, with **behavior, examples, edge cases, and real‑world usage**.
+
+***
+
+# ✅ Difference between `Object.freeze()` and `Object.seal()`
+
+Both methods are used to **control modifications to objects**, but they differ in **how restrictive** they are.
+
+***
+
+## 🔹 Quick One‑Line Definitions
+
+*   **`Object.seal()`** → Prevents **adding or removing properties**, but **allows modifying existing values**.
+*   **`Object.freeze()`** → Prevents **adding, removing, or modifying properties** (fully immutable).
+
+***
+
+## ✅ `Object.seal()`
+
+### 🔹 What it does
+
+*   ❌ Cannot add new properties
+*   ❌ Cannot delete existing properties
+*   ✅ Can **modify existing property values**
+*   ❌ Cannot change property descriptors
+
+***
+
+### ✅ Example
+
+```js
+const user = { name: "Raja", age: 30 };
+
+Object.seal(user);
+
+user.age = 31;        // ✅ allowed
+user.city = "HYD";   // ❌ not allowed
+delete user.name;    // ❌ not allowed
+
+console.log(user);
+```
+
+### ✅ Output
+
+```js
+{ name: "Raja", age: 31 }
+```
+
+***
+
+### ✅ Use Case
+
+*   Object **structure must remain same**
+*   Values may change
+*   Example: config objects with mutable values
+
+***
+
+## ✅ `Object.freeze()`
+
+### 🔹 What it does
+
+*   ❌ Cannot add properties
+*   ❌ Cannot delete properties
+*   ❌ Cannot modify values
+*   ❌ Cannot change property descriptors
+
+✅ Object becomes **fully read‑only**
+
+***
+
+### ✅ Example
+
+```js
+const user = { name: "Raja", age: 30 };
+
+Object.freeze(user);
+
+user.age = 31;        // ❌ not allowed
+user.city = "HYD";   // ❌ not allowed
+delete user.name;    // ❌ not allowed
+
+console.log(user);
+```
+
+### ✅ Output
+
+```js
+{ name: "Raja", age: 30 }
+```
+
+***
+
+### ✅ Use Case
+
+*   Immutable data
+*   Constants
+*   Redux initial state
+*   Configuration that must never change
+
+***
+
+## 🔥 Side‑by‑Side Comparison
+
+| Feature                | `Object.seal()` | `Object.freeze()` |
+| ---------------------- | --------------- | ----------------- |
+| Add new properties     | ❌ No            | ❌ No              |
+| Delete properties      | ❌ No            | ❌ No              |
+| Modify existing values | ✅ Yes           | ❌ No              |
+| Change descriptors     | ❌ No            | ❌ No              |
+| Immutability level     | Partial         | Full              |
+| Strict mode error      | ✅ Yes           | ✅ Yes             |
+
+***
+
+## ✅ Strict Mode Behavior
+
+```js
+"use strict";
+
+const obj = { a: 1 };
+Object.freeze(obj);
+
+obj.a = 2; // ❌ TypeError in strict mode
+```
+
+*   **Strict mode** → throws error
+*   **Non‑strict mode** → fails silently
+
+***
+
+## ✅ Shallow Immutability (Important Interview Trap ⚠️)
+
+Both `freeze()` and `seal()` are **shallow**.
+
+```js
+const obj = {
+  user: { name: "Raja" }
+};
+
+Object.freeze(obj);
+
+obj.user.name = "Ram"; // ✅ Allowed
+```
+
+✅ Only the **top‑level object** is frozen
+
+***
+
+### ✅ Deep Freeze Example
+
+```js
+function deepFreeze(obj) {
+  Object.freeze(obj);
+
+  Object.values(obj).forEach(value => {
+    if (typeof value === "object" && value !== null) {
+      deepFreeze(value);
+    }
+  });
+
+  return obj;
+}
+```
+
+***
+
+## ✅ Useful Helper Methods
+
+```js
+Object.isFrozen(obj); // true / false
+Object.isSealed(obj); // true / false
+```
+
+***
+
+## ✅ Real‑World Usage (React / JS)
+
+### ✅ `Object.freeze`
+
+```js
+const ACTIONS = Object.freeze({
+  ADD: "ADD",
+  REMOVE: "REMOVE"
+});
+```
+
+✅ Prevents accidental change
+
+***
+
+### ✅ `Object.seal`
+
+```js
+const formData = Object.seal({
+  name: "",
+  email: ""
+});
+
+formData.name = "Raja"; // ✅
+formData.age = 30;      // ❌
+```
+
+***
+
+## ✅ Interview‑Ready Summary
+
+> **`Object.seal()`** prevents adding or removing properties but allows modifying existing values, whereas **`Object.freeze()`** makes an object completely immutable by disallowing any changes.
+
+***
+
+## ✅ 10‑Second Interview Answer
+
+> Freeze makes an object fully immutable, while seal only locks the structure but allows value updates.
+
+***
+
+If you want next:
+✅ **`Object.preventExtensions()` vs seal vs freeze**  
+✅ **Deep freeze interview questions**  
+✅ **Redux immutability patterns**  
+✅ **Tricky output‑based questions**
+
+Just say 👍

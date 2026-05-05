@@ -1,0 +1,144 @@
+Short answer: **Yes, but only some hooks — not all — can be used in Server Components.**
+
+This usually comes up in **React Server Components (RSC)** / **Next.js App Router** interviews.
+
+***
+
+## ✅ Hooks in **Server Components** (Allowed vs Not Allowed)
+
+### ✅ Allowed in **Server Components**
+
+Server Components run **on the server**, so only hooks that **do not rely on browser state or lifecycle** are allowed.
+
+✅ **Allowed hooks:**
+
+*   `use()` ✅ (important!)
+*   `useId()`
+*   `useMemo()` *(limited use)*
+*   `useContext()` *(read-only, server-safe)*
+
+### ❌ NOT Allowed in **Server Components**
+
+Hooks that depend on **state, effects, or browser APIs** ❌
+
+❌ **Not allowed:**
+
+*   `useState`
+*   `useEffect`
+*   `useLayoutEffect`
+*   `useReducer`
+*   `useRef`
+*   `useCallback`
+
+***
+
+## ✅ Why this restriction exists
+
+Server Components:
+
+*   Run **only on the server**
+*   Do **not re-render on user interaction**
+*   Have **no access to browser APIs** (`window`, `document`)
+*   Are rendered **once per request**
+
+Therefore:
+
+> Hooks that manage **state, effects, or DOM** are meaningless on the server.
+
+***
+
+## ✅ Special Hook: `use()` (Very Important ⭐)
+
+`use()` is **designed specifically for Server Components**.
+
+### ✅ Example
+
+```js
+import { use } from 'react';
+
+function ServerComponent() {
+  const data = use(fetchData());
+  return <div>{data.name}</div>;
+}
+```
+
+✔ Works only in Server Components  
+✔ Suspends rendering until the promise resolves  
+✔ Replaces `useEffect + useState` for data fetching
+
+***
+
+## ✅ Comparison Table
+
+| Hook       | Server Component | Client Component |
+| ---------- | ---------------- | ---------------- |
+| useState   | ❌                | ✅                |
+| useEffect  | ❌                | ✅                |
+| useContext | ✅ (read-only)    | ✅                |
+| useId      | ✅                | ✅                |
+| use()      | ✅                | ❌                |
+| useRef     | ❌                | ✅                |
+
+***
+
+## ✅ Client Components (For Contrast)
+
+Client Components **do support all hooks**, but must be marked explicitly:
+
+```js
+'use client';
+
+import { useState } from 'react';
+
+export default function ClientComponent() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+***
+
+## ✅ Common Interview Question & Answer
+
+### ❓ Can we use `useState` in a Server Component?
+
+**Answer:**  
+❌ No. Server Components cannot manage client-side state.
+
+***
+
+### ❓ How do Server Components fetch data without `useEffect`?
+
+**Answer:**  
+✅ Using async functions or the `use()` hook.
+
+***
+
+### ❓ Can Server Components use Context?
+
+**Answer:**  
+✅ Yes, but **read-only** (no state updates).
+
+***
+
+## ✅ Mental Model (Easy to Remember)
+
+*   🖥️ **Server Components** → data, logic, security, performance
+*   🧠 **Client Components** → interaction, state, effects
+
+***
+
+## ✅ Interview One‑Liner (Perfect Answer)
+
+> **Only server-safe hooks like `use()` and `useContext` are allowed in Server Components. State and effect hooks are client-only.**
+
+***
+
+If you want next:
+
+*   ✅ Server vs Client Components diagram
+*   ✅ Next.js App Router interview questions
+*   ✅ Real-world examples
+*   ✅ Tricky interview pitfalls
+
+Just tell me 👍

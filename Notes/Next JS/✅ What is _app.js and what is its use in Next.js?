@@ -1,0 +1,88 @@
+✅ What is _app.js and what is its use in Next.js?
+_app.js is a custom App component in Next.js that acts as a wrapper for all pages in an application.
+It allows you to initialize pages, maintain global state, apply global layouts, and include global styles.
+📍 It is part of the Pages Router (pages/_app.js).
+
+🔹 Core Purpose of _app.js
+1️⃣ Wraps All Pages
+Every page in the pages directory is rendered through _app.js.
+
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />;
+}
+export default MyApp;
+	• Component → the active page
+	• pageProps → props returned from data‑fetching methods
+✅ Runs on every page navigation
+
+2️⃣ Apply Global Styles
+Global CSS can only be imported inside _app.js.
+import '../styles/globals.css';
+✅ Ensures consistent styling across the app
+
+3️⃣ Maintain Global State / Providers
+Use _app.js to wrap pages with providers:
+	• Redux
+	• Context API
+	• Theme providers
+	• Authentication providers
+
+<AppProvider>
+  <Component {...pageProps} />
+</AppProvider>
+✅ State persists across route changes
+
+4️⃣ Define Global Layouts
+You can apply a common layout (header, footer, sidebar):
+
+<Layout>
+  <Component {...pageProps} />
+</Layout>
+``
+✅ Avoids repeating layout code on every page
+
+5️⃣ Handle Page-Level Custom Layouts
+Supports per‑page layouts:
+
+Component.getLayout =
+  Component.getLayout || ((page) => page);
+return Component.getLayout(<Component {...pageProps} />);
+✅ Useful for dashboards, auth pages, etc.
+
+🔹 What _app.js is NOT Used For
+❌ It does not define routes
+❌ It does not replace _document.js
+❌ It does not render HTML <body> or <html>
+
+🔄 _app.js vs _document.js
+File	Purpose
+_app.js	Wraps pages, global state, layouts
+_document.js	Customize HTML, <head>, <body>
+
+🧠 Interview‑Ready Answer (30 Seconds)
+	_app.js is a custom App component in Next.js that wraps all pages.
+	It is used to apply global styles, manage global state, add layouts, and initialize shared logic across pages.
+	It runs for every page and ensures consistency across the application.
+
+⚠️ Important (Modern Next.js)
+	• _app.js is used with the Pages Router
+	• In the App Router, similar functionality is handled by: 
+		○ layout.js
+		○ providers
+		○ Server Components
+
+✅ Real‑World Example
+In an enterprise app (like Cognizant projects):
+	• Auth provider in _app.js
+	• Common layout for all internal pages
+	• Global error handling
+
+If you want, I can next:
+	• ✅ Explain _document.js
+	• ✅ Compare _app.js vs layout.js
+	• ✅ Give real project code examples
+	• ✅ Prepare follow‑up interview questions
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 
+

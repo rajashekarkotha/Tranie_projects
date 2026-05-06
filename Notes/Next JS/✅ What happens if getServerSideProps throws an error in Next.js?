@@ -1,0 +1,97 @@
+✅ What happens if getServerSideProps throws an error in Next.js?
+If getServerSideProps throws an error, Next.js treats it as a server error and renders the error page. By default, the user will see a 500 Internal Server Error page, either the built‑in one or a custom error page if you’ve defined it.
+
+🔹 Default Behavior
+1️⃣ Unhandled Error
+If an error is thrown and not handled, Next.js will:
+	• Return HTTP 500
+	• Render: 
+		○ pages/500.js (if present), or
+		○ the default Next.js 500 error page
+	• Log the error on the server console
+
+export async function getServerSideProps() {
+  throw new Error("Database failed");
+}
+✅ Result: 500 error page shown to the user
+
+🔹 How to Handle Errors Properly (Recommended)
+✅ 1️⃣ Use try/catch inside getServerSideProps
+This prevents crashing the page and gives you control over UX.
+
+export async function getServerSideProps() {
+  try {
+    const data = await fetchData();
+    return { props: { data } };
+  } catch (error) {
+    return { props: { error: true } };
+  }
+}
+``
+✅ Page still renders
+✅ Error handled gracefully
+
+✅ 2️⃣ Redirect on Error
+Useful when data is mandatory.
+
+catch (error) {
+  return {
+    redirect: {
+      destination: "/error",
+      permanent: false,
+    },
+  };
+}
+✅ Better user experience
+✅ No broken page
+
+✅ 3️⃣ Show 404 if Data Is Missing
+If the resource doesn’t exist:
+
+if (!data) {
+  return { notFound: true };
+}
+✅ Renders 404.js
+✅ Appropriate for missing resources
+
+🔹 Custom Error Pages
+You can define:
+	• pages/500.js → Server errors
+	• pages/_error.js → Unified error handling (advanced)
+
+// pages/500.js
+export default function Custom500() {
+  return <h1>Something went wrong</h1>;
+}
+
+🔄 What About Client‑Side Navigation?
+	• During client‑side transitions, an error in getServerSideProps: 
+		○ Redirects to the error page
+		○ Still triggers a full page reload
+
+⚠️ Important Notes (Interview‑Relevant)
+	• Errors in getServerSideProps are server‑side only
+	• Users never see stack traces in production
+	• Logging + monitoring (Datadog, New Relic, App Insights) is critical
+	• Never expose sensitive error details to the UI
+
+🧠 Interview‑Ready 30‑Second Answer
+	If getServerSideProps throws an error, Next.js returns a 500 server error and renders the default or custom 500 error page.
+	To avoid breaking the user experience, we usually handle errors using try/catch and return fallback props, a redirect, or notFound.
+	This gives us better control over error handling and improves reliability in production.
+
+✅ Real‑World Example (Enterprise / Cognizant‑Style)
+	• API timeout → show friendly error message
+	• Auth failure → redirect to login
+	• Missing data → return 404
+	• Unexpected exception → log + show 500 page
+
+If you want, I can:
+	• ✅ Compare error handling in SSR vs SSG
+	• ✅ Explain App Router error handling (error.js)
+	• ✅ Give production‑grade error patterns
+	• ✅ Provide mock interview follow‑ups
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 
+

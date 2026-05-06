@@ -1,0 +1,63 @@
+✅ What is Next.js and how is it different from React?
+🔹 What is React?
+React is a JavaScript library developed by Facebook for building user interfaces, mainly single‑page applications (SPAs).
+	• Focuses only on the UI layer
+	• Uses client‑side rendering (CSR) by default
+	• You need to choose and configure extra tools for: 
+		○ Routing (React Router)
+		○ Server‑side rendering
+		○ SEO
+		○ Build and optimization
+👉 React answers: “How do I build UI components?”
+
+🔹 What is Next.js?
+Next.js is a full‑featured framework built on top of React, developed by Vercel.
+	• Uses React plus additional capabilities out of the box
+	• Supports multiple rendering methods
+	• Production‑ready with minimal configuration
+👉 Next.js answers: “How do I build, render, optimize, and deploy a React app?”
+
+🔍 Key Differences Between Next.js and React
+Aspect	React	Next.js
+Type	UI Library	React Framework
+Rendering	Client‑Side Rendering (CSR)	SSR, SSG, ISR, CSR
+Routing	Manual (React Router)	File‑based routing
+SEO	Weak by default	SEO‑friendly
+Performance	Depends on setup	Optimized by default
+Backend	Needs separate backend	Built‑in API routes
+Setup	More configuration	Minimal configuration
+Production readiness	Developer‑driven	Enterprise‑ready
+
+🚀 Rendering Capability Comparison
+	• React
+		○ Renders mostly on the browser
+		○ Slower first page load
+		○ SEO limitations
+	• Next.js
+		○ SSR (Server‑Side Rendering) → Faster first load, better SEO
+		○ SSG (Static Site Generation) → Very fast pages
+		○ ISR (Incremental Static Regeneration) → Best for dynamic but scalable pages
+
+🧠 Simple Interview Answer (Client‑Round Ready)
+	React is a library focused on building UI components, while Next.js is a framework built on top of React that provides routing, server‑side rendering, SEO optimization, and backend capabilities out of the box.
+	In real projects, we use Next.js when performance, SEO, and scalability are important.
+
+✅ When to Use What?
+	• ✅ Use React if:
+		○ You are building simple dashboards
+		○ SEO is not critical
+		○ You want full control over architecture
+	• ✅ Use Next.js if:
+		○ SEO and performance matter
+		○ You need SSR/SSG
+		○ You want faster development with best practices built‑in
+
+If you want, I can next:
+	• ✅ Give a 30‑second interview answer
+	• ✅ Provide a real project example
+	• ✅ Compare Next.js vs React vs Angular
+	• ✅ Prepare Next.js follow‑up interview questions
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 
+

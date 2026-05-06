@@ -1,0 +1,77 @@
+✅ What is file‑based routing?
+File‑based routing is a routing mechanism where the folder and file structure of your project automatically determines the application’s routes (URLs)—without writing explicit routing configuration.
+This is a core feature of Next.js.
+
+🔹 How File‑Based Routing Works in Next.js
+In Next.js, each file represents a route.
+Example (Pages Router)
+
+pages/
+ ├── index.js        →  /
+ ├── about.js        →  /about
+ ├── blog/
+ │    └── post.js    →  /blog/post
+✅ No Route definitions
+✅ No route mapping files
+✅ The URL structure mirrors the file structure
+
+Example (App Router – Modern Next.js)
+
+app/
+ ├── page.js         →  /
+ ├── about/
+ │    └── page.js    →  /about
+📌 Routes are created using folders and page.js.
+
+🔹 Dynamic Routes (Data‑Driven URLs)
+Using square brackets ([]):
+pages/product/[id].js
+This matches:
+	• /product/101
+	• /product/202
+The value id is available as a route parameter.
+
+🔹 Nested Routes
+
+pages/dashboard/settings.js
+→ /dashboard/settings
+✅ Nested folders create nested URLs automatically.
+
+🔹 Catch‑All Routes
+pages/docs/[...slug].js
+Matches:
+	• /docs/intro
+	• /docs/guide/setup
+Used for documentation or deeply nested content.
+
+🔹 Benefits of File‑Based Routing
+✅ No manual routing configuration
+✅ Cleaner, predictable URLs
+✅ Better developer productivity
+✅ Built‑in support for dynamic and nested routes
+✅ SEO‑friendly architecture
+
+🧠 Interview‑Ready Answer (30 Seconds)
+	File‑based routing means routes are automatically created based on the project’s folder and file structure.
+	In Next.js, each file inside the pages or app directory becomes a route, removing the need for manual route configuration and making routing simple, scalable, and SEO‑friendly.
+
+⚖️ Comparison with React (Quick)
+React	Next.js
+Manual routing	Automatic routing
+React Router required	Built‑in
+More setup	Minimal setup
+
+✅ When to Use File‑Based Routing
+	• SEO‑focused applications
+	• Large, scalable projects
+	• Teams that prefer convention over configuration
+
+If you want, I can:
+	• ✅ Explain file‑based routing vs React Router
+	• ✅ Show advanced routing scenarios
+	• ✅ Prepare follow‑up interview Q&A
+	• ✅ Give real project examples
+Just say the word 👍
+
+From <edge://commercial-copilot-chat/> 
+

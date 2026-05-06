@@ -1,0 +1,81 @@
+✅ What are layout.js and template.js in the Next.js App Router?
+In the Next.js App Router (app/ directory), both layout.js and template.js define shared UI wrappers for routes.
+The key difference is whether the UI is preserved or re‑created during navigation.
+
+🔹 layout.js
+👉 What it is
+layout.js defines a persistent layout that wraps pages and nested routes inside a folder.
+✅ Key Characteristics
+	• Persists across route navigation
+	• Does NOT re‑mount when moving between child routes
+	• Preserves state
+	• Server Component by default
+	• Must render {children}
+📁 Example
+app/dashboard/
+ ├── layout.js
+ ├── page.js
+ └── settings/page.js
+✅ Example Code
+
+export default function DashboardLayout({ children }) {
+  return (
+    <div>
+      <Sidebar />
+      <main>{children}</main>
+    </div>
+  );
+}
+``
+✅ Sidebar stays mounted
+✅ Only page content changes
+✅ Best Use Cases
+	• App shell (header, footer)
+	• Sidebar navigation
+	• Authentication wrappers
+	• Global providers (theme, auth)
+
+🔹 template.js
+👉 What it is
+template.js is similar to layout.js but re‑mounts on every navigation.
+✅ Key Characteristics
+	• Re‑created on every route change
+	• State is reset
+	• Server Component by default
+	• Must render {children}
+✅ Example Code
+
+export default function DashboardTemplate({ children }) {
+  return <div className="fade-in">{children}</div>;
+}
+✅ Re‑triggers animations
+✅ Clears state on navigation
+✅ Best Use Cases
+	• Page transition animations
+	• Scroll reset behavior
+	• UI that must restart on each navigation
+
+⚖️ layout.js vs template.js
+Aspect	layout.js	template.js
+Persistence	✅ Yes	❌ No
+Re‑mounts on navigation	❌ No	✅ Yes
+State preserved	✅ Yes	❌ No
+Performance	✅ Better	Slightly lower
+Typical usage	App structure	Transitions / resets
+
+🧠 Interview‑Ready 30‑Second Answer
+	In the Next.js App Router, layout.js is used for persistent layouts that wrap routes and preserve state across navigation, such as headers or sidebars.
+	template.js is similar but re‑mounts on every navigation, making it useful when UI state must reset, like animations or transitions.
+
+✅ Rule of Thumb (Say This)
+	• Need persistence? → layout.js ✅
+	• Need reset on every navigation? → template.js ✅
+If you want next, I can:
+	• Compare _app.js vs layout.js
+	• Explain nested layouts & route groups
+	• Show real enterprise App Router structure
+	• Prepare App Router interview coding questions
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 
+

@@ -1,0 +1,138 @@
+✅ How do you share logic between server and client in Next.js?
+In Next.js (especially App Router), sharing logic between Server Components and Client Components is a core design consideration. The goal is to reuse code without breaking constraints of each environment.
+Below is a clear, production‑ready explanation with patterns interviewers expect.
+
+🔹 Key Principle (Remember This)
+	✅ Share pure, environment‑agnostic logic
+	❌ Do NOT share logic that depends on browser or Node‑specific APIs
+
+✅ 1️⃣ Share Pure Utility Functions (Most Common)
+✅ Best Candidate for Sharing
+	• Data transformation
+	• Formatting
+	• Validation
+	• Business rules
+	• Calculations
+These functions:
+	• Don’t use window, document, or fs
+	• Don’t depend on React hooks
+✅ Example
+
+// utils/price.ts
+export function formatPrice(value: number) {
+  return ${value.toFixed(2)};
+}
+✅ Can be used in:
+	• Server Components
+	• Client Components
+	• API routes
+
+✅ 2️⃣ Share Business Logic (Domain Logic)
+Keep business rules outside React components.
+✅ Example
+
+// domain/cart.ts
+export function calculateTotal(items) {
+  return items.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  );
+}
+✅ Reusable in:
+	• Server Components (data prep)
+	• Client Components (UI display)
+	• APIs
+
+✅ 3️⃣ Share Logic via Server Actions (App Router)
+Server Actions let Client Components call server‑side logic safely.
+✅ Server Action
+
+// app/actions/createUser.js
+"use server";
+export async function createUser(data) {
+  await db.user.create(data);
+}
+✅ Client Component Uses It
+
+"use client";
+import { createUser } from "./actions/createUser";
+<button onClick={() => createUser(formData)}>
+  Submit
+</button>
+✅ Logic lives on server
+✅ Safely reused by client
+✅ No API boilerplate
+
+✅ 4️⃣ Share Validation with Schema Libraries
+Using libraries like Zod makes logic reusable on both sides.
+✅ Example
+
+// schemas/user.ts
+import { z } from "zod";
+export const UserSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+✅ Use on:
+	• Server (API / Server Actions)
+	• Client (form validation)
+	✅ This is a very strong interview answer
+
+✅ 5️⃣ Share API Logic via a Service Layer
+Create a shared service module.
+
+// services/productService.ts
+export async function getProducts() {
+  const res = await fetch("/api/products");
+  return res.json();
+}
+✅ Can be consumed by:
+	• Client hooks
+	• Server APIs
+	• Event handlers
+
+✅ 6️⃣ Use a Monorepo / Shared Package (Enterprise Pattern)
+In large teams (Cognizant‑style projects):
+packages/
+  └── core-logic/
+        ├── pricing.ts
+        ├── validation.ts
+        └── rules.ts
+apps/
+  └── web (Next.js)
+✅ Ensures:
+	• High reuse
+	• Consistency
+	• Easier testing
+
+❌ What NOT to Share Directly
+Logic Type	Why
+window, document	Browser‑only
+React hooks	Client‑only
+Database access	Server‑only
+Node APIs (fs)	Not available on client
+👉 Separate these behind boundaries
+
+⚖️ Correct Pattern Summary
+Pattern	Shareable?
+Utility functions	✅ Yes
+Domain logic	✅ Yes
+Validation schemas	✅ Yes
+Server Actions	✅ Yes (via calls)
+Hooks	❌ No
+Browser APIs	❌ No
+
+🧠 Interview‑Ready 30‑Second Answer
+	In Next.js, shared logic should be kept environment‑agnostic. We typically extract pure utility functions, business rules, and validation logic into shared modules that both Server and Client Components can import. For server‑only logic, we use Server Actions or services, which client components can invoke safely. This separation improves reuse, performance, and maintainability.
+
+✅ One‑Line Power Statement
+	Share logic by separating “what” from “where it runs.”
+
+If you want, I can: ✅ Draw recommended folder structures
+✅ Explain real enterprise sharing patterns
+✅ Compare Server Actions vs API routes
+✅ Give interview coding examples
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 
+

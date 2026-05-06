@@ -1,0 +1,96 @@
+✅ What is catch‑all routing ([...slug].js) in Next.js?
+Catch‑all routing in Next.js allows a single dynamic route file to handle multiple URL segments of varying depth.
+It is useful when you don’t know in advance how many path segments a route will have.
+
+🔹 Basic Idea
+Using [...slug].js, you can match one or more URL segments with a single route.
+pages/docs/[...slug].js
+This file matches:
+	• /docs/intro
+	• /docs/getting-started
+	• /docs/guides/setup
+	• /docs/a/b/c
+✅ One file → many URLs
+✅ Dynamic depth supported
+
+🔹 How the Route Parameter Works
+For a URL like:
+/docs/guides/setup
+Inside [...slug].js:
+
+import { useRouter } from 'next/router';
+const router = useRouter();
+console.log(router.query.slug);
+Output:
+["guides", "setup"]
+📌 The parameter is always an array of path segments.
+
+🔹 Typical Use Cases (Very Common in Interviews)
+✅ Documentation websites
+	• /docs/intro
+	• /docs/api/auth
+	• /docs/api/auth/login
+✅ CMS‑driven pages
+	• URLs defined by content editors
+	• Flexible content hierarchies
+✅ Knowledge bases / help centers
+
+🔹 Catch‑All vs Dynamic Routes
+Type	File	Matches
+Dynamic route	[id].js	Exactly one segment
+Catch‑all route	[...slug].js	One or more segments
+
+🔹 Optional Catch‑All Routing ([[...slug]])
+
+pages/docs/[[...slug]].js
+``
+Matches:
+	• /docs
+	• /docs/intro
+	• /docs/a/b
+📌 Difference:
+	• [...slug] → requires at least one segment
+	• [[...slug]] → segment is optional
+
+🔹 With Data Fetching (Example)
+
+export async function getStaticProps({ params }) {
+  const { slug } = params; // array
+  return { props: { slug } };
+}
+``
+✅ Works with:
+	• getStaticProps
+	• getServerSideProps
+	• ISR
+
+🧠 Interview‑Ready 30‑Second Answer
+	Catch‑all routing in Next.js uses [...slug].js to match routes with multiple URL segments.
+	The matched segments are available as an array, making it ideal for documentation sites or CMS‑driven pages with dynamic URL structures.
+	It allows flexible routing without defining routes for every possible path.
+
+✅ Real‑World Example
+Documentation site
+
+/docs
+/docs/react
+/docs/react/hooks
+/docs/react/hooks/useEffect
+All handled by:
+
+pages/docs/[...slug].js
+``
+
+✅ Pages Router vs App Router Note
+	• Pages Router: [...slug].js
+	• App Router: folders + page.js with dynamic segments
+
+If you want, I can:
+	• ✅ Compare [id].js vs [...slug].js vs [[...slug]]
+	• ✅ Show a real docs site implementation
+	• ✅ Explain catch‑all routing with ISR
+	• ✅ Give interview coding challenges
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 
+

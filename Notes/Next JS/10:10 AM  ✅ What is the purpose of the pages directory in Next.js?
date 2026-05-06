@@ -1,0 +1,71 @@
+✅ What is the purpose of the pages directory in Next.js?
+The pages directory in Next.js is used to define routes and pages automatically using a file‑based routing system.
+In simple terms:
+👉 Every file inside pages/ becomes a route in your application.
+
+🔹 Core Purpose of the pages Directory
+1️⃣ Automatic Routing
+Next.js automatically creates routes based on file names.
+
+pages/
+ ├── index.js      →  /
+ ├── about.js      →  /about
+ ├── blog/
+ │    └── [id].js  →  /blog/123
+✅ No need for React Router
+✅ No manual route configuration
+
+2️⃣ Page‑Level Rendering Control
+Each file in pages/ represents a page, where you can define how the page is rendered:
+	• SSR → getServerSideProps
+	• SSG → getStaticProps
+	• ISR → revalidation
+	• CSR → normal React behavior
+
+export async function getServerSideProps() {
+  return { props: {} }
+}
+
+3️⃣ Special Files for App Behavior
+File	Purpose
+_app.js	Initialize pages, add global layout
+_document.js	Customize HTML structure
+404.js	Custom 404 page
+500.js	Custom error page
+_error.js	Custom error handling
+
+4️⃣ Dynamic Routes Support
+Using brackets ([]) allows dynamic routing:
+pages/product/[id].js
+➡️ /product/101
+➡️ /product/202
+
+5️⃣ API Routes (Backend Support)
+The pages/api folder allows backend APIs inside the same app:
+pages/api/login.js → /api/login
+✅ No separate backend required
+✅ Runs on the server only
+
+🧠 Interview‑Ready Answer (30 Seconds)
+	The pages directory in Next.js enables file‑based routing, where each file automatically becomes a route.
+	It also allows page‑level data fetching using SSR, SSG, or ISR, and supports dynamic routes and API endpoints.
+	This makes routing simpler and the application production‑ready by default.
+
+⚠️ Important Note (Modern Next.js)
+	• The pages directory is part of the Pages Router
+	• Newer Next.js versions introduce the app directory (App Router)
+	• Both can coexist, but you use one routing system at a time
+
+✅ When to Use pages Directory
+	• Existing or legacy Next.js projects
+	• Simple routing requirements
+	• Team familiarity with classic Next.js pattern
+
+If you want next, I can:
+	• ✅ Compare pages router vs app router
+	• ✅ Explain _app.js, _document.js in detail
+	• ✅ Give real project example
+	• ✅ Provide follow‑up interview questions
+Just tell me 👍
+
+From <edge://commercial-copilot-chat/> 

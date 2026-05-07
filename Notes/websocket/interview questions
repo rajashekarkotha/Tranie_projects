@@ -1,0 +1,57 @@
+As a senior developer, interview questions about WebSockets move beyond basic syntax to focus on architectural patterns, scalability, resource management, and security. [1, 2, 3, 4] 
+## 1. Architectural & Scalability Questions
+
+* How do you scale a WebSocket application horizontally?
+* The Problem: WebSockets are stateful; once a client connects to Server A, Server B cannot easily "push" a message to them.
+   * The Solution: Use a Pub/Sub mechanism (like Redis or NATS) as a backplane. When a message needs to be sent to a user, the server broadcasts it to the Pub/Sub; every server instance listens and pushes the message only if the target user is connected to that specific instance. [2, 5, 6] 
+* What are the trade-offs between "Sticky Sessions" vs. "Statelessness" in WebSocket load balancing?
+* Answer: Sticky sessions ensure a client stays with the same server for the duration of the connection, which is easier for simple apps but creates "hotspots" where one server is overloaded. Statelessness (with a Pub/Sub) allows better load distribution but adds architectural complexity and latency due to the extra message hop. [2] 
+* How would you handle WebSockets in a Serverless (FaaS) environment?
+* Answer: Standard Lambda/Cloud Functions are ephemeral and cannot hold a persistent connection. You must use a gateway service (like AWS API Gateway WebSocket API or Azure Web PubSub) that manages the persistent connection for you and triggers your functions only when an event occurs. [6] 
+
+## 2. Reliability & Flow Control (Backpressure)
+
+* How do you handle "Backpressure" when a client cannot keep up with the server?
+* Answer: If a server sends messages faster than the client can process them, buffers fill up, causing memory bloat and potential crashes.
+   * Strategies: Implement throttling (dropping less critical messages), queuing with a fixed limit, or a credit-based flow control where the client explicitly "requests" the next batch of data after processing the current one. [7, 8, 9] 
+* Describe a robust reconnection strategy for unstable networks.
+* Answer: Use Exponential Backoff with jitter (randomness) to prevent a "thundering herd" effect where all disconnected clients try to reconnect at exactly the same second. Always include a heartbeat (ping/pong) mechanism to detect "half-open" connections where the socket is dead but the OS thinks it's still alive. [7, 10, 11, 12, 13] 
+
+## 3. Security Deep Dive
+
+* How do you prevent "Cross-Site WebSocket Hijacking" (CSWH)?
+* Answer: WebSockets do not strictly follow the Same-Origin Policy (SOP). An attacker could initiate a connection from their site to your server. To prevent this, always validate the Origin header during the HTTP handshake and use CSRF tokens for the initial upgrade request. [14, 15, 16, 17] 
+* Where should authentication happen?
+* Answer: Authentication must happen during the initial HTTP upgrade handshake (using cookies or Authorization headers). Once the connection is upgraded to binary framing, standard HTTP auth headers are no longer present, so any subsequent message-level authorization must be built into your custom protocol. [14, 18] 
+
+## 4. Advanced Protocol Comparison
+
+* WebSockets vs. gRPC Streams vs. Server-Sent Events (SSE): When do you choose what?
+* SSE: Use if you only need one-way server-to-client updates (e.g., live news feed). It's easier to scale and works over standard HTTP.
+   * gRPC: Use for server-to-server high-performance communication. It uses HTTP/2 and Protobufs, which are more efficient than JSON.
+   * WebSockets: Best for low-latency, two-way (full-duplex) interaction like gaming or chat apps. [5, 13, 19, 20, 21, 22] 
+
+Would you like a sample implementation of a scaled WebSocket architecture using Redis?
+
+[1] [https://devinterview.io](https://devinterview.io/questions/web-and-mobile-development/websocket-interview-questions/)
+[2] [https://medium.com](https://medium.com/@sanjeevanibhandari3/websockets-part-3-interviews-prep-common-questions-real-world-answers-20ba40a38466)
+[3] [https://hellointern.in](https://hellointern.in/blog/websocket-interview-questions-and-answers-68086)
+[4] [https://devinterview.io](https://devinterview.io/questions/web-and-mobile-development/websocket-interview-questions/)
+[5] [https://github.com](https://github.com/Devinterview-io/websocket-interview-questions)
+[6] [https://devinterview.io](https://devinterview.io/blog/websocket-interview-questions/)
+[7] [https://medium.com](https://medium.com/@hadiyolworld007/node-js-websockets-backpressure-flow-control-patterns-for-stable-real-time-apps-27ab522a9e69)
+[8] [https://dev.to](https://dev.to/safal_bhandari/understanding-backpressure-in-web-socket-471m)
+[9] [https://blog.haroldadmin.com](https://blog.haroldadmin.com/posts/backpressure-with-websockets-and-web-streams)
+[10] [https://medium.com](https://medium.com/@sanjeevanibhandari3/websockets-part-3-interviews-prep-common-questions-real-world-answers-20ba40a38466)
+[11] [https://www.linkedin.com](https://www.linkedin.com/posts/vinayrai59_websocket-reconnect-logic-explained-backoff-activity-7420795191453978624-zqtS)
+[12] [https://learnwithhasan.com](https://learnwithhasan.com/solo-builder-hub/ai-coding-blocks/architecture/websockets/interview-questions/)
+[13] [https://devinterview.io](https://devinterview.io/questions/web-and-mobile-development/websocket-interview-questions/)
+[14] [https://www.invicti.com](https://www.invicti.com/blog/web-security/websocket-security-best-practices)
+[15] [https://devinterview.io](https://devinterview.io/questions/web-and-mobile-development/websocket-interview-questions/)
+[16] [https://www.vskills.in](https://www.vskills.in/interview-questions/web-services-security-testing-interview-questions)
+[17] [https://github.com](https://github.com/Devinterview-io/websocket-interview-questions/blob/main/README.md)
+[18] [https://devcenter.heroku.com](https://devcenter.heroku.com/articles/websocket-security)
+[19] [https://www.youtube.com](https://www.youtube.com/watch?v=9ipWbro_QY0)
+[20] [https://igotanoffer.com](https://igotanoffer.com/blogs/tech/polling-sse-websockets-system-design-interview)
+[21] [https://learnwithhasan.com](https://learnwithhasan.com/solo-builder-hub/ai-coding-blocks/architecture/websockets/interview-questions/)
+[22] [https://learnwithhasan.com](https://learnwithhasan.com/solo-builder-hub/ai-coding-blocks/architecture/websockets/interview-questions/)

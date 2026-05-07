@@ -1,0 +1,35 @@
+Next.js is a flexible React framework used to build fast, full-stack web applications. While React is a library focused on the user interface (UI), Next.js builds on top of it to handle complex production requirements like routing, data fetching, and performance optimizations out of the box. [1, 2, 3, 4] 
+## Key Features
+Next.js provides several built-in tools that simplify development and improve user experience: [1, 5, 6, 7] 
+
+* Rendering Options: You can choose how your content is delivered based on your needs:
+* Server-Side Rendering (SSR): Generates HTML on each request, which is great for dynamic content and SEO.
+   * Static Site Generation (SSG): Pre-renders pages at build time for near-instant loading.
+   * Incremental Static Regeneration (ISR): Allows you to update static content without rebuilding the entire site.
+* File-Based Routing: Instead of using external libraries like React Router, you simply add files to the app or pages directory to create new routes automatically.
+* Full-Stack Capabilities: Through API Routes and Server Actions, you can write backend code (like database queries) directly within your project, eliminating the need for a separate server.
+* Optimisations: It includes automatic code splitting, which only loads the necessary JavaScript for the current page, and a built-in <Image> component for automatic image resizing and lazy loading. [1, 3, 4, 5, 8, 9, 10, 11, 12] 
+
+## Why Developers Use It
+Next.js is often preferred over "plain" React for production-ready apps because it solves common issues like poor SEO and slow initial load times. It is widely used by major companies such as Netflix, TikTok, Uber, and Nike. [8, 13, 14, 15] 
+Developed and maintained by Vercel, it continues to evolve with recent versions like Next.js 16 introducing faster build tools like Turbopack and deeper integration with AI coding agents. [14, 16] 
+Are you planning to build a new project from scratch, or are you looking to migrate an existing React app to Next.js? [17, 18] 
+
+[1] https://nextjs.org
+[2] [https://nextjs.org](https://nextjs.org/learn/react-foundations/what-is-react-and-nextjs)
+[3] [https://www.geeksforgeeks.org](https://www.geeksforgeeks.org/nextjs/next-js-introduction/)
+[4] [https://clerk.com](https://clerk.com/blog/what-is-nextjs)
+[5] [https://www.sanity.io](https://www.sanity.io/glossary/next-js)
+[6] [https://www.devlane.com](https://www.devlane.com/blog/what-is-nextjs-and-why-you-should-use-it)
+[7] [https://www.mtechzilla.com](https://www.mtechzilla.com/technologies/nextjs-development)
+[8] [https://medium.com](https://medium.com/@johnnyJK/understanding-next-js-the-key-to-modern-web-development-b9c3a895d30d)
+[9] [https://www.uxpin.com](https://www.uxpin.com/studio/blog/nextjs-vs-react/)
+[10] [https://nextjs.org](https://nextjs.org/docs)
+[11] [https://medium.com](https://medium.com/@avs-abhishek/next-js-what-why-how-485b30413867)
+[12] [https://adhithiravi.medium.com](https://adhithiravi.medium.com/discovering-next-js-why-its-my-go-to-framework-for-react-applications-dcb97fd81382)
+[13] [https://medium.com](https://medium.com/@galihadityam1/what-is-next-js-a-beginner-friendly-overview-d6bb2516261b)
+[14] [https://en.wikipedia.org](https://en.wikipedia.org/wiki/Next.js)
+[15] [https://www.altudo.co](https://www.altudo.co/insights/blogs/nextjs-vs-reactjs-vs-angularjs-key-differences-you-must-know)
+[16] [https://nextjs.org](https://nextjs.org/blog)
+[17] [https://binmile.com](https://binmile.com/services/nextjs-development-services/)
+[18] [https://insights.daffodilsw.com](https://insights.daffodilsw.com/blog/next.js-for-e-commerce-websites-a-must-have-for-modern-online-retailers)

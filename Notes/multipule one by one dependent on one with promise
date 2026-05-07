@@ -1,0 +1,55 @@
+To run multiple asynchronous tasks where each step depends on the result of the previous one, you use Promise Chaining. [1, 2] 
+There are two primary ways to do this:
+## 1. Using .then() Chaining
+Each .then() receives the result of the previous promise and returns a new promise for the next step. [3, 4] 
+
+const firstTask = () => new Promise(resolve => resolve("User123"));
+const secondTask = (userId) => new Promise(resolve => resolve(`Data for ${userId}`));
+
+firstTask()
+    .then(userId => {
+        console.log(userId);
+        return secondTask(userId); // Return the next promise
+    })
+    .then(data => {
+        console.log(data); // "Data for User123"
+    })
+    .catch(error => console.error(error)); // Single catch for the whole chain
+
+## 2. Using async/await (Recommended)
+This is "syntactic sugar" that makes your asynchronous code look and behave like synchronous code, which is much easier to read. [5, 6] 
+
+async function runSequence() {
+    try {
+        // Pauses here until firstTask resolves
+        const userId = await firstTask(); 
+        
+        // Pauses here until secondTask resolves using result from first
+        const data = await secondTask(userId); 
+        
+        console.log(data);
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
+}
+
+runSequence();
+
+## Why use this?
+
+* Sequential Execution: Ensures tasks run one by one rather than all at once.
+* Data Dependency: Allows you to pass data from one step directly into the next.
+* Avoids Callback Hell: Prevents deeply nested code (the "pyramid of doom"). [1, 2, 4, 5, 7] 
+
+Pro Tip: If your tasks do not depend on each other, use [Promise.all()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) to run them in parallel for better performance. [8, 9] 
+Do you have a specific API flow or database query sequence you are trying to build?
+
+[1] [https://developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+[2] [https://www.geeksforgeeks.org](https://www.geeksforgeeks.org/javascript/javascript-promise-chaining/)
+[3] [https://javascript.info](https://javascript.info/promise-chaining)
+[4] [https://coreui.io](https://coreui.io/answers/how-to-chain-promises-in-javascript/)
+[5] [https://www.geeksforgeeks.org](https://www.geeksforgeeks.org/javascript/how-to-execute-multiple-promises-sequentially-in-javascript/)
+[6] [https://developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+[7] [https://www.freecodecamp.org](https://www.freecodecamp.org/news/how-to-use-promises-in-javascript/)
+[8] [https://developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+[9] [https://developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises)

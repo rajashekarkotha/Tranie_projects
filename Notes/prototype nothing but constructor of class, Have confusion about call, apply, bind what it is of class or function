@@ -1,0 +1,375 @@
+Great question 👍 — this confusion is very common. Let’s clear it **simply and correctly**.
+
+***
+
+# ✅ 1. First: Fix the misunderstanding
+
+> ❌ **“prototype = constructor of class” → NOT correct**
+
+### ✅ Correct idea:
+
+*   **`constructor`** → function used to create objects
+*   **`prototype`** → object that stores shared properties/methods
+
+***
+
+### ✅ Relation between them:
+
+```javascript
+function Person(name) {
+    this.name = name;
+}
+
+console.log(Person.prototype); 
+```
+
+👉 `Person.prototype` is just a **normal object** used for inheritance.
+
+***
+
+### 🔗 Diagram
+
+    Person (constructor function)
+       │
+       ▼
+    Person.prototype (shared methods)
+       │
+       ▼
+    Object.prototype
+
+***
+
+# ✅ 2. What is `call`, `apply`, `bind`?
+
+👉 These are **methods of functions**, NOT classes.
+
+### ✅ Important:
+
+> They belong to **Function.prototype**
+
+***
+
+### ✅ Diagram
+
+    myFunction
+       │
+       ▼
+    Function.prototype → has call, apply, bind
+       │
+       ▼
+    Object.prototype
+
+👉 So:
+
+*   Only **functions** can use `call`, `apply`, `bind`
+
+***
+
+# ✅ 3. Why do we need them?
+
+👉 To control **`this` keyword manually**
+
+***
+
+# ✅ 4. `call()` example
+
+```javascript
+function greet() {
+    console.log("Hello " + this.name);
+}
+
+const user = { name: "Ravi" };
+
+greet.call(user); 
+```
+
+👉 Output:
+
+    Hello Ravi
+
+✔ `call` invokes function immediately  
+✔ Pass arguments separately
+
+***
+
+### ✅ Syntax
+
+```javascript
+func.call(thisArg, arg1, arg2)
+```
+
+***
+
+# ✅ 5. `apply()` example
+
+```javascript
+function greet(city) {
+    console.log(this.name + " from " + city);
+}
+
+const user = { name: "Anu" };
+
+greet.apply(user, ["Hyderabad"]);
+```
+
+✔ Same as `call`, but arguments in **array**
+
+***
+
+### ✅ Syntax
+
+```javascript
+func.apply(thisArg, [args])
+```
+
+***
+
+# ✅ 6. `bind()` example
+
+```javascript
+function greet() {
+    console.log("Hi " + this.name);
+}
+
+const user = { name: "Rajashekar" };
+
+const newFunc = greet.bind(user);
+
+newFunc(); 
+```
+
+👉 Output:
+
+    Hi Rajashekar
+
+✔ Does NOT execute immediately  
+✔ Returns a **new function**
+
+***
+
+# ✅ 7. Simple Comparison Table
+
+| Feature              | call  | apply | bind  |
+| -------------------- | ----- | ----- | ----- |
+| Executes immediately | ✅     | ✅     | ❌     |
+| Arguments            | comma | array | comma |
+| Returns function     | ❌     | ❌     | ✅     |
+
+***
+
+# ✅ 8. Real Understanding in One Line
+
+*   `call` → run function with custom `this`
+*   `apply` → same, but arguments as array
+*   `bind` → create new function with fixed `this`
+
+***
+
+# ✅ 9. Important Interview Statement
+
+> “call, apply, and bind are methods available on `Function.prototype` used to control the value of `this` during function execution.”
+
+***
+
+# ✅ 10. Final clarity (most important)
+
+| Concept         | Belongs to                      |
+| --------------- | ------------------------------- |
+| prototype       | constructor functions           |
+| constructor     | function                        |
+| call/apply/bind | functions (Function.prototype)  |
+| class           | syntactic sugar over prototypes |
+
+***
+
+# ✅ 🔥 Super Simple Mental Model
+
+    Function → has prototype
+    Prototype → used for inheritance
+
+    Function → also has call/apply/bind
+    (call/apply/bind control "this")
+
+***
+
+If you want, next I can give:
+✅ tricky output questions (very common in Cognizant interviews)  
+✅ real-world scenarios (React/JS usage)  
+✅ visual memory tricks for fast recall
+
+Just tell 👍
+
+
+*************************************************give example using call, apply, bind both prototype*************************************************************************************
+
+
+Perfect 👍 — let’s combine **prototype + call / apply / bind** in real interview-style examples.
+
+***
+
+# ✅ 1. Using `call()` with Prototype (Inheritance)
+
+```javascript
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+Person.prototype.greet = function () {
+    return `Hello, I'm ${this.name}`;
+};
+
+function Employee(name, age, role) {
+    // Borrow constructor using call()
+    Person.call(this, name, age);
+    this.role = role;
+}
+
+// Inherit prototype
+Employee.prototype = Object.create(Person.prototype);
+Employee.prototype.constructor = Employee;
+
+const emp = new Employee("Ravi", 28, "Developer");
+
+console.log(emp.greet()); // Hello, I'm Ravi
+```
+
+✅ What happened:
+
+*   `call()` used to **reuse constructor**
+*   `Employee` gets properties from `Person`
+*   Prototype gives access to methods
+
+***
+
+# ✅ 2. Using `apply()` with Prototype
+
+```javascript
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+Person.prototype.info = function (city, country) {
+    return `${this.name}, ${this.age}, ${city}, ${country}`;
+};
+
+const p1 = new Person("Anu", 25);
+
+// Using apply to pass array arguments
+console.log(p1.info.apply(p1, ["Hyderabad", "India"]));
+```
+
+✅ Output:
+
+    Anu, 25, Hyderabad, India
+
+***
+
+# ✅ 3. Using `bind()` with Prototype Method
+
+```javascript
+function Person(name) {
+    this.name = name;
+}
+
+Person.prototype.sayHi = function () {
+    return `Hi ${this.name}`;
+};
+
+const p1 = new Person("Rajashekar");
+
+// Bind method
+const boundFunc = p1.sayHi.bind(p1);
+
+console.log(boundFunc()); // Hi Rajashekar
+```
+
+✅ Key:
+
+*   `bind()` creates a new function
+*   Fixes `this` permanently
+
+***
+
+# ✅ 4. Borrowing Prototype Methods (Important)
+
+```javascript
+function Animal(name) {
+    this.name = name;
+}
+
+Animal.prototype.speak = function () {
+    return `${this.name} makes noise`;
+};
+
+const dog = {
+    name: "Bruno"
+};
+
+// Borrow method using call
+console.log(Animal.prototype.speak.call(dog));
+```
+
+👉 Output:
+
+    Bruno makes noise
+
+***
+
+# ✅ 5. call vs apply vs bind with Prototype Method
+
+```javascript
+function Person(name) {
+    this.name = name;
+}
+
+Person.prototype.greet = function (city) {
+    return `${this.name} from ${city}`;
+};
+
+const user = { name: "Kiran" };
+
+// call
+console.log(Person.prototype.greet.call(user, "Delhi"));
+
+// apply
+console.log(Person.prototype.greet.apply(user, ["Mumbai"]));
+
+// bind
+const fn = Person.prototype.greet.bind(user, "Chennai");
+console.log(fn());
+```
+
+***
+
+# ✅ 6. Full Mental Model (VERY IMPORTANT)
+
+    Prototype → stores methods
+
+    call/apply/bind → used to control "this"
+                     when calling those methods
+
+***
+
+# ✅ 7. Key Interview Insight
+
+👉 Why use them together?
+
+*   `prototype` → reuse methods
+*   `call/apply/bind` → reuse methods across **different objects**
+
+***
+
+# ✅ One-Line Explanation
+
+> “Prototype provides method sharing, and call/apply/bind allow those methods to be reused with different objects by controlling `this`.”
+
+***
+
+If you want next level prep, I can give:
+✅ tricky output questions (like confusing `this`)  
+✅ real-world examples (React event handlers, callbacks)  
+✅ memory shortcuts for interviews
+
+Just tell 👍

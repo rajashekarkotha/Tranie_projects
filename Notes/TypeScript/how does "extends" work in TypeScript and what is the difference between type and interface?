@@ -1,0 +1,174 @@
+Let’s break this into **2 parts clearly (very important for interviews)** 👇
+
+***
+
+# ✅ 1. How `extends` works in TypeScript
+
+👉 `extends` is used for **inheritance**
+
+***
+
+## 🔹 A. With `class`
+
+```typescript
+class Animal {
+  name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  speak() {
+    console.log(this.name + " makes noise");
+  }
+}
+
+class Dog extends Animal {
+  bark() {
+    console.log(this.name + " barks");
+  }
+}
+
+const d = new Dog("Bruno");
+
+d.speak(); // inherited ✅
+d.bark();  // own method ✅
+```
+
+***
+
+✅ What happens:
+
+*   `Dog` inherits:
+    *   properties (`name`)
+    *   methods (`speak`)
+*   Can also add its own methods
+
+***
+
+## 🔹 B. With `interface`
+
+```typescript
+interface Person {
+  name: string;
+}
+
+interface Employee extends Person {
+  salary: number;
+}
+
+const emp: Employee = {
+  name: "Ravi",
+  salary: 50000
+};
+```
+
+***
+
+✅ Meaning:
+
+    Employee = Person + extra properties
+
+***
+
+## 🔹 C. With `type` (via intersections)
+
+```typescript
+type Person = {
+  name: string;
+};
+
+type Employee = Person & {
+  salary: number;
+};
+```
+
+***
+
+👉 TypeScript doesn’t use `extends` keyword here, but:
+
+    & = combine types (like inheritance)
+
+***
+
+# ✅ 2. Difference between `type` vs `interface`
+
+👉 This is a **very common interview question**
+
+***
+
+## 🔹 Basic Difference
+
+| Feature               | interface           | type            |
+| --------------------- | ------------------- | --------------- |
+| Purpose               | define object shape | define any type |
+| Extends               | ✅ using `extends`   | ✅ using `&`     |
+| Declaration merge     | ✅ allowed           | ❌ not allowed   |
+| Can define primitives | ❌ no                | ✅ yes           |
+
+***
+
+## 🔹 1. Declaration Merging ✅ (IMPORTANT)
+
+```typescript
+interface User {
+  name: string;
+}
+
+interface User {
+  age: number;
+}
+
+const u: User = {
+  name: "Ravi",
+  age: 25
+};
+```
+
+✅ Interfaces automatically merge
+
+***
+
+❌ Type DOES NOT allow this:
+
+```typescript
+type User = { name: string };
+type User = { age: number }; // ❌ Error
+```
+
+***
+
+## 🔹 2. Type is More Flexible
+
+```typescript
+type ID = string | number; // ✅ union
+
+type Point = [number, number]; // ✅ tuple
+```
+
+👉 Interface cannot do this
+
+***
+
+## 🔹 3. Extending Multiple Types
+
+### Interface:
+
+```typescript
+interface A { a: number }
+interface B { b: number }
+
+interface C extends A, B {
+  c: number;
+}
+```
+
+***
+
+### Type:
+
+```typescript
+type A = { a: number };
+type B = { b: number };
+
+```

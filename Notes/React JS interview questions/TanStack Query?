@@ -1,0 +1,271 @@
+Here’s a **clear, interview-ready explanation of TanStack Query (React Query)** 👇
+
+***
+
+# ✅ What is TanStack Query?
+
+> **TanStack Query is a data-fetching and state management library used to handle server state in React applications.**
+
+👉 Earlier called **React Query**
+
+***
+
+# ✅ What problem does it solve?
+
+Without TanStack Query:
+
+```javascript
+useEffect(() => {
+  fetch("/api/data")
+    .then(res => res.json())
+    .then(setData);
+}, []);
+```
+
+❌ Problems:
+
+*   Manual loading state
+*   Manual error handling
+*   No caching
+*   Refetch logic messy
+
+***
+
+✅ TanStack Query solves:
+
+*   ✅ Data fetching
+*   ✅ Caching
+*   ✅ Background updates
+*   ✅ Synchronization with server
+
+***
+
+# ✅ Key Idea (VERY IMPORTANT)
+
+👉 React manages **UI state**  
+👉 TanStack Query manages **server state**
+
+***
+
+# ✅ Installation
+
+```bash
+npm install @tanstack/react-query
+```
+
+***
+
+# ✅ Basic Setup
+
+***
+
+## 🔹 Step 1: Create QueryClient
+
+```javascript
+import { QueryClient } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+```
+
+***
+
+## 🔹 Step 2: Provide to App
+
+```javascript
+import { QueryClientProvider } from "@tanstack/react-query";
+
+<QueryClientProvider client={queryClient}>
+  <App />
+</QueryClientProvider>
+```
+
+***
+
+# ✅ 1. useQuery (Fetching Data)
+
+👉 Used for GET requests
+
+```javascript
+import { useQuery } from "@tanstack/react-query";
+
+function fetchUsers() {
+  return fetch("/api/users").then(res => res.json());
+}
+
+function App() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error...</p>;
+
+  return (
+    <div>
+      {data.map(user => (
+        <p key={user.id}>{user.name}</p>
+      ))}
+    </div>
+  );
+}
+```
+
+***
+
+✅ What it gives automatically:
+
+*   loading state ✅
+*   error handling ✅
+*   caching ✅
+*   refetching ✅
+
+***
+
+# ✅ 2. useMutation (POST / PUT / DELETE)
+
+👉 Used for modifying data
+
+```javascript
+import { useMutation } from "@tanstack/react-query";
+
+function addUser(user) {
+  return fetch("/api/users", {
+    method: "POST",
+    body: JSON.stringify(user)
+  });
+}
+
+const mutation = useMutation({
+  mutationFn: addUser,
+});
+
+mutation.mutate({ name: "Ravi" });
+```
+
+***
+
+✅ Used for:
+
+*   create / update / delete
+
+***
+
+# ✅ 3. Caching (Core Feature)
+
+```javascript
+useQuery({
+  queryKey: ["users"],
+  queryFn: fetchUsers
+});
+```
+
+👉 `queryKey`:
+
+    Acts like cache key ✅
+
+✅ Same key → data reused  
+✅ No extra API calls
+
+***
+
+# ✅ 4. Automatic Refetching
+
+*   On window focus
+*   On reconnect
+*   On interval
+
+✅ Keeps data fresh
+
+***
+
+# ✅ 5. Background Updates
+
+👉 UI shows old data while fetching new data
+
+    Smooth UX ✅
+    No flicker ✅
+
+***
+
+# ✅ 6. Invalidation (Refresh Data)
+
+```javascript
+import { useQueryClient } from "@tanstack/react-query";
+
+const queryClient = useQueryClient();
+
+queryClient.invalidateQueries(["users"]);
+```
+
+✅ Refetches updated data
+
+***
+
+# ✅ 7. Full Data Flow
+
+    Component → useQuery
+            ↓
+    Fetch API
+            ↓
+    Cache result
+            ↓
+    UI updated
+            ↓
+    Auto-refetch when needed
+
+***
+
+# ✅ Redux vs TanStack Query (Important)
+
+| Feature       | Redux        | TanStack Query |
+| ------------- | ------------ | -------------- |
+| Purpose       | Global state | Server state   |
+| Data fetching | Manual       | Built-in       |
+| Caching       | Manual       | Auto           |
+| Boilerplate   | High         | Low            |
+
+***
+
+# ✅ When to Use TanStack Query?
+
+✔ API-heavy apps  
+✔ Server data (users, products, etc.)  
+✔ Need caching & auto-sync
+
+***
+
+# ✅ When NOT to use?
+
+❌ For UI state (theme, modals)  
+👉 Use React state or Redux instead
+
+***
+
+# ✅ Real-world Example
+
+    E-commerce app:
+
+    Products → useQuery ✅
+    Cart state → Redux / useState ✅
+
+***
+
+# ✅ One-Line Interview Answer
+
+> “TanStack Query is a powerful library for managing server state in React, providing data fetching, caching, and synchronization with minimal code.”
+
+***
+
+# ✅ Quick Memory Trick
+
+    TanStack Query = Fetch + Cache + Sync ✅
+
+***
+
+If you want next level prep, I can give:
+✅ Redux vs TanStack Query deep comparison  
+✅ Interview tricky scenarios  
+✅ Real project architecture
+
+Just tell 👍

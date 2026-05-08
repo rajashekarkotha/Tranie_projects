@@ -236,3 +236,172 @@ If you want next:
 ✅ **How React uses prototypes internally**
 
 Just tell me 👍
+
+
+******************************************====Prototype Examples====***********************************************************
+
+Here are **clear and practical JavaScript prototype examples** you can use for coding interviews:
+
+***
+
+# ✅ 1. Basic Prototype Example
+
+```javascript
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+// Adding method to prototype
+Person.prototype.greet = function () {
+    return `Hello, my name is ${this.name}`;
+};
+
+const p1 = new Person("Ravi", 25);
+const p2 = new Person("Anu", 30);
+
+console.log(p1.greet()); // Hello, my name is Ravi
+console.log(p2.greet()); // Hello, my name is Anu
+```
+
+👉 **Key point:**  
+Methods added to `prototype` are **shared across all instances** (memory efficient).
+
+***
+
+# ✅ 2. Prototype Chain Example
+
+```javascript
+function Animal(name) {
+    this.name = name;
+}
+
+Animal.prototype.speak = function () {
+    return `${this.name} makes a noise`;
+};
+
+function Dog(name, breed) {
+    Animal.call(this, name); // inherit properties
+    this.breed = breed;
+}
+
+// Inherit prototype
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.constructor = Dog;
+
+// Add new method
+Dog.prototype.bark = function () {
+    return `${this.name} barks`;
+};
+
+const d1 = new Dog("Bruno", "Labrador");
+
+console.log(d1.speak()); // Bruno makes a noise
+console.log(d1.bark());  // Bruno barks
+```
+
+👉 **Key concepts:**
+
+*   `Object.create()` → sets up prototype chain
+*   Child inherits parent methods
+
+***
+
+# ✅ 3. Override Prototype Method (Polymorphism)
+
+```javascript
+Dog.prototype.speak = function () {
+    return `${this.name} barks loudly`;
+};
+
+console.log(d1.speak()); // Bruno barks loudly
+```
+
+👉 Method overriding works via prototype chain.
+
+***
+
+# ✅ 4. Using ES6 Classes (Behind the scenes uses prototypes)
+
+```javascript
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+
+    greet() {
+        return `Hi, I'm ${this.name}`;
+    }
+}
+
+const p = new Person("Rajashekar");
+
+console.log(p.greet());
+```
+
+👉 Internally:
+
+*   `greet()` is stored in `Person.prototype`
+
+***
+
+# ✅ 5. Checking Prototype
+
+```javascript
+console.log(p.__proto__ === Person.prototype); // true
+console.log(Person.prototype.isPrototypeOf(p)); // true
+```
+
+***
+
+# ✅ 6. Adding Property Dynamically
+
+```javascript
+Person.prototype.country = "India";
+
+console.log(p1.country); // India
+console.log(p2.country); // India
+```
+
+***
+
+# ✅ 7. Important Interview Points
+
+*   Every JS object has a hidden `[[Prototype]]`
+*   Functions have a `prototype` property
+*   `new` keyword does:
+    1.  Creates a new object
+    2.  Sets prototype
+    3.  Binds `this`
+    4.  Returns object
+*   Prototype enables **inheritance + code reuse**
+
+***
+
+# ✅ Quick Real-World Example
+
+```javascript
+Array.prototype.customSum = function () {
+    return this.reduce((acc, val) => acc + val, 0);
+};
+
+const arr = [1, 2, 3];
+
+console.log(arr.customSum()); // 6
+```
+
+***
+
+# ✅ Short Definition (for interviews)
+
+> "Prototype in JavaScript is a mechanism that allows objects to inherit properties and methods from other objects."
+
+***
+
+If you want, I can also give:
+✅ Tricky interview questions on prototypes  
+✅ Output-based questions (very common in interviews)  
+✅ Real-time debugging examples
+
+Just tell me 👍
+

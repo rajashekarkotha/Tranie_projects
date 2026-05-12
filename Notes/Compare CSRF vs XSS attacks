@@ -247,3 +247,20 @@ If you want next, I can:
 ✅ Give **interview questions with answers**
 
 Just tell me 👍
+
+======================================================
+
+Clickjacking,  Injection Attacks
+=================================
+
+
+
+xss - cross site scripting
+
+use input validation, sanitinze user inputs, escape HTML and implement Content Security Policy
+
+
+CSRF - rejection forgery
+
+
+CSRF forces users to execute unwanted actions. prevent it using CSRF tokens and SameSite cookies.

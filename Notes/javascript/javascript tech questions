@@ -963,3 +963,81 @@ If you want next level:
 Just tell 👍
 
 
+***********************************************************************************************************************************************************
+***********************************************************************************************************************************************************
+
+JavaScript variables can belong to the local or global scope.
+Global variables can be made local (private) with closures.
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="count">0</h1>
+    <button onclick="reset()">reset</button>
+    <button onclick="add()">add</button>
+    <script>
+        
+        function createCounter() {
+            let count = 0;
+            return function () {
+                return count++;
+            }
+        }
+        const counter = createCounter();
+        function add() {
+            document.getElementById("count").innerText = counter();
+        }
+        function reset() {
+            counter.count = 0;
+            document.getElementById("count").innerText = 0;
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+function outerFunction(){
+    let outerVariable = 'Hello';
+    
+    function innerFunction(){
+        let innerVariable = 'world';
+        console.log(outerVariable+'  '+innerVariable);
+    }
+    return innerFunction;
+}
+const closer = outerFunction();
+closer();
+
+
+
+
+function createCounter() {
+  let count = 0;
+  return function () {
+    count++;
+    return count;
+  };
+}
+const counter1 = createCounter();
+const counter2 = createCounter();
+console.log(counter1());
+console.log(counter1());
+console.log(counter2());
+
+1
+2
+1
+
+
+
+
+

@@ -1,0 +1,47 @@
+Your snippet:
+
+```js
+setTimeOut(() => {}, 1000, 2, 4)
+```
+
+has a small mistake in the function name.
+
+### ✅ Correct version:
+
+```js
+setTimeout(() => {}, 1000, 2, 4);
+```
+
+### 🔍 Explanation:
+
+*   `setTimeout` (with lowercase **o**) is the correct built‑in JavaScript function.
+*   It executes a function after a delay (in milliseconds).
+
+### 📌 Parameters:
+
+```js
+setTimeout(callback, delay, arg1, arg2, ...)
+```
+
+*   `() => {}` → callback function (runs after delay)
+*   `1000` → delay in milliseconds (1 second)
+*   `2, 4` → extra arguments passed to the callback
+
+### 💡 Example using arguments:
+
+```js
+setTimeout((a, b) => {
+  console.log(a + b);
+}, 1000, 2, 4);
+```
+
+✅ Output after 1 second:
+
+    6
+
+### ⚠️ Summary:
+
+*   ❌ `setTimeOut` → incorrect
+*   ✅ `setTimeout` → correct
+
+Let me know if you want to see how this behaves in browsers vs Node.js 👍

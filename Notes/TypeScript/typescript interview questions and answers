@@ -1,0 +1,146 @@
+## Core Fundamentals## Q1: What is TypeScript and how does it differ from JavaScript?
+TypeScript is a statically-typed, open-source superset of JavaScript developed by Microsoft. It compiles down to standard JavaScript that runs in any browser or environment. [1] 
+
+| Feature [1, 2, 3, 4, 5] | JavaScript | TypeScript |
+|---|---|---|
+| Type System | Dynamically typed (checked at runtime) | Statically typed (checked at compile time) |
+| Error Detection | Errors are found during runtime | Errors are caught during development |
+| Tooling | Basic autocomplete and refactoring | Advanced autocomplete, navigation, and refactoring |
+| Supported Features | Limited by runtime engine support | Supports latest ECMAScript features via down-level compiling |
+
+## Q2: What is Type Inference and how does it differ from Type Annotation?
+
+* Type Annotation: You explicitly declare the variable type using a colon (:).
+
+let age: number = 25;
+
+* Type Inference: TypeScript automatically guesses the type based on the value assigned.
+
+let age = 25; // TypeScript automatically infers this as a 'number'
+
+[6, 7, 8, 9, 10] 
+
+------------------------------
+## Intermediate Concepts## Q3: What is the difference between any and unknown?
+Both can hold any value, but they enforce different levels of type safety: [7, 11] 
+
+* any: Turns off type checking completely. You can call any method or property on it, which risks runtime crashes.
+* unknown: A type-safe version of any. You cannot interact with an unknown variable until you safely narrow or assert its type. [11] 
+
+let valueAny: any = "Hello";
+valueAny.toUpperCase(); // Allowed
+let valueUnknown: unknown = "Hello";// valueUnknown.toUpperCase(); // Compile Error!
+if (typeof valueUnknown === "string") {
+    valueUnknown.toUpperCase(); // Allowed after narrowing
+}
+
+## Q4: What is the difference between interface and type alias?
+Both define custom data structures, but they have key structural trade-offs: [12] 
+
+* Interfaces:
+* Open for extension via declaration merging (declaring the same interface name multiple times merges their fields).
+   * Strictly used to define object shapes. [13] 
+* Type Aliases:
+* Cannot be changed after creation (no declaration merging).
+   * More flexible; can define primitives, unions, tuples, and intersections. [13, 14, 15] 
+
+// Interface Declaration Merginginterface User { name: string; }interface User { age: number; } // Merged!
+// Type Alias Uniontype ID = string | number;
+
+## Q5: What is a Tuple?
+A tuple is an array with a fixed number of elements where each element has a specific, known type. [11, 13] 
+
+let employee: [number, string] = [1, "Alice"];// employee = ["Alice", 1]; // Compile Error! Wrong order.
+
+------------------------------
+## Advanced Concepts## Q6: What are Generics and why would you use them?
+Generics allow you to create reusable, type-flexible components that work across multiple types while maintaining type safety. Instead of locking a function into a single type or using any, you pass a type variable. [7, 16] 
+
+function getFirstElement<T>(arr: T[]): T {
+    return arr[0];
+}
+const numArr = getFirstElement<number>([1, 2, 3]); // Returns a numberconst strArr = getFirstElement<string>(["a", "b"]); // Returns a string
+
+## Q7: What are Discriminated Unions?
+A pattern used for type narrowing where a group of types share a common literal property (the "discriminant"). TypeScript reads this literal property to safely distinguish between the structures. [7] 
+
+interface Success {
+    status: "success"; // Discriminant
+    data: string;
+}
+interface Failure {
+    status: "failed"; // Discriminant
+    error: string;
+}
+function handleResponse(res: Success | Failure) {
+    if (res.status === "success") {
+        console.log(res.data); // TypeScript knows res is 'Success'
+    } else {
+        console.log(res.error); // TypeScript knows res is 'Failure'
+    }
+}
+
+## Q8: Explain Conditional Types. [17] 
+Conditional types act like a ternary operator at the type level, choosing between two types based on a structural check (T extends U ? X : Y). [12, 18] 
+
+type IsString<T> = T extends string ? true : false;
+type A = IsString<string>; // Evaluates to: truetype B = IsString<number>; // Evaluates to: false
+
+------------------------------
+## Scenario-Based Questions## Q9: How can you safely parse and validate runtime API JSON data into a type? [19] 
+Using a type cast (as User) or a type annotation on JSON.parse is unsafe because it tells the compiler to blindly trust the shape, which can cause unexpected runtime crashes if the API schema changes. [11, 20] 
+To handle this cleanly, you should use a User-Defined Type Guard function or an external validation library like Zod: [7, 13] 
+
+type User = { name: string; age: number; };
+// Type guard function safely checking properties at runtimefunction isUser(obj: any): obj is User {
+    return obj && typeof obj.name === "string" && typeof obj.age === "number";
+}
+const data = `{"name":"Bob","age":30}`;const parsed = JSON.parse(data);
+if (isUser(parsed)) {
+    console.log(parsed.name.toLowerCase()); // Completely type-safe
+}
+
+## Q10: How do you enforce strict configuration matching without losing type inference? [21] 
+Using a regular type declaration forces the compiler to broaden literal properties (e.g., matching "red" to just string). To strictly enforce an interface rule while preserving the exact literal values, you should use the satisfies operator. [7] 
+
+interface ConnectionConfig {
+    host: string;
+    port: number;
+}
+// Validates against the interface but remembers that port is exactly 8080const config = {
+    host: "localhost",
+    port: 8080
+} satisfies ConnectionConfig;
+// Checking config.port here retains the precise literal type 8080 instead of 'number'
+
+------------------------------
+If you want to tailor your preparation further, please share:
+
+* The seniority level of the role you are targeting (Junior, Mid, or Senior/Lead).
+* Any specific framework you will be pairing it with (React, Next.js, NestJS, Angular).
+* Whether you want to practice live code challenges or deep dive into architectural design patterns. [7, 22, 23] 
+
+
+[1] [https://github.com](https://github.com/Devinterview-io/typescript-interview-questions)
+[2] [https://coderpad.io](https://coderpad.io/interview-questions/typescript-interview-questions/)
+[3] [https://blog.stackademic.com](https://blog.stackademic.com/javascript-vs-typescript-20-key-differences-every-developer-should-know-for-interviews-806cf5db5a8e)
+[4] [https://www.edureka.co](https://www.edureka.co/blog/what-is-typescript/)
+[5] [https://www.acte.in](https://www.acte.in/jbpm-interview-question-and-answers)
+[6] [https://nabendu82.medium.com](https://nabendu82.medium.com/typescript-interview-questions-80d4bb1e9733)
+[7] [https://www.igmguru.com](https://www.igmguru.com/blog/typescript-interview-questions)
+[8] [https://www.turing.com](https://www.turing.com/interview-questions/typescript)
+[9] [https://www.terminal.io](https://www.terminal.io/blog/15-typescript-interview-questions-for-hiring-typescript-engineers)
+[10] [https://mimo.org](https://mimo.org/glossary/typescript)
+[11] [https://www.interviewcoder.co](https://www.interviewcoder.co/blog/typescript-interview-questions)
+[12] [https://www.geeksforgeeks.org](https://www.geeksforgeeks.org/typescript/typescript-interview-questions/)
+[13] [https://www.wecreateproblems.com](https://www.wecreateproblems.com/interview-questions/typescript-interview-questions)
+[14] [https://www.interviewbit.com](https://www.interviewbit.com/typescript-interview-questions/)
+[15] [https://data-flair.training](https://data-flair.training/blogs/typescript-interview-questions-and-answers/)
+[16] [https://www.youtube.com](https://www.youtube.com/watch?v=1UY8WBhPnlY)
+[17] [https://dev.to](https://dev.to/fullstackcafe/top-26-javascript-interview-questions-i-wish-i-knew-26k1)
+[18] [https://mimo.org](https://mimo.org/blog/typescript-interview-questions)
+[19] [https://dev.to](https://dev.to/fullstackcafe/top-26-javascript-interview-questions-i-wish-i-knew-26k1)
+[20] [https://medium.com](https://medium.com/@maksim_smagin/how-good-is-your-typescript-interview-with-just-3-questions-cecdce5ce4d4)
+[21] [https://www.akalinfo.com](https://www.akalinfo.com/blog/javascript-interview-questions/)
+[22] [https://www.youtube.com](https://www.youtube.com/watch?v=4pqeoHLf9IU)
+[23] [https://codestoresolutions.com](https://codestoresolutions.com/web-app-development/angular-other-typescript-framework/)

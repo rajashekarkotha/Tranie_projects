@@ -1038,6 +1038,67 @@ console.log(counter2());
 1
 
 
+=============================================================================
+
+
+// console.log(i);// i
+// var i;
+// for(i=0; i<5; i+=2) {
+//   setTimeout( function() { console.log(i)}, 0)
+// }
+// console.log('sdf',i+2);
+ 
+ //7
+ // 7 9 11 13 15
+ 
+ 
+//  const person = {
+//       firstName: "Alice",
+//       lastName: "Johnson",
+//       greet: function() {
+//         return `Hello, ${this.firstName}!`;
+//       }
+//     };
+ 
+//     const greet = person.greet;
+ 
+//     console.log(greet());  //Alice
+
+
+
+www.example.com/en/products/shoes/1234
+
+app/product/[catger].js
+
+const id = useParams();
+
+const locallization = useLocation();
+
+const data = featch(`url+${id}`);
+
+locallization == "en" ? 'add' : ''asd';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
 
 
 

@@ -41,6 +41,38 @@ greet.call(user, "Hyderabad");
 
     Hello Raja from Hyderabad
 
+
+Example2:
+
+const obj1 = {
+  name: "Shekar",
+  greet() {
+    console.log("Hello, " + this.name);
+  }
+};
+
+const obj2 = { name: "Ravi" };
+
+// Borrow obj1’s greet method for obj2
+obj1.greet.call(obj2); 
+// Output: "Hello, Ravi"
+
+
+Example3:
+
+const obj1 = {
+  name: "Shekar",
+  greet(message) {
+    console.log(`"Hello, " + ${message} + ${this.name}`);
+  }
+};
+
+const obj2 = { name: "Ravi" };
+
+// Borrow obj1’s greet method for obj2
+obj1.greet.call(obj2, "very good morning"); 
+// Output: "Hello, Ravi"
+
 ***
 
 ## ✅ `apply()`

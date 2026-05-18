@@ -1,0 +1,82 @@
+www.example.com/en/products/shoes/1234 have like?
+
+
+If you want to make that URL work with a **dynamic route in React (App Router style, like Next.js)**, you’d set up your routing so that parts of the path (`/en/products/shoes/1234`) are treated as parameters.
+
+---
+
+## 🔑 Example in Next.js App Router
+
+### Folder structure
+```
+app/
+  [lang]/
+    products/
+      [category]/
+        [id]/
+          page.js
+```
+
+### `page.js`
+```jsx
+export default function ProductPage({ params }) {
+  const { lang, category, id } = params;
+
+  return (
+    <div>
+      <h1>Language: {lang}</h1>
+      <h2>Category: {category}</h2>
+      <p>Product ID: {id}</p>
+    </div>
+  );
+}
+```
+
+---
+
+### How it works
+- URL: `/en/products/shoes/1234`
+- `params.lang` → `"en"`
+- `params.category` → `"shoes"`
+- `params.id` → `"1234"`
+
+So the page dynamically renders based on the path segments.
+
+---
+
+## ⚖️ General React (without Next.js)
+If you’re using **React Router**:
+```jsx
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+
+function ProductPage() {
+  const { lang, category, id } = useParams();
+  return (
+    <div>
+      <h1>Language: {lang}</h1>
+      <h2>Category: {category}</h2>
+      <p>Product ID: {id}</p>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/:lang/products/:category/:id" element={<ProductPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+```
+
+---
+
+✨ In short:  
+- In **Next.js App Router**, you use folder names like `[lang]`, `[category]`, `[id]`.  
+- In **React Router**, you use `:param` in the route path.  
+
+Both approaches let you handle URLs like `www.example.com/en/products/shoes/1234` dynamically.
+
+Would you like me to also show you how to **fetch product data from an API** using that `id` parameter, so the page actually loads product details instead of just printing the params?

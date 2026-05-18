@@ -80,3 +80,87 @@ export default function App() {
 Both approaches let you handle URLs like `www.example.com/en/products/shoes/1234` dynamically.
 
 Would you like me to also show you how to **fetch product data from an API** using that `id` parameter, so the page actually loads product details instead of just printing the params?
+
+================================================================================================================================================================================================
+
+
+In Next.js **App Router**, both `layout.js` and `page.js` are special files, but they serve different purposes:
+
+---
+
+## 📌 `page.js`
+- Defines the **actual content** of a route.
+- Each `page.js` file corresponds to a URL path.
+- It’s where you put your component logic, data fetching, and UI for that specific route.
+
+Example:
+```
+app/products/page.js
+```
+```jsx
+export default function ProductsPage() {
+  return <h1>All Products</h1>;
+}
+```
+👉 This renders when you visit `/products`.
+
+---
+
+## 📌 `layout.js`
+- Defines the **shared UI structure** for a group of routes.
+- Wraps around `page.js` files inside the same folder.
+- Useful for headers, footers, sidebars, or any persistent design that should remain across multiple pages.
+- Layouts are **nested**: a child layout wraps inside its parent layout.
+
+Example:
+```
+app/products/layout.js
+```
+```jsx
+export default function ProductsLayout({ children }) {
+  return (
+    <div>
+      <h2>Products Section</h2>
+      <div>{children}</div>
+    </div>
+  );
+}
+```
+👉 Any `page.js` inside `/products` will render inside this layout.
+
+---
+
+## ⚖️ Difference in a Nutshell
+| File        | Purpose | Example URL |
+|-------------|---------|-------------|
+| `page.js`   | Defines the **content** of a route | `/products` |
+| `layout.js` | Defines the **wrapper UI** around one or more pages | `/products/*` |
+
+---
+
+### 🔎 Visual Flow
+If you have:
+```
+app/
+  layout.js
+  products/
+    layout.js
+    page.js
+    [id]/
+      page.js
+```
+
+Visiting `/products/123` will render:
+- Root `layout.js` (site-wide wrapper)
+- Products `layout.js` (section wrapper)
+- Product `[id]/page.js` (actual page content)
+
+---
+
+✨ So:  
+- **`page.js` → actual page content**  
+- **`layout.js` → shared wrapper around pages**  
+
+Would you like me to sketch a **diagram showing how nested layouts wrap around pages** (like a tree structure), so you can visualize how multiple layouts stack together in Next.js?
+
+

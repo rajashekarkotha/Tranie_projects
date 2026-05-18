@@ -1,0 +1,97 @@
+In React, when you click a button and it causes the component to re‑render multiple times, it usually means that **state is being updated unnecessarily** or the render logic isn’t optimized. Here are some practical approaches to fix it:
+
+---
+
+## 🔑 Common Causes
+1. **State updates on every click**  
+   If you’re calling `setState` (or `useState` setter) without checking conditions, React will re‑render each time.
+
+2. **Inline functions or objects**  
+   Declaring functions/objects directly inside `render` or JSX can cause re‑renders because they are recreated on every render.
+
+3. **Parent re‑renders**  
+   If the parent component re‑renders, the child button component will also re‑render unless memoized.
+
+---
+
+## ✅ Optimization Approaches
+
+### 1. Use `React.memo` for child components
+```jsx
+const Button = React.memo(({ onClick }) => {
+  console.log("Button rendered");
+  return <button onClick={onClick}>Click me</button>;
+});
+```
+👉 Prevents unnecessary re‑renders when props don’t change.
+
+---
+
+### 2. Use `useCallback` for event handlers
+```jsx
+function App() {
+  const [count, setCount] = React.useState(0);
+
+  const handleClick = React.useCallback(() => {
+    setCount(prev => prev + 1);
+  }, []);
+
+  return <Button onClick={handleClick} />;
+}
+```
+👉 Ensures the same function reference is reused, avoiding re‑renders of memoized children.
+
+---
+
+### 3. Avoid redundant state updates
+```jsx
+function App() {
+  const [clicked, setClicked] = React.useState(false);
+
+  const handleClick = () => {
+    if (!clicked) {   // only update once
+      setClicked(true);
+    }
+  };
+
+  return <button onClick={handleClick}>Click</button>;
+}
+```
+👉 Prevents multiple renders when the state value is already the same.
+
+---
+
+### 4. Debounce or throttle clicks
+If multiple rapid clicks trigger re‑renders:
+```jsx
+import { useCallback } from "react";
+import _ from "lodash";
+
+function App() {
+  const handleClick = useCallback(
+    _.throttle(() => {
+      console.log("Button clicked");
+    }, 1000),
+    []
+  );
+
+  return <button onClick={handleClick}>Click</button>;
+}
+```
+👉 Limits how often the handler runs.
+
+---
+
+### 5. Check unnecessary props/state
+- Don’t store derived values in state (compute them directly).
+- Keep state minimal.
+- Pass only required props to children.
+
+---
+
+✨ In short:  
+- Use `React.memo` + `useCallback` to stabilize renders.  
+- Prevent redundant state updates.  
+- Debounce/throttle if rapid clicks are expected.  
+
+Would you like me to show you a **before vs. after code example** where a button causes multiple renders, then optimized with `React.memo` and `useCallback` so you can see the difference clearly?

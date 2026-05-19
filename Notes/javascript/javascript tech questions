@@ -1411,6 +1411,58 @@ Sequential: 2
 Would you like me to show you a **timeline diagram** of how the event loop processes a `for` loop with Promises and `setTimeout` together? That makes the interaction between call stack, microtask queue, and task queue crystal clear.
 
 
+=========================================================================================================================================================================================================================
+
+let obj = {
+    name: "shekar",
+    age: 23,
+    greet(){
+      return `hello ${this.name}`;
+    }
+}
+
+const a = obj.greet.bind(obj);
+console.log(a());
+You get hello undefined because the function loses its connection to the obj object when you assign it to a new variable.
+## Why This Happens
+
+* The this keyword is dynamic: In JavaScript, this is not determined by where a function is defined, but by how it is called.
+* Method invocation: When you call obj.greet(), JavaScript sees obj before the dot, so this points to obj.
+* Function invocation: When you assign obj.greet to the variable a, you are extracting the bare function. When you call a(), it is executed as a regular function.
+* The fallback: In regular function calls, this defaults to the global window object (or undefined in strict mode). Since window.name is not defined, this.name returns undefined.
+
+## How to Fix It
+You can fix this using three common methods:
+## 1. Use bind() to lock this
+The bind() method explicitly couples the function to a specific object, no matter how it is called.
+
+const a = obj.greet.bind(obj);
+console.log(a()); // Output: hello shekar
+
+## 2. Call it directly
+Avoid assigning the method to a variable if you do not need to.
+
+console.log(obj.greet()); // Output: hello shekar
+
+## 3. Use an arrow function in the object
+Arrow functions do not have their own this. They inherit this from the surrounding scope where the object was created.
+
+let obj = {
+    name: "shekar",
+    age: 23,
+    greet: () => `hello ${obj.name}` // Direct reference to obj
+}
+
+To help me provide the best alternative for your code, let me know:
+
+* Are you planning to pass this function as a callback (e.g., in an event listener)?
+* Are you working in strict mode?
+* Do you need to create multiple objects with this same method?
+
+
+
+
+
 
 
 

@@ -1,0 +1,78 @@
+Here’s how you can build a **custom React hook `useDebounce`** to delay updates until after a specified time has passed:
+
+---
+
+## 🛠 Implementation
+
+```jsx
+import { useState, useEffect } from "react";
+
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    // Set up a timer
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    // Cleanup if value changes before delay ends
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export default useDebounce;
+```
+
+---
+
+## 🔎 How it works
+- `value`: the input you want to debounce (e.g., search text).
+- `delay`: time in milliseconds to wait before updating.
+- The hook returns a **debounced version** of the value that only updates after the delay.
+
+---
+
+## 📌 Example Usage
+```jsx
+import { useState } from "react";
+import useDebounce from "./useDebounce";
+
+function SearchBox() {
+  const [query, setQuery] = useState("");
+  const debouncedQuery = useDebounce(query, 500); // 500ms delay
+
+  useEffect(() => {
+    if (debouncedQuery) {
+      console.log("API call with:", debouncedQuery);
+      // fetchData(debouncedQuery);
+    }
+  }, [debouncedQuery]);
+
+  return (
+    <input
+      type="text"
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Search..."
+    />
+  );
+}
+```
+
+---
+
+## ⚖️ Key Benefits
+- Prevents **too many API calls** when typing fast.
+- Improves performance by reducing unnecessary re-renders or requests.
+- Commonly used in search bars, auto-complete, and live filtering.
+
+---
+
+✨ With this hook, you can debounce any state value in React — not just text inputs.  
+
+Would you like me to also show you a **`useDebounce` hook that works with functions** (so you can debounce an event handler like `onClick` or `onScroll`)? That’s another common interview twist.

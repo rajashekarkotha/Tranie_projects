@@ -1536,6 +1536,87 @@ let b ={...a}
 [100,2,3]
  
 console.log(3>2>1)
+
+
+Perfect, you’re asking for **JavaScript interview-style logical questions** similar to the quirky coercion examples we’ve been exploring. These are the kinds of puzzles interviewers love because they test your understanding of type conversion, scope, closures, and tricky behavior.  
+
+Here’s a curated set of examples:
+
+---
+
+### 🔹 Type Coercion & Operators
+```js
+console.log("5" - 2);   // ?
+console.log("5" + 2);   // ?
+console.log("5" * "2"); // ?
+console.log(true + true); // ?
+console.log(false == 0);  // ?
+```
+
+---
+
+### 🔹 Scope & Hoisting
+```js
+var x = 10;
+function foo() {
+  console.log(x);
+  var x = 20;
+}
+foo(); // ?
+```
+
+---
+
+### 🔹 Closures
+```js
+function outer() {
+  let count = 0;
+  return function inner() {
+    count++;
+    return count;
+  };
+}
+const fn = outer();
+console.log(fn()); // ?
+console.log(fn()); // ?
+```
+
+---
+
+### 🔹 Async & Event Loop
+```js
+console.log("Start");
+setTimeout(() => console.log("Timeout"), 0);
+Promise.resolve().then(() => console.log("Promise"));
+console.log("End");
+```
+👉 Order of execution is a classic interview test.
+
+---
+
+### 🔹 Equality Quirks
+```js
+console.log([] == []);       // ?
+console.log([] == ![]);      // ?
+console.log(null == undefined); // ?
+console.log(NaN == NaN);     // ?
+```
+
+---
+
+### 🔹 Object Tricks    
+```js
+let obj = { a: 1 };
+let copy = obj;
+copy.a = 99;
+console.log(obj.a); // ?
+```
+
+---
+
+💡 These kinds of questions test whether you understand **JavaScript internals** (like coercion, hoisting, closures, and the event loop).  
+
+Would you like me to **walk through the answers step by step** for each of these, or do you want me to just give you the raw outputs so you can quiz yourself?
  
 
 

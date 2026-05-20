@@ -1520,23 +1520,23 @@ To help apply this to your project, let me know:
 * Are you using modern frameworks like React, Angular, or vanilla JavaScript?
 * Do you prefer object-oriented code (Classes) or functional code (Factory Functions)? [15, 16] 
 
+==================================================================================tech questions=================================================
 
-[1] [https://genekuo.medium.com](https://genekuo.medium.com/javascript-object-modelling-with-behavior-delegation-8be99da48432)
-[2] [https://intellipaat.com](https://intellipaat.com/blog/javascript-constructor/)
-[3] [https://codeburst.io](https://codeburst.io/object-oriented-programming-in-javascript-51b2bdfdfe9f)
-[4] [https://dev.to](https://dev.to/mmvergara/prototypal-inheritance-4c6k)
-[5] [https://www.vojtechruzicka.com](https://www.vojtechruzicka.com/javascript-constructor-functions-and-new-operator/)
-[6] [https://www.executeprogram.com](https://www.executeprogram.com/courses/modern-javascript/lessons/extending-classes)
-[7] [https://javascript.plainenglish.io](https://javascript.plainenglish.io/how-i-use-classes-in-javascript-and-react-fba0e3b91e70)
-[8] [https://codeburst.io](https://codeburst.io/learn-javascript-oop-a-primer-for-web-development-e8a8b5710664)
-[9] [https://fiveable.me](https://fiveable.me/ap-comp-sci-a/unit-1/creating-and-storing-objects/study-guide/rUOTKl6Ih5noXJ0GtxJF)
-[10] [https://www.aleksandrhovhannisyan.com](https://www.aleksandrhovhannisyan.com/blog/javascript-fields-vs-methods/)
-[11] [https://medium.com](https://medium.com/@shilpasyal55/object-creation-methods-in-javascript-61da7bd76bdb)
-[12] [https://codeburst.io](https://codeburst.io/master-javascript-prototypes-inheritance-d0a9a5a75c4e)
-[13] [https://dev.to](https://dev.to/elijahtrillionz/building-a-project-with-javascript-objects-1dn)
-[14] [https://codeburst.io](https://codeburst.io/how-to-do-object-oriented-programming-the-right-way-1339c1a25286)
-[15] [https://www.freecodecamp.org](https://www.freecodecamp.org/news/crud-operations-in-angular-536e1c03a715/)
-[16] [https://www.linkedin.com](https://www.linkedin.com/pulse/object-oriented-programming-machine-learning-enhancing-omega-makena-bh38c)
+ 
+console.log([]+[]);
+ 
+[]
+ 
+let a =[1,2,3]   let b=a; b[0]=100; console.log(a);
+ 
+[100,2,3]
+ 
+let b ={...a}
+ 
+[100,2,3]
+ 
+console.log(3>2>1)
+ 
 
 
 

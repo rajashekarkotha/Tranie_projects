@@ -1,0 +1,155 @@
+import React, { useEffect, useState } from "react";
+import "./style.css";
+
+export default function App() {
+  const [data, setData] = useState([]);
+  const [parentChecked, setParentChecked] = useState(false);
+  const [childChecked, setChildChecked] = useState({});
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/todos?_limit=5")
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+        // initialize child checkboxes as false
+        const initialState = {};
+        data.forEach((item) => {
+          initialState[item.id] = false;
+        });
+        setChildChecked(initialState);
+      });
+  }, []);
+
+  const handleParentChange = (e) => {
+    const checked = e.target.checked;
+    setParentChecked(checked);
+
+    // update all children when parent changes
+    const updatedChildren = {};
+    data.forEach((item) => {
+      updatedChildren[item.id] = checked;
+    });
+    setChildChecked(updatedChildren);
+  };
+
+  const handleChildChange = (id) => {
+    setChildChecked((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  return (
+    <div>
+      <h1>Hello StackBlitz!</h1>
+      <div>
+        <input
+          type="checkbox"
+          checked={parentChecked}
+          onChange={handleParentChange}
+        />{" "}
+        <h5>Parent</h5>
+      </div>
+      {data.map((ele) => (
+        <Child
+          key={ele.id}
+          childData={ele}
+          checked={childChecked[ele.id] || false}
+          onChange={() => handleChildChange(ele.id)}
+        />
+      ))}
+    </div>
+  );
+}
+
+const Child = ({ childData, checked, onChange }) => {
+  return (
+    <div>
+      <li>
+        <input type="checkbox" checked={checked} onChange={onChange} />{" "}
+        {childData.title}
+      </li>
+    </div>
+  );
+};
+================================?? if this parent and child and nested child components checkbox cheked logic can share? ??=============================================================================
+
+import React, { useState } from "react";
+
+export default function App() {
+  const [parentChecked, setParentChecked] = useState(false);
+  const [childChecked, setChildChecked] = useState({
+    child1: false,
+    child2: false,
+  });
+
+  // Parent toggles all children
+  const handleParentChange = (e) => {
+    const checked = e.target.checked;
+    setParentChecked(checked);
+    setChildChecked({
+      child1: checked,
+      child2: checked,
+    });
+  };
+
+  // Child toggles itself
+  const handleChildChange = (key) => {
+    setChildChecked((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  return (
+    <div>
+      <h3>Parent</h3>
+      <input
+        type="checkbox"
+        checked={parentChecked}
+        onChange={handleParentChange}
+      />
+      <Child
+        label="Child 1"
+        checked={childChecked.child1}
+        onChange={() => handleChildChange("child1")}
+      />
+      <Child
+        label="Child 2"
+        checked={childChecked.child2}
+        onChange={() => handleChildChange("child2")}
+      />
+    </div>
+  );
+}
+
+function Child({ label, checked, onChange }) {
+  return (
+    <div style={{ marginLeft: "20px" }}>
+      <h4>{label}</h4>
+      <input type="checkbox" checked={checked} onChange={onChange} />
+      <NestedChild parentChecked={checked} />
+    </div>
+  );
+}
+
+function NestedChild({ parentChecked }) {
+  const [nestedChecked, setNestedChecked] = useState(false);
+
+  // Sync with parent when parent changes
+  React.useEffect(() => {
+    setNestedChecked(parentChecked);
+  }, [parentChecked]);
+
+  return (
+    <div style={{ marginLeft: "40px" }}>
+      <h5>Nested Child</h5>
+      <input
+        type="checkbox"
+        checked={nestedChecked}
+        onChange={() => setNestedChecked((prev) => !prev)}
+      />
+    </div>
+  );
+}
+

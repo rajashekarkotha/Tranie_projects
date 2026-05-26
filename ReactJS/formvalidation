@@ -1,0 +1,210 @@
+import React, { useState } from "react";
+import "./style.css";
+
+function App() {
+  const [form, setForm] = useState({ firstName: "", email: "", password: "" });
+  const [errors, setErrors] = useState({});
+  const [disabled, setDisabled] = useState(true);
+
+  const validateForm = (name, value) => {
+    let error = {};
+
+    switch (name) {
+      case "firstName": {
+        if (!value) {
+          error.firstName = "Please enter your name";
+        } else if (value.length < 2) {
+          error.firstName = "Name must be at least 2 characters";
+        }
+        break;
+      }
+      case "email": {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value) {
+          error.email = "Please enter your email";
+        } else if (!emailRegex.test(value)) {
+          error.email = "Please enter a valid email";
+        }
+        break;
+      }
+      case "password": {
+        if (!value) {
+          error.password = "Please enter a password";
+        } else if (value.length < 6) {
+          error.password = "Password must be at least 6 characters";
+        }
+        break;
+      }
+      default:
+        break;
+    }
+
+    // Clear error if field is valid
+    if (Object.keys(error).length === 0) {
+      setErrors((prev) => {
+        const { [name]: removed, ...rest } = prev;
+        return rest;
+      });
+    } else {
+      setErrors((prev) => ({ ...prev, ...error }));
+    }
+
+    checkDisabled({ ...form, [name]: value }, { ...errors, ...error });
+  };
+
+  const checkDisabled = (formData, errorData) => {
+    const hasErrors = Object.keys(errorData).length > 0;
+    const hasEmptyFields = Object.values(formData).some((val) => !val);
+    setDisabled(hasErrors || hasEmptyFields);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    validateForm(name, value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!disabled) {
+      console.log("Form submitted:", form);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>First Name:</label>
+        <input
+          type="text"
+          name="firstName"
+          value={form.firstName}
+          onChange={handleChange}
+        />
+        {errors.firstName && <p style={{ color: "red" }}>{errors.firstName}</p>}
+      </div>
+
+      <div>
+        <label>Email:</label>
+        <input
+          type="text"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+        />
+        {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+      </div>
+
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+        />
+        {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
+      </div>
+
+      <button type="submit" disabled={disabled}>
+        Submit
+      </button>
+    </form>
+  );
+}
+
+export default App;
+
+*********************************************************************************************************************************************************************************************************************************************
+
+import React, { useState } from "react";
+import "./style.css";
+
+function App() {
+  const [form, setForm] = useState({ firstName: "", email: "", password: "" });
+  const [errors, setErrors] = useState({});
+  const [disabled, setDisabled] = useState(true);
+
+  const validateAll = (formData) => {
+    const newErrors = {};
+
+    if (!formData.firstName) {
+      newErrors.firstName = "Please enter your name";
+    } else if (formData.firstName.length < 2) {
+      newErrors.firstName = "Name must be at least 2 characters";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email) {
+      newErrors.email = "Please enter your email";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Please enter a password";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    setErrors(newErrors);
+    setDisabled(Object.keys(newErrors).length > 0);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const updatedForm = { ...form, [name]: value };
+    setForm(updatedForm);
+    validateAll(updatedForm);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!disabled) {
+      console.log("Form submitted:", form);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>First Name:</label>
+        <input
+          type="text"
+          name="firstName"
+          value={form.firstName}
+          onChange={handleChange}
+        />
+        {errors.firstName && <p style={{ color: "red" }}>{errors.firstName}</p>}
+      </div>
+
+      <div>
+        <label>Email:</label>
+        <input
+          type="text"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+        />
+        {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+      </div>
+
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+        />
+        {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
+      </div>
+
+      <button type="submit" disabled={disabled}>
+        Submit
+      </button>
+    </form>
+  );
+}
+
+export default App;

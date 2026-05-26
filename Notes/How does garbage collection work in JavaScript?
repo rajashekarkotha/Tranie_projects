@@ -1,0 +1,66 @@
+**JavaScript uses automatic garbage collection to free memory by removing objects that are no longer reachable. Developers don’t manually manage memory; instead, the engine periodically identifies unused values and clears them, preventing leaks and improving performance.**
+
+---
+
+## 🔑 How Garbage Collection Works in JavaScript
+
+### 1. **Memory Lifecycle**
+- **Allocation**: Memory is automatically allocated when you create variables, objects, arrays, or functions.
+- **Usage**: You read/write values, pass them to functions, or manipulate them.
+- **Release**: When values are no longer needed (unreachable), the garbage collector frees the memory. Unlike C/C++, you don’t call `free()` manually.  [Mozilla Developer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management)
+
+---
+
+### 2. **Reachability Concept**
+- **Roots**: Certain values are always reachable (global variables, currently executing functions, local variables).
+- **References**: Any object referenced from a root is also reachable.
+- **Unreachable Objects**: If no references exist to an object, it becomes unreachable and is eligible for garbage collection.  
+  Example:
+  ```js
+  let user = { name: "John" };
+  user = null; // object {name: "John"} is now unreachable
+  ```
+  The garbage collector will eventually remove it.  [The Modern JavaScript Tutorial](https://javascript.info/garbage-collection)
+
+---
+
+### 3. **Algorithms Used**
+- **Mark-and-Sweep** (most common):
+  - **Mark**: The collector starts from roots and marks all reachable objects.
+  - **Sweep**: Any object not marked is considered unreachable and removed.
+- **Reference Counting** (less common, prone to issues with circular references).  [GeeksForGeeks](https://www.geeksforgeeks.org/javascript/garbage-collection-in-javascript/)
+
+---
+
+### 4. **Practical Implications**
+- **Automatic**: Runs in the background; developers don’t control when it happens.
+- **Performance**: Helps prevent memory leaks and keeps apps responsive.
+- **Limitations**:
+  - GC doesn’t guarantee immediate cleanup; timing is engine-dependent.
+  - Circular references can delay collection if not handled properly.
+  - Large unused structures may persist until the collector runs.
+
+---
+
+## ⚠️ Risks & Best Practices
+- **Memory Leaks**: Can still occur if you keep unnecessary references (e.g., global variables, event listeners not removed).
+- **Avoid Globals**: Minimize global variables to reduce retained memory.
+- **Clean Up**: Remove event listeners, clear intervals/timeouts, and nullify references when no longer needed.
+- **Use WeakMap/WeakSet**: These structures allow garbage collection of keys when no other references exist.
+
+---
+
+## 📊 Quick Comparison
+
+| Aspect                  | Manual Memory Mgmt (C/C++) | JavaScript Garbage Collection |
+|--------------------------|-----------------------------|-------------------------------|
+| Allocation              | `malloc/new`                | Automatic on variable/object creation |
+| Deallocation            | `free/delete`               | Automatic when unreachable |
+| Risk of Memory Leaks    | High (developer error)      | Lower, but possible via lingering references |
+| Control                 | Full developer control      | No direct control, engine decides timing |
+
+---
+
+✅ **In short:** JavaScript garbage collection is based on *reachability* and typically uses the **mark-and-sweep algorithm**. It’s automatic, invisible to developers, and ensures memory is freed when objects are no longer accessible, though you should still write code carefully to avoid leaks.  [GeeksForGeeks](https://www.geeksforgeeks.org/javascript/garbage-collection-in-javascript/)  [Mozilla Developer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Memory_management)  [The Modern JavaScript Tutorial](https://javascript.info/garbage-collection)
+
+Would you like me to also show you **real-world debugging techniques** (like using Chrome DevTools’ Memory tab) to spot and fix memory leaks in your React projects?

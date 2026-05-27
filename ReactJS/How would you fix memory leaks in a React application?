@@ -1,0 +1,6 @@
+My approach was:
+
+- First checking the "useEffect" hooks and ensuring proper cleanup functions are implemented.
+- Verifying if event listeners, intervals, subscriptions, or API calls are being cleaned up correctly during component unmount.
+- Avoiding unnecessary state updates after component unmounts.
+- Using techniques like "AbortController" for cancelling pending API requests when needed.

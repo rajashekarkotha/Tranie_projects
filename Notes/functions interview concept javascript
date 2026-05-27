@@ -1,0 +1,28 @@
+𝗙𝘂𝗻𝗰𝘁𝗶𝗼𝗻𝘀 𝗮𝗿𝗲 𝗻𝗼𝘁 𝗷𝘂𝘀𝘁 𝗮 𝗝𝗮𝘃𝗮𝗦𝗰𝗿𝗶𝗽𝘁 𝘁𝗼𝗽𝗶𝗰.
+They are the foundation behind almost everything you write in JavaScript.
+
+Callbacks, closures, higher-order functions, methods, recursion, React hooks, event handlers, async code — all of them become easier when functions are clear.
+
+So I created this detailed handwritten-style note on Functions in JavaScript covering:
+
+• Function Declaration
+• Function Expression
+• Named Function Expression
+• Arrow Function
+• Callback Function
+• Higher-Order Function
+• IIFE
+• Constructor Function
+• Generator Function
+• Recursive Function
+• Method Function
+
+This is designed for beginners, revision, and interview preparation — with examples for each type so the concepts become easier to connect.
+
+If you are learning JavaScript or preparing for frontend/MERN interviews, don’t skip functions.
+
+Master functions properly, and many advanced JavaScript concepts will start making sense automatically.
+
+Save this for revision.
+Share it with someone learning JavaScript.
+More JavaScript deep-dive notes coming soon. 🚀

@@ -1,0 +1,8 @@
+React 19 useFormStatus removes a surprising amount of form boilerplate:
+
+• no manual loading states
+• cleaner submit buttons
+• easier async UX
+• less code to forget
+
+Feels like React is quietly moving toward much simpler full-stack patterns ⚡

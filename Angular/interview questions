@@ -1,0 +1,29 @@
+🚀 Frontend Interview Series — Part 3
+(Advanced Angular interview questions | 2–4 years experience)
+These are the questions where interviewers start checking whether you’ve worked on real projects 😅
+1️⃣ Explain the Angular component lifecycle. Which hooks do you use most often?
+2️⃣ When would you use ngOnInit() vs ngAfterViewInit()?
+3️⃣ What causes memory leaks in Angular applications?
+4️⃣ What happens if you don’t unsubscribe from Observables? How do you prevent it?
+5️⃣ Explain the difference between switchMap, mergeMap, concatMap, and exhaustMap.
+6️⃣ In what scenario would you use switchMap()?
+7️⃣ Reactive Forms vs Template-driven Forms — when would you choose each?
+8️⃣ How do you create custom validators in Angular?
+9️⃣ How do Angular Route Guards work?
+🔟 Tricky Angular Question 👇
+You have:
+ngOnInit() {
+ console.log('Init');
+}
+
+ngAfterViewInit() {
+ console.log('After View');
+}
+👉 Which runs first, and why? 🤔
+1️⃣1️⃣ What causes ExpressionChangedAfterItHasBeenCheckedError?
+1️⃣2️⃣ How do you safely upgrade Angular versions in production projects?
+1️⃣3️⃣ How do you manage environment configurations across dev, QA, and production?
+1️⃣4️⃣ How do you implement i18n (internationalization) in Angular?
+1️⃣5️⃣ How would you debug an issue that only occurs in production but not locally?
+Real interviews often test debugging + architecture + Angular internals, not only coding.
+Which question would make you pause in an interview? 👇

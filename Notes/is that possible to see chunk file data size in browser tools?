@@ -1,0 +1,38 @@
+Yes — you can absolutely inspect **chunk file sizes** in browser developer tools. Here’s how you can do it step by step:
+
+---
+
+## 🔍 Using Chrome/Edge DevTools
+1. **Open DevTools**  
+   Press `F12` or `Ctrl+Shift+I` (Windows/Linux) or `Cmd+Opt+I` (Mac).
+
+2. **Go to the Network Tab**  
+   Reload the page with DevTools open. You’ll see all network requests, including JavaScript chunk files (`main.js`, `vendors~chunk.js`, etc.).
+
+3. **Filter by JS**  
+   Use the filter bar → select **JS** to only show JavaScript files.
+
+4. **Check Size Columns**  
+   - **Transferred Size** → how much was actually downloaded (after compression like gzip/brotli).  
+   - **Content Size** → the original uncompressed size of the file.  
+
+5. **Hover for Details**  
+   Hover over the file or click it to see headers, compression, and caching info.
+
+---
+
+## 📊 Alternative Views
+- **Performance Tab** → shows loading timeline and which chunks block rendering.  
+- **Coverage Tab** (`Ctrl+Shift+P` → type *Coverage*) → shows how much of each chunk is actually used vs unused.  
+- **Application Tab → Frames → Scripts** → lists loaded scripts with sizes.  
+
+---
+
+## ⚠️ Things to Keep in Mind
+- If you’re using **Webpack Module Federation** or micro‑frontends, each remote app will have its own `remoteEntry.js` and chunk files.  
+- Compression can make transferred size much smaller than the actual bundle size.  
+- For optimization, look at **bundle splitting**, **tree‑shaking**, and **lazy loading** to reduce chunk sizes.  
+
+---
+
+👉 Would you like me to show you how to **visualize chunk sizes with Webpack Bundle Analyzer**? That tool gives a graphical treemap of all chunks and their dependencies, which is often easier than scanning DevTools manually.

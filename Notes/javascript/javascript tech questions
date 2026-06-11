@@ -1625,6 +1625,61 @@ console.log(obj.a); // ?
 💡 These kinds of questions test whether you understand **JavaScript internals** (like coercion, hoisting, closures, and the event loop).  
 
 Would you like me to **walk through the answers step by step** for each of these, or do you want me to just give you the raw outputs so you can quiz yourself?
+
+=================================================================================================================================================================================================================================================
+
+print Duplicates elements in Array?
+
+const arr = [1,2,2,3,4,4,5];
+
+function printDuplicates(arr) {
+  let freq = {};
+  let duplicates = [];
+
+  arr.forEach(ele => {
+    freq[ele] = (freq[ele] || 0) + 1;
+  });
+
+  for (let key in freq) {
+    if (freq[key] > 1) {
+      duplicates.push(Number(key));
+    }
+  }
+
+  return duplicates;
+}
+
+console.log(printDuplicates(arr)); // [2, 4]
+
+
+********************************************************
+
+const arr = [1,2,2,3,4,4,5];
+
+function duplicateCounts(arr) {
+  let freq = {};
+  arr.forEach(ele => {
+    freq[ele] = (freq[ele] || 0) + 1;
+  });
+
+  let result = {};
+  for (let key in freq) {
+    if (freq[key] > 1) {
+      result[key] = freq[key];
+    }
+  }
+
+  return result;
+}
+
+console.log(duplicateCounts(arr)); 
+// { '2': 2, '4': 2 }
+
+***********************************************************************************************************************************************************************************************************************************************
+===============================================================================================================================================================================================================================================
+***********************************************************************************************************************************************************************************************************************************************
+
+
  
 
 

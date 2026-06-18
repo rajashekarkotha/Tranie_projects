@@ -1,0 +1,43 @@
+import React, {useEffect, useState} from "react";
+import "./style.css";
+
+const App = (props) => {
+ const [count, setCount] = useState(0);
+
+ useEffect(()=>{
+  console.log('Hello');
+  setCount(1);
+ },[props.visible]);
+
+ return(
+   <div>{count}</div>
+ )
+}
+
+export default App;  //1
+=====================================================================================================
+
+import React, { useEffect, useState } from 'react';
+import './style.css';
+
+const featchData = () =>
+  new Promise((r) => setTimeout(() => r(Date.now()), 100));
+
+const App = () => {
+  const [result, setResult] = useState(0);
+
+  const data = featchData().then((value) => setResult(value));
+
+  return (
+    <div>
+      {result === data.toString() ? <div> hello </div> : <div> goodbye </div>}
+    </div>
+  );
+};
+
+export default App;
+
+
+==============================================================================================================
+
+

@@ -1,0 +1,74 @@
+**In `createSlice`, `reducers` define state changes for actions created inside the slice, while `extraReducers` handle actions defined outside the slice (like async thunks or actions from other slices).**  
+
+---
+
+## 🔑 Key Difference
+
+| Property        | Purpose                                                                 | Action Creators | Typical Use Case |
+|-----------------|-------------------------------------------------------------------------|-----------------|------------------|
+| **reducers**    | Defines case reducers for actions local to the slice. Keys automatically generate action creators. | ✅ Auto-generated | Updating state with slice-specific actions (e.g., `increment`, `decrement`). |
+| **extraReducers** | Handles actions not defined in the slice itself (external actions). No action creators are generated. | ❌ Not generated | Responding to async actions (`createAsyncThunk`) or actions from other slices. |
+
+---
+
+## 📘 Detailed Explanation
+
+### 1. **Reducers**
+- Each function inside `reducers` corresponds to an action type.  
+- Redux Toolkit automatically generates **action creators** for them.  
+- Example:
+  ```js
+  const counterSlice = createSlice({
+    name: 'counter',
+    initialState: { value: 0 },
+    reducers: {
+      increment: (state) => { state.value++ },
+      decrement: (state) => { state.value-- }
+    }
+  });
+
+  // Auto-generated actions
+  export const { increment, decrement } = counterSlice.actions;
+  ```
+
+### 2. **extraReducers**
+- Used when your slice needs to respond to actions defined elsewhere.  
+- Common with **`createAsyncThunk`** (pending, fulfilled, rejected states).  
+- No action creators are generated here—you rely on existing ones.  
+- Example:
+  ```js
+  const fetchUserById = createAsyncThunk('users/fetchById', async (id) => {
+    const response = await api.getUser(id);
+    return response.data;
+  });
+
+  const userSlice = createSlice({
+    name: 'users',
+    initialState: { loading: false, data: null },
+    reducers: {},
+    extraReducers: (builder) => {
+      builder
+        .addCase(fetchUserById.pending, (state) => { state.loading = true })
+        .addCase(fetchUserById.fulfilled, (state, action) => {
+          state.loading = false;
+          state.data = action.payload;
+        })
+        .addCase(fetchUserById.rejected, (state) => { state.loading = false });
+    }
+  });
+  ```
+
+---
+
+## ⚡ Practical Guidance
+- **Use `reducers`** for actions you define and dispatch directly from your slice.  
+- **Use `extraReducers`** when handling:  
+  - Async logic (`createAsyncThunk`)  
+  - Actions from other slices (e.g., `auth/logout` affecting `userSlice`)  
+  - Global actions that multiple slices should respond to.  
+
+---
+
+✅ In short: **`reducers` = local actions with auto-generated creators; `extraReducers` = external actions you need to handle manually.**  
+
+Would you like me to also show you a **visual flow diagram** of how `reducers` and `extraReducers` fit into the Redux Toolkit data flow? That could make the distinction even clearer.   [Stack Overflow](https://stackoverflow.com/questions/66425645/what-is-difference-between-reducers-and-extrareducers-in-redux-toolkit)  [Redux Toolkit](https://redux-toolkit.js.org/api/createslice/)  [Medium](https://medium.com/@skyshots/mastering-redux-toolkit-dive-into-createslice-createasyncthunk-and-extrareducers-d8d7c5dd47fc)

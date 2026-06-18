@@ -1,0 +1,65 @@
+Here’s a clear **Promise chaining example** in JavaScript that you can use in interviews or projects:
+
+```js
+// Example: Fetch user, then fetch their posts, then log results
+function getUser(id) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve({ id, name: "Ashritha" }), 1000);
+  });
+}
+
+function getPosts(userId) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve([
+      { id: 1, title: "Post 1", userId },
+      { id: 2, title: "Post 2", userId }
+    ]), 1000);
+  });
+}
+
+function getComments(postId) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve([
+      { id: 101, text: "Nice post!", postId },
+      { id: 102, text: "Thanks for sharing!", postId }
+    ]), 1000);
+  });
+}
+
+// Promise chaining
+getUser(1)
+  .then(user => {
+    console.log("User:", user);
+    return getPosts(user.id); // chain next promise
+  })
+  .then(posts => {
+    console.log("Posts:", posts);
+    return getComments(posts[0].id); // chain another promise
+  })
+  .then(comments => {
+    console.log("Comments on first post:", comments);
+  })
+  .catch(err => {
+    console.error("Error:", err);
+  });
+```
+
+---
+
+## 🔎 What’s Happening
+1. `getUser(1)` resolves with a user object.  
+2. `.then()` passes that user to `getPosts(user.id)`.  
+3. Next `.then()` passes posts to `getComments(posts[0].id)`.  
+4. Finally, comments are logged.  
+5. Any error in the chain is caught by `.catch()`.
+
+---
+
+## 🎯 Interview Tip
+If asked this in an interview, you can say:
+
+> “I handle asynchronous flows in JavaScript using Promise chaining when tasks depend on each other sequentially. Each `.then()` returns a new Promise, allowing me to pass results down the chain. For cleaner syntax, I often use `async/await`, but Promise chaining is useful to demonstrate explicit control of execution order.”
+
+---
+
+Would you like me to also show you the **equivalent `async/await` version** of this example? It’s often easier to read and interviewers appreciate seeing both approaches.

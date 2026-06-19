@@ -1,0 +1,139 @@
+Here’s a **mock interview Q&A set tailored for React + TypeScript roles** — designed to simulate the kinds of practical and conceptual questions you’d face.  
+
+---
+
+## 🎯 Mock Interview Q&A (React + TypeScript)
+
+### **1. Typing React Props**
+**Q:** How do you type props for a functional component in React using TypeScript?  
+**A:**  
+```tsx
+type ButtonProps = {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean; // optional
+};
+
+const Button: React.FC<ButtonProps> = ({ label, onClick, disabled }) => (
+  <button onClick={onClick} disabled={disabled}>
+    {label}
+  </button>
+);
+```
+👉 Interviewers want to see if you can enforce prop contracts and handle optional props.
+
+---
+
+### **2. Typing State with Hooks**
+**Q:** How do you type state managed with `useState`?  
+**A:**  
+```tsx
+const [count, setCount] = useState<number>(0);
+const [user, setUser] = useState<{ name: string; age: number } | null>(null);
+```
+👉 Shows you understand generics in hooks.
+
+---
+
+### **3. Typing Events**
+**Q:** How do you type an `onChange` event for an input field?  
+**A:**  
+```tsx
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  console.log(e.target.value);
+};
+```
+👉 Demonstrates knowledge of React’s event types.
+
+---
+
+### **4. Context API with TypeScript**
+**Q:** How do you type a React Context?  
+**A:**  
+```tsx
+type Theme = "light" | "dark";
+
+const ThemeContext = React.createContext<Theme>("light");
+
+const useTheme = () => React.useContext(ThemeContext);
+```
+👉 Interviewers check if you can enforce context values.
+
+---
+
+### **5. Typing API Responses**
+**Q:** How do you type an API response in React?  
+**A:**  
+```tsx
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+async function fetchUsers(): Promise<User[]> {
+  const res = await fetch("/api/users");
+  return res.json();
+}
+```
+👉 Shows ability to integrate TypeScript with async/await and external data.
+
+---
+
+### **6. Utility Types in React**
+**Q:** How would you make all props optional for a component?  
+**A:**  
+```tsx
+type UserProps = {
+  name: string;
+  age: number;
+};
+
+type OptionalUserProps = Partial<UserProps>;
+```
+👉 Demonstrates knowledge of built-in utility types.
+
+---
+
+### **7. Error Boundaries**
+**Q:** How do you type an Error Boundary component in React?  
+**A:**  
+```tsx
+type ErrorBoundaryState = { hasError: boolean };
+
+class ErrorBoundary extends React.Component<{}, ErrorBoundaryState> {
+  state: ErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError(_: Error): ErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) return <h1>Something went wrong.</h1>;
+    return this.props.children;
+  }
+}
+```
+👉 Tests your ability to handle runtime errors with TypeScript.
+
+---
+
+### **8. Advanced: Module Federation**
+**Q:** How do you type a remote component imported via Module Federation?  
+**A:**  
+```tsx
+declare module "userApp/UserPage" {
+  const UserPage: React.ComponentType;
+  export default UserPage;
+}
+```
+👉 Shows you can handle dynamic imports in micro‑frontend setups.
+
+---
+
+## 🚀 Practice Tip
+Interviewers often ask you to **write a small React component live** (like a form with validation). Practicing with **typed forms, API calls, and context** will give you confidence.
+
+---
+
+Would you like me to **simulate a live coding round** (e.g., “Build a typed login form with validation in React + TypeScript”) so you can practice under interview-like conditions?

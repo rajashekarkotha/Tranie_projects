@@ -1,0 +1,65 @@
+**Here’s a curated list of the most common and important TypeScript interview questions you should prepare for in 2026. These cover fundamentals, advanced features, and real-world applications—perfect for front-end roles like React JS development.**
+
+---
+
+## 🔑 Core TypeScript Interview Questions
+
+### Basics
+- **What is TypeScript and why use it over JavaScript?**  
+  → Statically typed superset of JavaScript that adds type safety, better tooling, and scalability.  [DataCamp](https://www.datacamp.com/blog/typescript-interview-questions)  
+- **Difference between `any`, `unknown`, and `never` types?**  
+  → `any`: disables type checking, `unknown`: safer alternative requiring type checks, `never`: represents values that never occur (e.g., function that always throws).  
+- **Explain type inference in TypeScript.**  
+  → Compiler automatically infers types from assigned values.  [DataCamp](https://www.datacamp.com/blog/typescript-interview-questions)  
+- **How do `let`, `const`, and `var` differ in TypeScript?**  
+  → `var`: function-scoped, `let`: block-scoped, `const`: block-scoped and immutable.  [GeeksForGeeks](https://www.geeksforgeeks.org/typescript/typescript-interview-questions/)  
+
+---
+
+### Intermediate
+- **What are interfaces and how do they differ from type aliases?**  
+  → Interfaces define contracts; type aliases can represent unions, intersections, primitives. Interfaces are extendable, type aliases are more flexible.  
+- **Explain generics in TypeScript.**  
+  → Allow reusable components with type parameters, e.g., `function identity<T>(arg: T): T`.  
+- **What are decorators in TypeScript?**  
+  → Special annotations for classes/methods/properties, often used in Angular.  [GeeksForGeeks](https://www.geeksforgeeks.org/typescript/typescript-interview-questions/)  
+- **How does TypeScript handle modules and namespaces?**  
+  → ES modules (`import/export`) are standard; namespaces are legacy for organizing code.  
+
+---
+
+### Advanced / Experienced
+- **What are type guards and how are they implemented?**  
+  → Functions or conditions that refine types at runtime, e.g., `typeof`, `instanceof`, or custom predicates.  
+- **Difference between `interface` merging and `type` intersections?**  
+  → Interfaces can merge declarations automatically; types use `&` for intersections.  
+- **Explain utility types like `Partial`, `Pick`, `Omit`, and `Readonly`.**  
+  → Built-in helpers to transform object types.  
+- **How does TypeScript integrate with React or Angular projects?**  
+  → Strong typing for props, state, hooks, and services; improves maintainability and tooling.  [HackerRank](https://www.hackerrank.com/blog/typescript-interview-questions-developers-should-know/)  
+
+---
+
+## 📊 Quick Comparison Table
+
+| Concept            | Key Use Case | Example |
+|--------------------|-------------|---------|
+| `any` vs `unknown` | Flexibility vs safety | `let x: any; let y: unknown;` |
+| Generics           | Reusable components | `function identity<T>(arg: T): T` |
+| Interfaces vs Types| Contracts vs flexibility | `interface User {name:string}` vs `type User={name:string}` |
+| Decorators         | Metadata/annotations | `@Component({...})` in Angular |
+| Utility Types      | Type transformations | `Partial<User>` makes all props optional |
+
+---
+
+## ⚠️ Common Pitfalls to Watch
+- Overusing `any` → defeats TypeScript’s purpose.  
+- Mixing `namespace` with ES modules → leads to confusion.  
+- Forgetting to configure `tsconfig.json` properly → can cause compilation/runtime mismatches.  
+- Not handling `strictNullChecks` → runtime errors sneak in.  
+
+---
+
+✅ **Tip for you, Ashritha:** Since you’re a React JS developer, expect **questions on typing props, hooks, and context in TypeScript**, plus practical coding exercises like building a typed form or API call.  
+
+Would you like me to create a **mock interview Q&A set specifically tailored for React + TypeScript roles** so you can practice with real-world scenarios?

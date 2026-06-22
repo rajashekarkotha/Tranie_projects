@@ -1675,6 +1675,76 @@ function duplicateCounts(arr) {
 console.log(duplicateCounts(arr)); 
 // { '2': 2, '4': 2 }
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+const users = [
+  { name: 'raj', city: 'hyd' },
+  { name: 'shekar', city: 'ben' },
+  { name: 'reddy', city: 'hyd' },
+];
+
+const grouped = {};
+
+users.forEach(({ name, city }) => {
+  if (!grouped[city]) {
+    grouped[city] = [];
+  }
+  grouped[city].push(name);
+});
+
+console.log(grouped);
+// { hyd: ['raj', 'reddy'], ben: ['shekar'] }
+
+===========================================================================
+
+const users = [
+  { name: 'raj', city: 'hyd' },
+  { name: 'shekar', city: 'ben' },
+  { name: 'reddy', city: 'hyd' },
+];
+
+const grouped = {};
+
+users.forEach(({ name, city }) => {
+  if (!grouped[city]) {
+    grouped[city] = [];
+  }
+  grouped[city].push(name);
+});
+
+console.log(grouped);
+// { hyd: ['raj', 'reddy'], ben: ['shekar'] }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+// Generic debounce function
+function debounce(func, delay) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+// Example: Debounced search
+function search(query) {
+  console.log('Searching for:', query);
+}
+
+const debouncedSearch = debounce(search, 300);
+
+// Simulated typing
+debouncedSearch('Hel');
+debouncedSearch('Hell');
+debouncedSearch('Hello');
+// Only "Hello" will be logged after 300ms of inactivity
+
+
+
 ***********************************************************************************************************************************************************************************************************************************************
 ===============================================================================================================================================================================================================================================
 ***********************************************************************************************************************************************************************************************************************************************

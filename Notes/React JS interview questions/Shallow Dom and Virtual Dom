@@ -1,0 +1,30 @@
+Here’s a crisp definition-style breakdown for you:
+
+### 🌱 Shallow Rendering (Shallow DOM)
+- **Definition**: A testing technique where a React component is rendered only one level deep, without fully rendering its child components.
+- **Purpose**: Used in unit testing to isolate a component’s behavior and verify its output or props passed to children, without worrying about the children’s implementation.
+- **Example**:  
+  ```jsx
+  const wrapper = shallow(<Parent />);
+  // Only Parent is rendered, Child components are not fully rendered
+  ```
+
+---
+
+### 🌐 Virtual DOM
+- **Definition**: An in-memory representation of the real DOM maintained by React. It’s a lightweight copy of the actual DOM tree.
+- **Purpose**: React uses the virtual DOM to efficiently determine what has changed after a state update, then applies only the minimal necessary changes to the real DOM.
+- **Process**:
+  1. State changes → React updates virtual DOM.
+  2. React diffs new virtual DOM with the old one.
+  3. Only changed nodes are updated in the real DOM.
+
+---
+
+### ⚡ Difference in One Line
+- **Shallow DOM**: A **testing strategy** to render components partially.  
+- **Virtual DOM**: A **React core mechanism** to optimize UI updates.
+
+---
+
+Would you like me to sketch a **side-by-side diagram** showing how shallow rendering skips children while virtual DOM diffs the whole tree? That visual could make the distinction even clearer.

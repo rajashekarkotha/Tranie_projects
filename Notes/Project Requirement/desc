@@ -1,0 +1,120 @@
+UI
+Tables and columns to show:
+Table: User monthly rewards
+columns: customerId, name, month, year, reward points
+Table: Total rewards
+columns: customer name and reward points
+Table: Transactions
+columns: transaction id, customer name, purchase date, product
+purchased, price, reward points
+Key Guidelines:
+1. State Management and React Components:
+ Move Pure Functions: Place pure functions outside
+components to avoid recreating them needlessly.
+ Avoid Nested Components: Extract nested components
+for better organization.
+ Separate Sorting Logic: Avoid storing sorting logic directly
+in state; sort data during rendering or fetching. Sort by
+dates.
+ Consolidate State: Consider combining separate states
+(e.g., user, userName, userId) into a single state object.
+ Be Mindful of Optional Chaining: Use optional chaining
+judiciously to improve readability.
+ Simplify Callbacks: Eliminate unnecessary callback
+wrappers around functions.
+ Extract Fragments: Remove unnecessary code fragments
+or components that don’t serve a purpose.
+ Check useEffect Dependencies: Prevent unnecessary re-
+renders.
+2. Data Processing and Logic:
+ Verify Points Calculation: Double-check the points
+calculation logic.
+ Handle Fractions: Ensure proper handling of fractional
+points.
+ Aggregate by Month and Year: Consider aggregating
+points by both month and year.
+ Use array.filter: When filtering a list, prefer array.filter over
+Array.find.
+ Avoid Dataset Dependency: Don’t rely solely on the
+dataset for limiting months.
+3. Error Handling and UI:
+ Implement Error Handling: Gracefully handle unexpected
+situations.
+ Add Loading Indicators: Display loading indicators during
+data fetching.
+ Include Loading States: Implement loading states.
+ Localized Dates: Handle localized dates appropriately.
+4. Code Quality:
+ Standardize naming convention (files, variables,
+functions) and indexing of the code
+ Correct File Names: Fix any misspelled file names.
+ Remove Console Logs: Clean up leftover console logs.
+ Use Distinct Variable Names: Avoid internal and external
+variable name clashes.
+ Review Formatting and Typos: Ensure consistency and
+correctness.
+5. Miscellaneous:
+ Refactor Boilerplate Code: Improve maintainability of
+header code.
+ Optimize Code: Enhance performance and readability.
+6. Version Control Tool
+ Ensure the ReadMe.
+7. Testing
+ Ensure Test Case
+ Simulate an asynchronous API call to fetch data
+Tips
+1. Make sure calculation logic works with different years data
+ex: December 2023, January 2024, Feb 2024
+2. Use only pure functions
+3. Avoid mutations, don’t use for/foreach loops use reduce/map
+4. Have unit test cases with jest covering all scenarios
+5. Use/configure logger
+6. Handle decimal calculations
+ex: purchase 100.2 $ then reward is 50 points
+purchase 100.4 $ then reward is 50 points
+7. Don&#39;t leave console logs open
+8. Keep the code in smaller/simpler reusable functional blocks
+9. Add comments wherever possible
+10. Maintain proper code formatting by using Eslint
+11. Use React JS (do not use TypeScript)
+12. Don’t use Redux
+13. Make up a data set to best demonstrate your solution
+14. Check solution into GitHub
+15. Make sure the logic won’t break on change of dataset
+16. Show 3 consecutive months transactions
+17. Show data with sort by year and month. Avoid storing sorting logic
+directly in state; sort data during rendering or fetching. Sort by dates.
+18. Consider aggregating points by both month and year.
+19. Use PropTypes for props validation in all components.
+20. Implement dynamic loading states based on actual API/database
+response times; avoid using setTimeout for simulating loading.
+21. Follow a proper directory structure and naming conventions (e.g.
+PascalCase for Components, camelCase for folders). Use meaningful
+and understandable names for files and components.
+22. Create a detailed README file explaining the project, approach,
+directory structure, and attach screenshots for all scenarios, including
+errors.
+What is “homework”? 
+The homework assignment is designed to assess a candidate’s technical understanding.  Requirements
+below for both UI and WebAPI devs.  ~30 minutes to code.  Depending on the candidate, more or less
+time may be needed.  
+ 
+ 
+Homework Requirements 
+ 
+UI Developer 
+A retailer offers a rewards program to its customers, awarding points based on each recorded
+purchase.  
+  
+A customer receives 2 points for every dollar spent over $100 in each transaction, plus 1 point for every
+dollar spent between $50 and $100 in each transaction. 
+(e.g. a $120 purchase = 2x$20 + 1x$50 = 90 points). 
+  
+Given a record of every transaction during a three month period, calculate the reward points earned for
+each customer per month and total. 
+  
+ Use React JS (do not use TypeScript) 
+ Simulate an asynchronous API call to fetch data 
+ No redux (requirement added 06/07/24)  
+ Make up a data set to best demonstrate your solution 
+ Check solution into GitHub
